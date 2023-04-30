@@ -1,0 +1,123 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "uni-app"
+				// "enablePullDownRefresh": true
+			}
+		}
+	    ,{
+            "path" : "pages/myhome/myhome",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/watch/watch",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/sing/sing",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/goindex/goindex",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/searchhome/searchhome",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/playlist/playlist",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/video/video",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/wordpage/wordpage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"navigationStyle": "custom",
+		"scrolllndicator": "node"
+	},
+	"uniIdRouter": {},
+	"tabBar": {
+		"color": "#7d7d7d",
+		"selectedColor": "#fff",
+		"backgroundColor": "#151515",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "听",
+				"iconPath": "/static/icon/音乐.png",
+				"selectedIconPath": "/static/icon/音乐-h.png"
+			},
+			{
+				"pagePath": "pages/watch/watch",
+				"text": "看",
+				"iconPath": "/static/icon//地球.png",
+				"selectedIconPath": "/static/icon/地球-h.png"
+			},
+			{
+				"pagePath": "pages/sing/sing",
+				"text": "唱",
+				"iconPath": "/static/icon/唱歌.png",
+				"selectedIconPath": "/static/icon/唱歌-h.png"
+			},
+			{
+				"pagePath": "pages/myhome/myhome",
+				"text": "我的",
+				"iconPath": "/static/icon/我的.png",
+				"selectedIconPath": "/static/icon/我的-h.png"
+			}
+		]
+	}
+}
