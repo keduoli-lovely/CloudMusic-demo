@@ -288,8 +288,18 @@
 			// console.log(e,commentsid)
 			this.getpl(commentsid.e)
 			this.getpic(commentsid)
+			this.allnum(commentsid.e)
 		},
 		methods: {
+			allnum(e) {
+				uni.request({
+					url: `${helper.url}/comment/music?id=${e}&limit=1`,
+					success: (res) => {
+						console.log(res)
+						this.total = res.data.total
+					}
+				})
+			},
 			getbtnlist(e) {
 				if(e === 0) {
 					this.gethot(this.id)
@@ -355,8 +365,8 @@
 				uni.request({
 					url: `${helper.url}/comment/hot?id=${e}&limit=20&offset=${keduoli1}&type=0`,
 					success: (res) => {
-						console.log(res)
-						this.total = res.data.total
+						// console.log(res)
+						// this.total = res.data.total
 						this.hotpl = [...this.hotpl, ...res.data.hotComments]
 						// console.log(res, this.hotpl)
 						this.getplid()

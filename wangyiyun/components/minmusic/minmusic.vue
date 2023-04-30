@@ -373,7 +373,7 @@
 						helper.kk1 = 1
 					} else {
 						// console.log(this.child)
-						this.child.down()
+						this.down()
 						// this.$refs.child.down()
 					}
 
