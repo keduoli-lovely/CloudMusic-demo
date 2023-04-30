@@ -347,13 +347,13 @@
 
 				helper.audiok.onCanplay(() => {
 					helper.musiclength.lengthk = (helper.audiok.duration) / 100
-					this.musiclength = (helper.audiok.duration) / 100
+					this.musiclengthk = (helper.audiok.duration) / 100
 					// console.log(helper.audiok.duration)
 
 					helper.musiclength.stare1 = Math.floor((helper.audiok.duration) / 60)
-					this.startk = Math.floor((helper.audiok.duration) / 60)
+					this.startk1 = Math.floor((helper.audiok.duration) / 60)
 					helper.musiclength.end1 = Math.round((helper.audiok.duration) % 60)
-					this.endk = Math.round((helper.audiok.duration) % 60)
+					this.endk1 = Math.round((helper.audiok.duration) % 60)
 					// console.log( helper.musiclength.stare1)
 					// console.log( helper.musiclength.end1)
 				})
@@ -369,7 +369,7 @@
 				helper.audiok.onEnded(() => {
 					// console.log(1111111111000000)
 					if (uni.getStorageSync('musiclist') <= 1) {
-						this.hello = 1
+						this.kk1 = 1
 						helper.kk1 = 1
 					} else {
 						// console.log(this.child)
@@ -390,12 +390,12 @@
 
 					// console.log(111111)
 
-					this.musicvalue = (helper.audiok.currentTime) / this.musiclength
+					this.live = (helper.audiok.currentTime) / this.musiclength
 					helper.pace.visible = (helper.audiok.currentTime) / this.musiclength
 					// console.log(helper.audiok.currentTime,2424)
 					let keduoli = helper.audiok.currentTime
 					// console.log(keduoli,123123)
-					this.playlength = keduoli
+					this.time = keduoli
 					helper.pace.ketime = keduoli
 
 				})
