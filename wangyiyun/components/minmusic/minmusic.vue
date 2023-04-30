@@ -307,10 +307,16 @@
 		},
 		methods: {
 			getcomments() {
-
-				uni.navigateTo({
-					url: `/pages/wordpage/wordpage?few=${this.few1}`
-				})
+				if(this.few1) {
+					uni.navigateTo({
+						url: `/pages/wordpage/wordpage?few=${this.few1}`
+					})
+				}else {
+					uni.navigateTo({
+						url: `/pages/wordpage/wordpage?few=0`
+					})
+				}
+				
 			},
 			horplay(e) {
 

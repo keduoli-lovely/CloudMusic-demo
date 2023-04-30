@@ -282,6 +282,7 @@
 			};
 		},
 		onLoad(e) {
+			console.log(e)
 			let commentsid = uni.getStorageSync('musiclist')[e.few]
 			this.id = commentsid.e
 			// console.log(e,commentsid)
@@ -354,7 +355,7 @@
 				uni.request({
 					url: `${helper.url}/comment/hot?id=${e}&limit=20&offset=${keduoli1}&type=0`,
 					success: (res) => {
-						// console.log(res)
+						console.log(res)
 						this.total = res.data.total
 						this.hotpl = [...this.hotpl, ...res.data.hotComments]
 						// console.log(res, this.hotpl)
