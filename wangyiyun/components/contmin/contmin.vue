@@ -13,7 +13,7 @@
 				</view>
 			</view>
 			
-			<view class="row" v-for="item in back" :key="item.id" @click="startgq(item.id,item.al.picUrl,item.name,item.ar[0].name, topnum)">
+			<view class="row" v-for="(item, index) in musicdata" :key="index" @click="startgq(item.id,item.al.picUrl,item.name,item.ar[0].name, topnum)">
 				<view class="row-left">
 					<view class="row-tit">
 						<text class="t13">{{item.name}}</text>
@@ -33,6 +33,15 @@
 					<view class="row-all">
 						<image src="/static/icon/更多1.png" mode="aspectFit"></image>
 					</view>
+				</view>
+			</view>
+			
+			<view class="Load-more" @click="adddatamusiclist">
+				<view class="Loadmore-text">
+					加载更多
+				</view>
+				<view class="Loadmore-icon">
+					<image src="../../static/icon/前往.png" mode="aspectFit"></image>
 				</view>
 			</view>
 			
@@ -65,7 +74,7 @@
 					
 			</view>
 			
-
+			
 		</view>
 		
 		<minmusic  v-show="xian"
@@ -111,7 +120,8 @@
 				few: 0,
 				hello: 0,
 				id: null,
-				child: null
+				child: null,
+				musicdata: []
 				
 			};
 		},
@@ -133,9 +143,25 @@
 				default() {
 					return '珂朵莉'
 				}
+			},
+			musicdatatitle: {
+				type: String
 			}
 		},
 		methods: {
+			adddatamusiclist() {
+				console.log(this.title)
+				let musicedatalength = this.musicdata.length
+				uni.request({
+					url: `${helper.url}/cloudsearch?keywords=${this.musicdatatitle}&limit=6&offset=${musicedatalength}&type=1`,
+					success: (res) => {
+						// console.log(res.data.result.songs)
+						this.musicdata = [...this.musicdata, ...res.data.result.songs]
+						// console.log(this.backsong)
+						helper.musicpiclist = [...this.musicdata, ...res.data.result.songs]
+					}
+				})
+			},
 			getvideo(id,name) {
 				uni.reLaunch({
 					url: `/pages/video/video?id=${id}&index=2&title=${name}`
@@ -381,6 +407,11 @@
 			this.$nextTick(() => {
 				this.child = this.$refs.child
 			})
+		},
+		watch: {
+			back(val) {
+				this.musicdata = this.back
+			}
 		}
 	
 	}
@@ -474,6 +505,20 @@
 				}
 			}
 			
+			.Load-more {
+				padding: 35rpx 0 10rpx;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				.Loadmore-text {
+					color: var(--listboxfontcolor);
+					font-size: 35rpx;
+				}
+				.Loadmore-icon {
+					width: 45rpx;
+					height: 45rpx;
+				}
+			}
 		}
 			
 		.mar {

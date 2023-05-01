@@ -96,27 +96,27 @@
 		"list": [
 			{
 				"pagePath": "pages/index/index",
-				"text": "听",
-				"iconPath": "/static/icon/音乐.png",
-				"selectedIconPath": "/static/icon/音乐-h.png"
+				"text": "发现",
+				"iconPath": "/static/icon/音乐演奏.png",
+				"selectedIconPath": "/static/icon/音乐演奏1.png"
 			},
 			{
 				"pagePath": "pages/watch/watch",
-				"text": "看",
-				"iconPath": "/static/icon//地球.png",
-				"selectedIconPath": "/static/icon/地球-h.png"
+				"text": "博客",
+				"iconPath": "/static/icon/播客.png",
+				"selectedIconPath": "/static/icon/播客1.png"
 			},
 			{
 				"pagePath": "pages/sing/sing",
-				"text": "唱",
-				"iconPath": "/static/icon/唱歌.png",
-				"selectedIconPath": "/static/icon/唱歌-h.png"
+				"text": "我的",
+				"iconPath": "/static/icon/my.png",
+				"selectedIconPath": "/static/icon/my1.png"
 			},
 			{
 				"pagePath": "pages/myhome/myhome",
-				"text": "我的",
-				"iconPath": "/static/icon/我的.png",
-				"selectedIconPath": "/static/icon/我的-h.png"
+				"text": "社区",
+				"iconPath": "/static/icon/ol.png",
+				"selectedIconPath": "/static/icon//ol1.png"
 			}
 		]
 	}

@@ -18,7 +18,7 @@
 		
 		
 		
-		<contmin :back="backsong" :arr="arr"></contmin>
+		<contmin :back="backsong" :arr="arr" :musicdatatitle="title"></contmin>
 		<!-- <listbox></listbox> -->
 	</view>
 </template>
