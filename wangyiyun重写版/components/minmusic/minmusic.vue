@@ -490,7 +490,7 @@
 			forward() {
 				this.musiclistdata = uni.getStorageSync('musiclist')
 				let sub = this.$store.state.musicSubscript
-
+				this.timeheight = 560
 				this.geci = true
 				this.lrc = null
 				helper.lrc = null
@@ -514,6 +514,7 @@
 				}
 			},
 			down() {
+				this.timeheight = 560
 				this.musiclistdata = uni.getStorageSync('musiclist')
 				let sub = this.$store.state.musicSubscript
 				this.geci = true
