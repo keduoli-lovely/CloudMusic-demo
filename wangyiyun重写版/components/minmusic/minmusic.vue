@@ -281,15 +281,25 @@
 				this.musicplaylist = arr
 				uni.setStorageSync('musiclist',arr)
 				if(arr.length > 0) {
-					this.$store.commit('changeSubscript', e + 1)
-					this.down()
-				}else if(arr.length <= 0) {
+					let keduoli1 = uni.getStorageSync('musiclist').length
+					if(keduoli1 > e ) {
+						this.$store.commit('changeSubscript', e + 1)
+						helper.count = e + 1
+						this.down()
+						this.colorchange()
+					}else if(keduoli1 === e) {
+						this.$store.commit('changeSubscript', 0)
+						helper.count = 0
+						this.down()
+						this.colorchange()
+					}
+ 				}else if(arr.length <= 0) {
 					helper.audiok.src = ''
 					this.showlistboxnum = false
 					this.listboxbottom = '-70%'
 					this.$store.commit('changeshow', 0)
 				}
-				this.colorchange()
+				
 			},
 			// 获取当前播放歌曲的评论
 			getcomments() {
@@ -314,19 +324,7 @@
 				// // 获取当前播放音乐的相关信息
 				let musiceDetail = uni.getStorageSync('musiclist')[e]
 
-				// this.$store.commit('changefirsttime', 0)
 
-				// this.$store.commit('changelasttime', 0)
-				// // this.lasttime = 0
-				// // this.firsttime = 0
-
-				// this.liveLine = 0
-
-				// this.singerName = musiceDetail.name
-				// this.bgpic = musiceDetail.img
-				// this.musiceTitle = musiceDetail.title
-
-				// // console.log(this.$store.state.musiceplaylength)
 				this.getdata(musiceDetail.e)
 				
 				this.colorchange()
@@ -359,14 +357,12 @@
 			},
 			dellist() {
 				this.isdel = true
-				// uni.removeStorageSync('musiclist');
 			},
 			quitlist() {
 				this.listboxbottom = '-70%'
 				this.showlistboxnum = false
 			},
 			colorchange() {
-				// console.log(helper.count)
 				clearTimeout(this.timer)
 				this.timer = null
 				let fewnum = this.$store.state.musicSubscript
@@ -377,18 +373,13 @@
 					let listboxmusicspan = document.querySelectorAll(".singer")
 
 					if (listboxmusic[fewnum]) {
-						// console.log(helper.count, fewnum)
 						if (helper.count != null) {
-
 							listboxmusic[helper.count].style.color = ""
 							listboxmusicspan[helper.count].style.color = ""
 
 						}
-						// console.log(fewnum)
-						// console.log(listboxmusic[fewnum])
 						listboxmusic[fewnum].style.color = "red"
 						listboxmusicspan[fewnum].style.color = "red"
-						// console.log(helper.count,fewnum)
 						if (fewnum < 0) {
 							helper.count = 0
 						} else {
