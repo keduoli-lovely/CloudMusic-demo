@@ -1,6 +1,6 @@
 {
-    "name" : "kugou",
-    "appid" : "",
+    "name" : "网易云音乐",
+    "appid" : "__UNI__G1ED8F6E",
     "description" : "",
     "versionName" : "1.0.0",
     "versionCode" : "100",
@@ -68,5 +68,12 @@
     "uniStatistics" : {
         "enable" : false
     },
-    "vueVersion" : "2"
+    "vueVersion" : "2",
+    "fallbackLocale" : "zh-Hans",
+    "h5" : {
+        "router" : {
+            "base" : "./"
+        },
+        "title" : "网易云音乐"
+    }
 }
