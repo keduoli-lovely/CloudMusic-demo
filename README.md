@@ -6,7 +6,7 @@
 
 使用: 
 
-一,  `clone keduoli-lovely/wangyiyun`
+一,  [下载文件](https://github.com/keduoli-lovely/wangyiyun/releases/tag/v0.04-beta)
 
 二, 下载[网易云音乐 NodeJS 版](https://github.com/Binaryify/NeteaseCloudMusicApi)
 
