@@ -9,7 +9,7 @@
 						
 					</view>
 					<view class="search-icon">
-						<image src="../../static/icon/搜索.png" mode="aspectFit"></image>
+						<image src="/static/icon/3.1-搜索.png" mode="aspectFit"></image>
 					</view>
 					
 					<input type="text" placeholder="歌曲/视频/歌单/电台/小说/歌词" class="ipt" placeholder-style="font-size: 20rpx" @click.stop="getSearchHome">
