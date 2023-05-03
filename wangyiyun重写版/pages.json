@@ -107,13 +107,13 @@
 				"selectedIconPath": "/static/icon/播客1.png"
 			},
 			{
-				"pagePath": "pages/sing/sing",
+				"pagePath": "pages/myhome/myhome",
 				"text": "我的",
 				"iconPath": "/static/icon/my.png",
 				"selectedIconPath": "/static/icon/my1.png"
 			},
 			{
-				"pagePath": "pages/myhome/myhome",
+				"pagePath": "pages/sing/sing",
 				"text": "社区",
 				"iconPath": "/static/icon/ol.png",
 				"selectedIconPath": "/static/icon//ol1.png"
