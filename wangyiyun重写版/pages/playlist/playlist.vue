@@ -19,7 +19,7 @@
 							<image src="../../static/icon/音乐演奏.png" mode="aspectFit"></image>
 
 						</view>
-						<text class="t1">官方动态歌单</text>
+						<text class="t1">歌单</text>
 					</view>
 
 					<input type="text" name="sear" class="input" v-show="range === true" placeholder="搜索歌单内容歌曲"
@@ -49,13 +49,13 @@
 				<image :src="pic1" mode="aspectFill"></image>
 				<view class="text">
 					<view class="font">
-						时光雷达
+						推荐歌单
 					</view>
 					<view class="t2">
-						每日更新
+						{{singname}}
 					</view>
 					<view class="t3">
-						你曾经挚爱的那些歌,现在还记得吗
+						{{singtext}}
 					</view>
 				</view>
 				<view class="songmask">
@@ -249,7 +249,9 @@
 				watchnum: helper.playwacth.play,
 				readnum: helper.playwacth.read,
 				givenum: helper.playwacth.give,
-				isshowlogding: true
+				isshowlogding: true,
+				singtext: '珂朵莉',
+				singname: 'keduoli'
 			};
 		},
 
@@ -472,7 +474,9 @@
 					uni.request({
 						url: `${helper.url}/playlist/detail?id=${this.id}`,
 						success: (res) => {
-							// console.log(res)
+							console.log(res)
+							this.singname = res.data.playlist.name
+							this.singtext = res.data.playlist.description
 							this.pic1 = res.data.playlist.coverImgUrl
 							helper.playpic = res.data.playlist.coverImgUrl
 							this.watchnum = res.data.playlist.subscribedCount
@@ -796,7 +800,7 @@
 
 				.text {
 					position: absolute;
-					padding-bottom: 50rpx;
+					padding-bottom: 80rpx;
 					color: #fff;
 
 					.font {
@@ -806,11 +810,20 @@
 					}
 
 					.t2 {
+						
 						font-size: 30rpx;
 						padding-bottom: 20rpx;
 					}
 
 					.t3 {
+						overflow: hidden;
+						text-overflow: ellipsis;
+						display: -webkit-box;
+						-webkit-line-clamp: 2;
+						-webkit-box-orient: vertical;
+						height: 2em;
+						width: 95%;
+						// padding: 0 30rpx;
 						padding-bottom: 20rpx;
 						color: rgba(255, 255, 255, .7);
 					}
