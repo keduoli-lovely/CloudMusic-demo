@@ -343,6 +343,7 @@
 					url: `${helper.url}/comment/floor?parentCommentId=${id1}&id=${id2}&limit=20&offset=${keduoli2}&type=0`,
 					success: (res) => {
 						// console.log(res)
+						if(res.data.code != 200) return
 						this.floortitle = res.data.data.ownerComment
 						this.floorcon = [...this.floorcon, ...res.data.data.comments]
 						this.isfloor = true
