@@ -193,7 +193,7 @@ import helper from '../../common/helper';
 						// url: 'http://localhost:3000/banner?type=2',
 						url: `${helper.url}/banner?type=2`,
 						success: (res) => {
-							console.log(res)
+							// console.log(res)
 							helper.bodydata.bannerTitlePic = res.data.banners
 							this.bannerTitlePic = res.data.banners
 							// console.log(helper.bodydata.bannerTitlePic)
