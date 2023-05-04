@@ -15,21 +15,30 @@
 				<view class="pic">
 					<image src="../../static/img/ban3.jpg" mode="aspectFill"></image>
 				</view>
-				<view class="name">
-					珂朵莉
+				<view class="login-online" v-if="islogin">
+					<view class="name">
+						{{username}}
+					</view>
+					<view class="grade">
+						<view class="concern">
+							<text class="t1">{{follow}}</text>
+							<text class="t2">关注</text>
+						</view>
+						<view class="followers">
+							<text class="t3">{{followeds}}</text>
+							<text class="t4">粉丝</text>
+						</view>
+						<view class="lv">
+							<text class="t5">LV.</text>
+							<text class="t6">10</text>
+						</view>
+					</view>
 				</view>
-				<view class="grade">
-					<view class="concern">
-						<text class="t1">1,0000</text>
-						<text class="t2">关注</text>
-					</view>
-					<view class="followers">
-						<text class="t3">1,000</text>
-						<text class="t4">粉丝</text>
-					</view>
-					<view class="lv">
-						<text class="t5">LV.</text>
-						<text class="t6">10</text>
+				
+				<view class="out-line" v-if="!islogin" @click="login">
+					<text class="out-text">立即登入</text>
+					<view class="out-icon">
+						<image src="/static/icon/前往.png" mode="aspectFit"></image>
 					</view>
 				</view>
 			</view>
@@ -106,17 +115,84 @@
 </template>
 
 <script>
+import helper from '../../common/helper';
 	export default {
 		data() {
 			return {
-				textstate: ''
+				textstate: '',
+				username: helper.username,
+				userid: helper.userid ,
+				followeds: helper.userdt.followeds,
+				follow: helper.userdt.follow
 			};
 		},
+		onLoad() {
+			if(this.islogin) {
+				if(!this.userid) {
+					this.getuser()
+				}
+				
+			}
+			this.cludelist()
+		},
 		methods: {
+			cludelist() {
+				uni.request({
+					url: `${helper.url}/user/cloud`,
+					success: (res) => {
+						console.log(res)
+					}
+				})
+			},
+			getuser() {
+				let cookie = uni.getStorageSync("cookie");
+				// console.log(cookie)
+				uni.request({
+					url: `${helper.url}/user/account`,
+					withCredentials: true,
+					success: (res) => {
+						console.log(res)
+						this.username = res.data.account.userName
+						helper.username = res.data.account.userName
+						this.userid = res.data.account.id
+						helper.userid = res.data.account.id
+						this.userdetail()
+					}
+				})
+			},
+			userdetail() {
+				uni.request({
+					url: `${helper.url}/user/followeds?uid=${helper.userid}`,
+					success: (res) => {
+						console.log(res,1)
+						this.followeds = (res.data.followeds).length
+						helper.userdt.followeds = this.followeds
+					}
+				}),
+				uni.request({
+					// url: `${helper.url}/user/follows?uid=${helper.userid}`,
+					url: `${helper.url}/likelist?uid={helper.userid}`,
+					success: (res) => {
+						this.follow = res.data.follow.length
+						helper.userdt.follow = res.data.follow.length
+						console.log(res)
+					}
+				})
+			},
+			login() {
+				uni.reLaunch({
+					url: '/pages/login/login'
+				})
+			},
 			getSearchHome() {
 				uni.navigateTo({
 					url:"/pages/searchhome/searchhome"
 				})
+			}
+		},
+		computed: {
+			islogin() {
+				return this.$store.state.loginState
 			}
 		}
 	}
@@ -170,7 +246,7 @@
 				width: 100%;
 				height: 200rpx;
 				border-radius: 16rpx;
-				background-color: #fff;
+				background-color: #666;
 				.pic {
 					// z-index: 10;
 					position: absolute;
@@ -182,49 +258,68 @@
 					overflow: hidden;
 					transform: translate(-50%, -50%);
 				}
-				.name {
-					padding: 10rpx;
+				.login-online {
+					text-align: center;
+					.name {
+						padding: 10rpx;
+					}
+					.grade {
+						white-space: nowrap;
+						padding: 0 0 10rpx;
+						// width: 75%;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						.concern {
+							padding-right: 20rpx;
+							.t1 {
+								padding-right: 10rpx;
+							}
+							.t2 {
+								font-size: 32rpx;
+								font-weight: 520;
+							}
+						}
+						.followers {
+							padding: 0 20rpx;
+							height: 1em;
+							line-height: 1em;
+							border-left: 1rpx solid #000;
+							border-right: 1rpx solid #000;
+							.t3 {
+								padding-right: 10rpx;
+							}
+							.t4 {
+								font-size: 32rpx;
+								font-weight: 520;
+							}
+						}
+						.lv {
+							padding-left: 20rpx;
+							.t5 {
+								font-weight: 520;
+								padding-right: 10rpx;
+							}
+							.t6 {
+								font-size: 32rpx;
+								
+							}
+						}
+					}
 				}
-				.grade {
-					white-space: nowrap;
-					padding: 0 0 10rpx;
-					width: 75%;
+				.out-line {
+					margin-top: 20rpx;
 					display: flex;
 					align-items: center;
-					.concern {
-						padding-right: 20rpx;
-						.t1 {
-							padding-right: 10rpx;
-						}
-						.t2 {
-							font-size: 32rpx;
-							font-weight: 520;
-						}
+					justify-content: center;
+					.out-text {
+						font-size: 40rpx;
+						font-weight: 550;
+						color: #fff;
 					}
-					.followers {
-						padding: 0 20rpx;
-						height: 1em;
-						line-height: 1em;
-						border-left: 1rpx solid #000;
-						border-right: 1rpx solid #000;
-						.t3 {
-							padding-right: 10rpx;
-						}
-						.t4 {
-							font-size: 32rpx;
-							font-weight: 520;
-						}
-					}
-					.lv {
-						padding-left: 20rpx;
-						.t5 {
-							font-weight: 520;
-							padding-right: 10rpx;
-						}
-						.t6 {
-							font-size: 32rpx;
-							
-						}
+					.out-icon {
+						width: 40rpx;
+						height: 40rpx;
 					}
 				}
 			}
@@ -252,9 +347,9 @@
 			}
 		
 			.live {
-				padding: 20rpx;
+				padding: 20rpx 20rpx 20rpx 30rpx;
 				margin-top: 50rpx;
-				height: 160rpx;
+				height: 180rpx;
 				background-color: #fff;
 				border-radius: 14rpx;
 				display: flex;
