@@ -1,6 +1,19 @@
 <script>
 	import helper from 'common/helper.js'
 	export default {
+		onLaunch() {
+			uni.request({
+				url: `${helper.url}/login/status`,
+				withCredentials: true,
+				success: (res) => {
+					// console.log(res)
+					let  id = res.data.data.account
+					if(id) {
+						this.$store.commit('changeLogin', true)
+					}
+				}
+			})
+		},
 		methods: {
 			watchmusice() {
 				
