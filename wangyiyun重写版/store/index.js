@@ -37,6 +37,9 @@ export default new Vuex.Store({
 		},
 		changemusiceplaylength(con, value) {
 			con.musiceplaylength = value
+		},
+		changeLogin(con, value) {
+			con.loginState = value
 		}
 	},
 	state: {
@@ -57,7 +60,9 @@ export default new Vuex.Store({
 		firsttime: 0,
 		lasttime: 0,
 		
-		musiceplaylength: 0
+		musiceplaylength: 0,
 		
+		// 登入状态
+		loginState: false
 	}
 })
