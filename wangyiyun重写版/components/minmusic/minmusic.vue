@@ -199,14 +199,12 @@
 
 <script>
 	import helper from '../../common/helper';
+	import {mapState} from 'vuex'
 
 	export default {
 		name: "minmusic",
 		data() {
 			return {
-				musicePercentage1: 0,
-				musiceProgress: 0,
-				musiceplaylength: 0,
 
 				strnum: 0,
 				timer: null,
@@ -303,7 +301,7 @@
 			},
 			// 获取当前播放歌曲的评论
 			getcomments() {
-				let subscript = this.$store.state.musicSubscript
+				let subscript = this.musicSubscript
 				if (subscript >= 0) {
 					uni.navigateTo({
 						url: `/pages/wordpage/wordpage?few=${subscript}`
@@ -365,7 +363,7 @@
 			colorchange() {
 				clearTimeout(this.timer)
 				this.timer = null
-				let fewnum = this.$store.state.musicSubscript
+				let fewnum = this.musicSubscript
 
 				this.timer = setTimeout(() => {
 
@@ -396,7 +394,7 @@
 
 					if (minlistbox) {
 						minlistbox.scrollTop = 0
-						minlistbox.scrollTop = 50 * (this.$store.state.musicSubscript)
+						minlistbox.scrollTop = 50 * (this.musicSubscript)
 					}
 				}, 100)
 				this.musicplaylist = uni.getStorageSync('musiclist')
@@ -412,7 +410,7 @@
 				if (!this.geci) {
 					
 					try {
-						this.lrcid = uni.getStorageSync('musiclist')[this.$store.state.musicSubscript].e
+						this.lrcid = uni.getStorageSync('musiclist')[this.musicSubscript].e
 						// console.log(this.lrcid)
 					} catch (e) {
 						console.log(e, '珂朵莉')
@@ -420,7 +418,7 @@
 					}
 					if (helper.lrcid != this.lrcid || this.lrc == null) {
 						try {
-							helper.lrcid = uni.getStorageSync('musiclist')[this.$store.state.musicSubscript].e
+							helper.lrcid = uni.getStorageSync('musiclist')[this.musicSubscript].e
 						} catch (e) {
 							console.log(e, '珂朵莉')
 						}
@@ -489,7 +487,7 @@
 			},
 			forward() {
 				this.musiclistdata = uni.getStorageSync('musiclist')
-				let sub = this.$store.state.musicSubscript
+				let sub = this.musicSubscript
 				this.timeheight = 560
 				this.geci = true
 				this.lrc = null
@@ -516,7 +514,7 @@
 			down() {
 				this.timeheight = 560
 				this.musiclistdata = uni.getStorageSync('musiclist')
-				let sub = this.$store.state.musicSubscript
+				let sub = this.musicSubscript
 				this.geci = true
 				this.lrc = null
 				helper.lrc = null
@@ -561,7 +559,7 @@
 				helper.pace.skipnum = e.detail.value
 
 				this.liveLine = e.detail.value
-				this.liveLinemusic = this.skipnum * this.$store.state.globalmusicePercentage
+				this.liveLinemusic = this.skipnum * this.globalmusicePercentage
 
 				helper.audiok.seek(this.liveLinemusic)
 				helper.audiok.play()
@@ -641,7 +639,7 @@
 			getgeci() {
 				// console.log(this.musiceplaylength)
 				for (let i = 0; i < this.p.length; i++) {
-					if (this.p[i].dataset.keduoli < this.$store.state.musiceplaylength) {
+					if (this.p[i].dataset.keduoli < this.musiceplaylength) {
 						if ((i - 1) >= 0) {
 							for (let j = 0; j < i; j++) {
 								// console.log(j)
@@ -672,39 +670,39 @@
 		},
 		computed: {
 			playUrl() {
-				return this.$store.state.controlPlayAndStop == 0 ? this.url1 : this.url2
+				return this.controlPlayAndStop == 0 ? this.url1 : this.url2
 			},
 			playfirst() {
-				return '0' + this.$store.state.firsttime
+				return '0' + this.firsttime
 			},
 			playlast() {
-				return this.$store.state.lasttime < 10 ? ('0' + this.$store.state.lasttime) : this.$store.state.lasttime
+				return this.lasttime < 10 ? ('0' + this.lasttime) : this.lasttime
 			},
 			allfirst() {
-				return '0' + this.$store.state.globalmusiceminute
+				return '0' + this.globalmusiceminute
 			},
 			alllast() {
-				return this.$store.state.globalmusicesecond < 10 ? ('0' + this.$store.state.globalmusicesecond) : this
-					.$store.state.globalmusicesecond
+				return this.globalmusicesecond < 10 ? ('0' + this.globalmusicesecond) : this.globalmusicesecond
 			},
 			rotation() {
 				return this.strnum > 10 ? ['barname', 'barnamestart'] : 'barname'
 			},
 			isplay() {
-				return this.$store.state.controlPlayAndStop == 0 ? 'running' : 'paused'
+				return this.controlPlayAndStop == 0 ? 'running' : 'paused'
 			},
 			changemusic() {
-				return this.$store.state.musicSubscript
+				return this.musicSubscript
 			},
 			changemusiceplaylength() {
-				return this.$store.state.musiceplaylength
-			}
+				return this.musiceplaylength
+			},
+			...mapState(['controlPlayAndStop', 'musicSubscript', 'globalmusicePercentage', 'globalmusiceminute', 'globalmusicesecond', 'firsttime', 'lasttime', 'musiceplaylength', 'musiceProgress']),
 
 		},
 		watch: {
 			changemusiceplaylength(val) {
 				this.skipmusic(val)
-				this.liveLine = this.$store.state.musiceProgress
+				this.liveLine = this.musiceProgress
 			},
 			top(val) {
 				this.topnum = this.top
