@@ -55,6 +55,13 @@ const audiok = uni.createInnerAudioContext();
 
 const url = 'http://localhost:3000'
 
+let userid = ''
+let username = ''
+
+let userdt = {
+	'followeds': 0,
+	'follow': 0
+}
 export default {
 	// 全局的请求地址
 	url,
@@ -93,5 +100,10 @@ export default {
 	// hotcomments
 	
 	// 评论数量
-	plnumstr
+	plnumstr,
+	
+	// 登入的用户的id
+	userid,
+	username,
+	userdt
 }
