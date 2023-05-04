@@ -474,7 +474,7 @@
 					uni.request({
 						url: `${helper.url}/playlist/detail?id=${this.id}`,
 						success: (res) => {
-							console.log(res)
+							// console.log(res)
 							this.singname = res.data.playlist.name
 							this.singtext = res.data.playlist.description
 							this.pic1 = res.data.playlist.coverImgUrl
