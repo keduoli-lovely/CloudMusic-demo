@@ -251,22 +251,25 @@
 				givenum: helper.playwacth.give,
 				isshowlogding: true,
 				singtext: '珂朵莉',
-				singname: 'keduoli'
+				singname: 'keduoli',
+				ispage: 1
 			};
 		},
 
 		onLoad(e) {
-			let row = uni.getStorageSync('musiclist')[this.$store.state.musicSubscript]
-			if(row) {
-				this.name = row.title
-				this.ren = row.name
-				this.musicpic = row.img
-				
-				// console.log(e)
-				
+			this.ispage = e.page
+			if(e.page == 1) {
+				this.id = e.id
+				let row = uni.getStorageSync('musiclist')[this.$store.state.musicSubscript]
+				if(row) {
+					this.name = row.title
+					this.ren = row.name
+					this.musicpic = row.img			
+				}			
+				this.getmusiclist()
+			}else if(e.page == 2) {
+				console.log(e.page)
 			}
-			this.id = e.id
-			this.getmusiclist()
 		},
 		mounted() {
 
@@ -508,9 +511,13 @@
 					this.range = false
 					this.long = '0'
 					this.title = null
-				} else {
+				} else if(this.ispage == 1) {
 					uni.reLaunch({
 						url: '/pages/index/index'
+					})
+				}else if(this.ispage == 2) {
+					uni.reLaunch({
+						url: '/pages/myhome/myhome'
 					})
 				}
 			},
