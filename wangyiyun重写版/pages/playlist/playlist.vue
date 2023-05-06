@@ -268,7 +268,8 @@
 				}			
 				this.getmusiclist()
 			}else if(e.page == 2) {
-				console.log(e.page)
+				this.getlivelist()
+				// console.log(e.page)
 			}
 		},
 		mounted() {
@@ -278,6 +279,25 @@
 			})
 		},
 		methods: {
+			getlivelist() {
+				console.log(this.$store.state)
+				if(this.livemusicelistdata.length === 0) {
+					let key = uni.getStorageSync('cookie')
+					uni.request({
+						url: `${helper.url}/song/detail?ids=${this.livemusicelist}`,
+						data: {
+							cookie: key
+						},
+						success: (res) => {
+							this.songdata = res.data.songs
+							this.$store.commit('setmusicedata', this.songdata)
+							// console.log(res,this.livemusicelist)
+						}
+					})
+				}else {
+					this.songdata = this.livemusicelistdata
+				}
+			},
 			masknone() {
 				this.title = null
 				this.range = false
@@ -534,6 +554,12 @@
 			},
 		},
 		computed: {
+			livemusicelist() {
+				return this.$store.state.livemusicelist
+			},
+			livemusicelistdata() {
+				return this.$store.state.livemusicelistdata
+			},
 			watchnum1() {
 				return (this.watchnum / 10000).toFixed(1)
 			},
