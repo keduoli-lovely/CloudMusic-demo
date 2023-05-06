@@ -2,19 +2,67 @@
 	import helper from 'common/helper.js'
 	export default {
 		onLaunch() {
+			let key = uni.getStorageSync('cookie')
 			uni.request({
 				url: `${helper.url}/login/status`,
-				withCredentials: true,
+				// withCredentials: true,
+				data: {
+					cookie: key
+				},
 				success: (res) => {
-					// console.log(res)
+					console.log(res)
 					let  id = res.data.data.account
 					if(id) {
 						this.$store.commit('changeLogin', true)
+						this.getuser(key)
 					}
 				}
 			})
 		},
 		methods: {
+			getuser(key) {
+				uni.request({
+					url: `${helper.url}/user/account`,
+					data:{
+						cookie: key
+					},
+					success: (res) => {
+						console.log(res)
+						let name = res.data.profile.nickname
+						this.$store.commit('getusername', name)
+						
+						let id = res.data.profile.userId
+						this.$store.commit('getuserid', id)
+						let pic = res.data.profile.avatarUrl
+						this.$store.commit('getuserheadpic', pic)
+						this.userdetail(key, id)
+					}
+				})
+			},
+			userdetail(key, id) {
+				uni.request({
+					url: `${helper.url}/user/followeds?uid=${id}`,
+					data:{
+						cookie: key
+					},
+					success: (res) => {
+						console.log(res,2)
+						let followeds = (res.data.followeds).length
+						this.$store.commit('getfolloweds', followeds)
+					}
+				}),
+				uni.request({
+					url: `${helper.url}/user/follows?uid=${id}`,
+					data: {
+						cookie: key
+					},
+					success: (res) => {
+						let follow = res.data.follow.length
+						
+						this.$store.commit('getfollow', follow)
+					}
+				})
+			},
 			watchmusice() {
 				
 				helper.audiok.onCanplay(() => {
