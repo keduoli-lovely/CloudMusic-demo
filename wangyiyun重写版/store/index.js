@@ -58,6 +58,9 @@ export default new Vuex.Store({
 		},
 		getlivemusicelist(con, value) {
 			con.livemusicelist = value
+		},
+		setmusicedata(con, value) {
+			con.livemusicelistdata = value
 		}
 	},
 	state: {
@@ -92,6 +95,8 @@ export default new Vuex.Store({
 		follow: 0,
 		
 		// 喜欢的音乐的id列表
-		livemusicelist: []
+		livemusicelist: [],
+		
+		livemusicelistdata: []
 	}
 })
