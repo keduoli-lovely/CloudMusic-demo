@@ -120,12 +120,11 @@ import helper from '../../common/helper';
 		data() {
 			return {
 				textstate: '',
-				list: [1,2,3,4]
 			};
 		},
 		methods: {
 			getlivemusic() {
-				if(!this.livemusicelist) {
+				if(this.livemusicelist.length === 0) {
 					let key = uni.getStorageSync('cookie')
 					uni.request({
 						url: `${helper.url}/likelist?uid=${this.userid}`,
@@ -133,16 +132,18 @@ import helper from '../../common/helper';
 							cookie: key
 						},
 						success: (res) => {
-							console.log(res.data.ids)
-							
-							this.$store.commit('getlivemusicelist', res.data.ids)
+							// console.log(res.data.ids)
+							let ids = res.data.ids
+							this.$store.commit('getlivemusicelist', ids)
 							uni.navigateTo({
 								url: '/pages/playlist/playlist?page=2'
 							})
 						}
 					})
 				}else {
+					// console.log(this.$store.state.livemusicelist)
 					uni.navigateTo({
+						
 						url: '/pages/playlist/playlist?page=2'
 					})
 				}
@@ -151,7 +152,7 @@ import helper from '../../common/helper';
 				uni.request({
 					url: `${helper.url}/user/cloud`,
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 					}
 				})
 			},		
