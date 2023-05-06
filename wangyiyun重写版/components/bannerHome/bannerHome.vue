@@ -184,7 +184,7 @@ import helper from '../../common/helper';
 			},
 			getdetail(id) {
 				uni.reLaunch({
-					url: `/pages/playlist/playlist?id=${id}`
+					url: `/pages/playlist/playlist?id=${id}&page=1`
 				})
 			},
 			getBanner() {
