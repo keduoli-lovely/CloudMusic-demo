@@ -40,6 +40,24 @@ export default new Vuex.Store({
 		},
 		changeLogin(con, value) {
 			con.loginState = value
+		},
+		getusername(con, value) {
+			con.username = value
+		},
+		getuserid(con, value) {
+			con.userid = value
+		},
+		getuserheadpic(con, value) {
+			con.userheadpic = value
+		},
+		getfolloweds(con, value) {
+			con.followeds = value
+		},
+		getfollow(con, value) {
+			con.follow = value
+		},
+		getlivemusicelist(con, value) {
+			con.livemusicelist = value
 		}
 	},
 	state: {
@@ -63,6 +81,17 @@ export default new Vuex.Store({
 		musiceplaylength: 0,
 		
 		// 登入状态
-		loginState: false
+		loginState: false,
+		
+		
+		// 用户信息
+		username: '',
+		userid: '',
+		userheadpic: '',
+		followeds: 0,
+		follow: 0,
+		
+		// 喜欢的音乐的id列表
+		livemusicelist: []
 	}
 })
