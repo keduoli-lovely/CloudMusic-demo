@@ -13,11 +13,11 @@
 				<!-- 用户头像 -->
 				<view class="user">
 					<view class="user-pic">
-						<image src="../../static/img/ban2.png" mode="aspectFill"></image>
+						<image :src="usertitlepic" mode="aspectFill"></image>
 					</view>
 					<!-- // 用户名称 -->
 					<view class="user-name">
-						珂朵莉
+						{{username}}
 					</view>
 					<!-- // 前网用户中心的小箭头 -->
 					<view class="getuserhomeicon">
@@ -116,6 +116,14 @@
 					this.leftbox = -700
 					this.ischange = !this.ischange
 				}
+			}
+		},
+		computed: {
+			usertitlepic() {
+				return this.$store.state.userheadpic
+			},
+			username() {
+				return this.$store.state.username
 			}
 		}
 	}
