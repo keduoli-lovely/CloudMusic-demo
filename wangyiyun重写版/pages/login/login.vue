@@ -68,6 +68,7 @@ import helper from '../../common/helper';
 							uni.setStorageSync('cookie', res.data.cookie)
 							clearInterval(this.timer)
 							this.$store.commit('changeLogin', true)
+							getApp().getuser(res.data.cookie)
 							uni.reLaunch({
 								url: '/pages/myhome/myhome'
 							})
