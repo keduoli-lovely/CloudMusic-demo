@@ -13,7 +13,7 @@
 		<view class="banner">
 			<view class="user">
 				<view class="pic">
-					<image src="../../static/img/ban3.jpg" mode="aspectFill"></image>
+					<image :src="usertitlepic" mode="aspectFill"></image>
 				</view>
 				<view class="login-online" v-if="islogin">
 					<view class="name">
@@ -90,7 +90,7 @@
 				<view class="live-pic">
 					<image src="../../static/video/1.jpg" mode="aspectFill"></image>
 				</view>
-				<view class="live-box">
+				<view class="live-box" @click="getlivemusic">
 					
 					<view class="title">
 						我喜欢的音乐
@@ -120,22 +120,33 @@ import helper from '../../common/helper';
 		data() {
 			return {
 				textstate: '',
-				username: helper.username,
-				userid: helper.userid ,
-				followeds: helper.userdt.followeds,
-				follow: helper.userdt.follow
+				list: [1,2,3,4]
 			};
 		},
-		onLoad() {
-			if(this.islogin) {
-				if(!this.userid) {
-					this.getuser()
-				}
-				
-			}
-			this.cludelist()
-		},
 		methods: {
+			getlivemusic() {
+				if(!this.livemusicelist) {
+					let key = uni.getStorageSync('cookie')
+					uni.request({
+						url: `${helper.url}/likelist?uid=${this.userid}`,
+						data: {
+							cookie: key
+						},
+						success: (res) => {
+							console.log(res.data.ids)
+							
+							this.$store.commit('getlivemusicelist', res.data.ids)
+							uni.navigateTo({
+								url: '/pages/playlist/playlist?page=2'
+							})
+						}
+					})
+				}else {
+					uni.navigateTo({
+						url: '/pages/playlist/playlist?page=2'
+					})
+				}
+			},
 			cludelist() {
 				uni.request({
 					url: `${helper.url}/user/cloud`,
@@ -143,42 +154,7 @@ import helper from '../../common/helper';
 						console.log(res)
 					}
 				})
-			},
-			getuser() {
-				let cookie = uni.getStorageSync("cookie");
-				// console.log(cookie)
-				uni.request({
-					url: `${helper.url}/user/account`,
-					withCredentials: true,
-					success: (res) => {
-						console.log(res)
-						this.username = res.data.account.userName
-						helper.username = res.data.account.userName
-						this.userid = res.data.account.id
-						helper.userid = res.data.account.id
-						this.userdetail()
-					}
-				})
-			},
-			userdetail() {
-				uni.request({
-					url: `${helper.url}/user/followeds?uid=${helper.userid}`,
-					success: (res) => {
-						console.log(res,1)
-						this.followeds = (res.data.followeds).length
-						helper.userdt.followeds = this.followeds
-					}
-				}),
-				uni.request({
-					// url: `${helper.url}/user/follows?uid=${helper.userid}`,
-					url: `${helper.url}/likelist?uid={helper.userid}`,
-					success: (res) => {
-						this.follow = res.data.follow.length
-						helper.userdt.follow = res.data.follow.length
-						console.log(res)
-					}
-				})
-			},
+			},		
 			login() {
 				uni.reLaunch({
 					url: '/pages/login/login'
@@ -193,6 +169,25 @@ import helper from '../../common/helper';
 		computed: {
 			islogin() {
 				return this.$store.state.loginState
+				// return false
+			},
+			usertitlepic() {
+				return this.$store.state.userheadpic
+			},
+			username() {
+				return this.$store.state.username
+			},
+			followeds() {
+				return this.$store.state.followeds
+			},
+			follow() {
+				return this.$store.state.follow
+			},
+			userid() {
+				return this.$store.state.userid
+			},
+			livemusicelist() {
+				return this.$store.state.livemusicelist
 			}
 		}
 	}
