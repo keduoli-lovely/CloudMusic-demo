@@ -10,7 +10,7 @@
 					cookie: key
 				},
 				success: (res) => {
-					console.log(res)
+					// console.log(res)
 					let  id = res.data.data.account
 					if(id) {
 						this.$store.commit('changeLogin', true)
@@ -27,7 +27,7 @@
 						cookie: key
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						let name = res.data.profile.nickname
 						this.$store.commit('getusername', name)
 						
@@ -46,7 +46,7 @@
 						cookie: key
 					},
 					success: (res) => {
-						console.log(res,2)
+						// console.log(res,2)
 						let followeds = (res.data.followeds).length
 						this.$store.commit('getfolloweds', followeds)
 					}
