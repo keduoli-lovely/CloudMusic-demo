@@ -88,7 +88,7 @@
 		
 			<view class="live">
 				<view class="live-pic">
-					<image src="../../static/video/1.jpg" mode="aspectFill"></image>
+					<image :src="picrow" mode="aspectFill"></image>
 				</view>
 				<view class="live-box" @click="getlivemusic">
 					
@@ -111,6 +111,19 @@
 			</view>
 		
 		</view>
+		
+		<minmusic
+		v-show="$store.state.showplaycomponent"
+		:imgk="musicpic"
+		:name="name" 
+		:ren="ren" 
+		:dd="dd"
+		:indexk="isindex"
+		:top="topnum"
+		:isshow="isshow"
+		@stopkk="bilibili"
+		@xianok="receptionShowMin"
+		></minmusic>
 	</view>
 </template>
 
@@ -119,10 +132,52 @@ import helper from '../../common/helper';
 	export default {
 		data() {
 			return {
+				picrow: '../../static/video/1.jpg',
+				isindex: 1,
+				musicpic: helper.contminlist.musicpic,
+				name: helper.contminlist.name,
+				ren: helper.contminlist.ren,
+				topnum: helper.contminlist.topnum,
+				isshow: 1,
+				dd: -95,
 				textstate: '',
 			};
 		},
+		onLoad() {
+			this.picone(this.livemusicelist[0])
+		},
 		methods: {
+			picone(id) {
+				if(!id) return
+				let key = uni.getStorageSync('cookie')
+				uni.request({
+					url: `${helper.url}/song/detail?ids=${id}`,
+					data: {
+						cookie: key
+					},
+					success: (res) => {
+						this.picrow = res.data.songs[0].al.picUrl
+					}
+				})
+			},
+			bilibili(e) {
+				if(this.numk != e) {
+					this.numk = 1
+					uni.showTabBar({
+						fail() {
+							console.log('珂朵莉')
+						}
+					})
+					helper.contminlist.dd = -100
+					this.dd = -95
+					// console.log(11,'k')
+				} else {
+					console.log(11,'k1')
+					
+					this.numk = e
+					helper.contminlist.dd = 0
+				}
+			},
 			getlivemusic() {
 				if(this.livemusicelist.length === 0) {
 					let key = uni.getStorageSync('cookie')
@@ -135,6 +190,7 @@ import helper from '../../common/helper';
 							// console.log(res.data.ids)
 							let ids = res.data.ids
 							this.$store.commit('getlivemusicelist', ids)
+							uni.setStorageSync('musicenum', ids.length)
 							uni.navigateTo({
 								url: '/pages/playlist/playlist?page=2'
 							})
@@ -191,7 +247,7 @@ import helper from '../../common/helper';
 				return this.$store.state.livemusicelist
 			},
 			mymusicnum() {
-				return this.$store.state.livemusicelist.length
+				return this.$store.state.livemusicelist.length || uni.getStorageSync('musicenum')
 			}
 		}
 	}
