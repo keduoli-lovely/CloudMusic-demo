@@ -35,6 +35,7 @@ import helper from '../../common/helper';
 		},
 		onLoad(e) {
 			this.title = e.name
+			document.title = this.title
 			this.newgetsong()
 			this.getarr()
 		},
