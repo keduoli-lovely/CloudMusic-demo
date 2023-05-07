@@ -320,7 +320,7 @@
 			},
 			back() {
 				if(this.wait == 1) {
-					uni.navigateBack({
+					uni.reLaunch({
 						url:"/pages/index/index"
 					})
 				}else {
