@@ -48,7 +48,7 @@
 				<image :src="pic1" mode="aspectFill"></image>
 				<view class="text">
 					<view class="font">
-						推荐歌单
+						{{singtexttop}}
 					</view>
 					<view class="t2">
 						{{singname}}
@@ -239,6 +239,7 @@
 	export default {
 		data() {
 			return {
+				singtexttop: '推荐歌单',
 				title: null,
 				range: false,
 				long: '0',
@@ -279,6 +280,7 @@
 				this.getmusiclist()
 			}else if(e.page == 2) {
 				this.getlivelist()
+				this.singtexttop = '我喜欢的音乐'
 				// console.log(e.page)
 			}
 		},
@@ -300,7 +302,7 @@
 						},
 						success: (res) => {
 							this.songdata = res.data.songs
-							this.pic1 = this.songdata[0].al.picUrl
+							this.pic1 = this.songdata[1].al.picUrl
 							// this.pic1 = this.songdata[0]
 							this.$store.commit('setmusicedata', this.songdata)
 							// console.log(res,this.livemusicelist)
@@ -308,7 +310,7 @@
 					})
 				}else {
 					this.songdata = this.livemusicelistdata
-					this.pic1 = this.songdata[0].al.picUrl
+					this.pic1 = this.songdata[1].al.picUrl
 				}
 			},
 			masknone() {
