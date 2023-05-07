@@ -3,23 +3,21 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "index"
+				"navigationBarTitleText": "网易云音乐"
 				// "enablePullDownRefresh": true
 			}
 		}
 	    ,{
             "path" : "pages/myhome/myhome",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
+            "style" : {
+                "navigationBarTitleText": "我的",
                 "enablePullDownRefresh": false
             }
             
         }
         ,{
             "path" : "pages/watch/watch",
-            "style" :                                                                                    
-            {
+            "style" : {
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
@@ -27,8 +25,7 @@
         }
         ,{
             "path" : "pages/sing/sing",
-            "style" :                                                                                    
-            {
+            "style" : {
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
@@ -36,9 +33,8 @@
         }
         ,{
             "path" : "pages/goindex/goindex",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
+            "style" : {
+                "navigationBarTitleText": "wyy",
                 "enablePullDownRefresh": false
             }
             
@@ -47,7 +43,7 @@
             "path" : "pages/searchhome/searchhome",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "搜索",
                 "enablePullDownRefresh": false
             }
             
@@ -56,7 +52,7 @@
             "path" : "pages/playlist/playlist",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "歌单",
                 "enablePullDownRefresh": false
             }
             
@@ -65,7 +61,7 @@
             "path" : "pages/video/video",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "mv",
                 "enablePullDownRefresh": false
             }
             
@@ -74,7 +70,7 @@
             "path" : "pages/wordpage/wordpage",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "评论",
                 "enablePullDownRefresh": false
             }
             
@@ -83,7 +79,7 @@
             "path" : "pages/login/login",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "登入",
                 "enablePullDownRefresh": false
             }
             
