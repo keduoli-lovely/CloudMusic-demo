@@ -1,8 +1,8 @@
 <template>
-	<view class="playlist">
+	<view class="playlist night">
 		<view class="box">
 			<view class="box-top">
-				<view class="keduoli1">
+				<view class="keduoli1" style="backdrop-filter: blur(80rpx);">
 					<image :src="pic1" mode="aspectFill" class="minke"></image>
 					<view class="kkkkk"
 						style="width: 100%;height: 100%;background-color: rgba(0,0,0,.1);position: absolute;top: 0;left: 0;">
@@ -43,8 +43,7 @@
 
 				</view>
 			</view>
-
-
+			
 			<view class="playlistpic">
 				<image :src="pic1" mode="aspectFill"></image>
 				<view class="text">
@@ -59,39 +58,48 @@
 					</view>
 				</view>
 				<view class="songmask">
-
+			
 				</view>
 			</view>
+		
+			<!-- <playheader 
+				:pic="pic1"
+				:singtitle="singname"
+				:singcon="singtext"
+			></playheader> -->
 
 			<!-- 中间收藏,评论,分享功能 -->
-			<view class="btnlist">
-				<!-- 收藏 -->
-				<view class="collection">
-					<view class="icon1">
-						<image src="../../static/icon/添加.png" mode="aspectFit"></image>
+			<view class="newbtn">
+				<view class="btnlist">
+					<!-- 收藏 -->
+					<view class="collection">
+						<view class="icon1">
+							<image src="../../static/icon/添加.png" mode="aspectFit"></image>
+						</view>
+						<text class="t4">{{watchnum1}}</text>万
 					</view>
-					<text class="t4">{{watchnum1}}</text>万
-				</view>
-
-				<!-- 评论 -->
-				<view class="comments">
-					<view class="icon2">
-						<image src="../../static/icon/评论.png" mode="aspectFit"></image>
+				
+					<!-- 评论 -->
+					<view class="comments">
+						<view class="icon2">
+							<image src="../../static/icon/评论.png" mode="aspectFit"></image>
+						</view>
+						<text class="t5">{{readnum}}</text>
 					</view>
-					<text class="t5">{{readnum}}</text>
-				</view>
-
-				<view class="give">
-					<view class="icon3">
-						<image src="../../static/icon/3.1分享.png" mode=""></image>
+				
+					<view class="give">
+						<view class="icon3">
+							<image src="../../static/icon/3.1分享.png" mode=""></image>
+						</view>
+						<text t6>{{givenum}}</text>
 					</view>
-					<text t6>{{givenum}}</text>
 				</view>
-			</view>
-
-
-			<view class="playlistbottom">
-				<view class="minbox">
+				
+				
+				<view class="playlistbottom">
+					<view class="unnecessary">
+						
+					</view>
 					<view class="minbox-top">
 						<view class="minboxplay-icon">
 							<image src="../../static/icon/24gf-playCircle.png" mode="aspectFit"></image>
@@ -100,7 +108,7 @@
 							<text class="t6">播放全部</text>
 							<text class="t8">{{'(' + listnum + ')'}}</text>
 						</view>
-
+									
 						<view class="down">
 							<view class="down-icon">
 								<image src="../../static/icon/平台下载.png" mode="aspectFit"></image>
@@ -110,47 +118,49 @@
 							</view>
 						</view>
 					</view>
-
-
-
-					<!-- 音乐列表 -->
-
-					<view class="musiclist">
-						<view class="musicmin">
-							<view class="music" v-for="(item, i) in songdata"
-								@click="startgq(item.id,item.al.picUrl,item.name,item.ar[0].name)">
-								<text class="top">{{i+1}}</text>
-
-								<view class="content">
-									<view class="title">
-										{{item.name}}
-									</view>
-									<!-- 作者 -->
-									<view class="author">
-										{{item.ar[0].name}}
+					<view class="minbox">
+						
+						<!-- 音乐列表 -->
+				
+						
+							<view class="musiclist">
+								<view class="musicmin">
+									<view class="music" v-for="(item, i) in songdata"
+										@click="startgq(item.id,item.al.picUrl,item.name,item.ar[0].name)">
+										<text class="top">{{i+1}}</text>
+							
+										<view class="content">
+											<view class="title">
+												{{item.name}}
+											</view>
+											<!-- 作者 -->
+											<view class="author">
+												{{item.ar[0].name}}
+											</view>
+										</view>
+							
+										<view class="row-right">
+											<view class="play-mv" @click="getmv" v-if="item.mv">
+												<image src="../../static/icon/播放4.png" mode="aspectFit"></image>
+											</view>
+											<view class="play-mv" style="border: 0" v-if="!item.mv">
+											</view>
+											<view class="row-all">
+												<image src="/static/icon/更多2.png" mode="aspectFit"></image>
+											</view>
+										</view>
 									</view>
 								</view>
-
-								<view class="row-right">
-									<view class="play-mv" @click="getmv" v-if="item.mv">
-										<image src="../../static/icon/播放4.png" mode="aspectFit"></image>
-									</view>
-									<view class="play-mv" style="border: 0" v-if="!item.mv">
-									</view>
-									<view class="row-all">
-										<image src="/static/icon/更多2.png" mode="aspectFit"></image>
-									</view>
+								<view class="logding" v-if="isshowlogding" @click="addlistmusic">
+									加载更多....
+								</view>
+								<view class="logding" v-if="!isshowlogding" @click="addlistmusic">
+									没有更多....
 								</view>
 							</view>
-						</view>
-						<view class="logding" v-if="isshowlogding" @click="addlistmusic">
-							加载更多....
-						</view>
-						<view class="logding" v-if="!isshowlogding" @click="addlistmusic">
-							没有更多....
-						</view>
+						
+				
 					</view>
-
 				</view>
 			</view>
 		</view>
@@ -250,8 +260,8 @@
 				readnum: helper.playwacth.read,
 				givenum: helper.playwacth.give,
 				isshowlogding: true,
-				singtext: '珂朵莉',
-				singname: 'keduoli',
+				singtext: '',
+				singname: '',
 				ispage: 1
 			};
 		},
@@ -280,7 +290,7 @@
 		},
 		methods: {
 			getlivelist() {
-				console.log(this.$store.state)
+				// console.log(this.$store.state)
 				if(this.livemusicelistdata.length === 0) {
 					let key = uni.getStorageSync('cookie')
 					uni.request({
@@ -290,12 +300,15 @@
 						},
 						success: (res) => {
 							this.songdata = res.data.songs
+							this.pic1 = this.songdata[0].al.picUrl
+							// this.pic1 = this.songdata[0]
 							this.$store.commit('setmusicedata', this.songdata)
 							// console.log(res,this.livemusicelist)
 						}
 					})
 				}else {
 					this.songdata = this.livemusicelistdata
+					this.pic1 = this.songdata[0].al.picUrl
 				}
 			},
 			masknone() {
@@ -877,15 +890,61 @@
 			}
 
 			.playlistbottom {
-				overflow-y: auto;
+				// overflow-y: auto;
 				z-index: 9;
 				position: absolute;
 				top: 50%;
 				left: 0;
 				width: 100%;
-				height: 50%;
-				background-color: #202023;
-
+				// height: 50%;
+				background-color: var(--indexgbcolor);
+				.unnecessary {
+					height: 50rpx;
+				}
+				.minbox-top {
+					z-index: 10;
+					position: sticky;
+					top: 150rpx;
+					height: 120rpx;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					// margin-top: 90rpx;
+					padding: 0 25rpx;
+					background-color: var(--indexgbcolor);
+					.minboxplay-icon {
+						flex: 1;
+						width: 50rpx;
+						height: 50rpx;
+					}
+				
+					.playtext {
+						padding-left: 40rpx;
+						flex: 7;
+						color: #fff;
+				
+						.t8 {
+							color: rgba(255, 255, 255, .5);
+						}
+					}
+				
+					.down {
+						flex: 2;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+				
+						.down-icon,
+						.down-all {
+							width: 45rpx;
+							height: 45rpx;
+						}
+				
+						.down-icon {
+							padding-right: 30rpx;
+						}
+					}
+				}
 				.minbox {
 					// position: fixed;
 					// top: 50%;
@@ -894,51 +953,12 @@
 					height: 100%;
 					background-color: #202023;
 
-					.minbox-top {
-						display: flex;
-						justify-content: space-between;
-						align-items: center;
-						margin-top: 90rpx;
-						padding: 0 25rpx;
-
-						.minboxplay-icon {
-							flex: 1;
-							width: 50rpx;
-							height: 50rpx;
-						}
-
-						.playtext {
-							padding-left: 40rpx;
-							flex: 7;
-							color: #fff;
-
-							.t8 {
-								color: rgba(255, 255, 255, .5);
-							}
-						}
-
-						.down {
-							flex: 2;
-							display: flex;
-							justify-content: center;
-							align-items: center;
-
-							.down-icon,
-							.down-all {
-								width: 45rpx;
-								height: 45rpx;
-							}
-
-							.down-icon {
-								padding-right: 30rpx;
-							}
-						}
-					}
+					
 
 					.musiclist {
 						overflow-y: hidden;
-						margin-top: 30rpx;
-						background-color: #202023;
+						// margin-top: 30rpx;
+						background-color: var(--indexgbcolor);
 
 						.logding {
 							margin: 40rpx auto 0;

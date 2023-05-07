@@ -98,8 +98,12 @@
 			movemorebox(e) {
 				this.movebox = e.changedTouches[0].pageX
 				// console.log(this.movestart,this.movebox)
-				this.leftbox = -(this.movestart - this.movebox)
-				// console.log(this.leftbox)
+				
+				if(this.leftbox <= 0) {
+					this.leftbox = -(this.movestart - this.movebox)
+				}else {
+					return
+				}
 				// console.log(e.changedTouches[0].pageX)
 			},
 			startmovebox(e) {

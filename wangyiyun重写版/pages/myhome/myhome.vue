@@ -1,5 +1,5 @@
 <template>
-	<view class="myhome">
+	<view class="myhome night">
 		<view class="header">
 			<indexleftbar></indexleftbar>
 			<view class="state">
@@ -95,7 +95,7 @@
 					<view class="title">
 						我喜欢的音乐
 						<view class="text-header">
-							1314
+							{{mymusicnum}}
 						</view>
 						</view>
 						
@@ -189,6 +189,9 @@ import helper from '../../common/helper';
 			},
 			livemusicelist() {
 				return this.$store.state.livemusicelist
+			},
+			mymusicnum() {
+				return this.$store.state.livemusicelist.length
 			}
 		}
 	}
@@ -199,7 +202,6 @@ import helper from '../../common/helper';
 		box-sizing: border-box;
 	}
 	.myhome {
-		
 		width: 750rpx;
 		height: 100%;
 		.header {
@@ -208,7 +210,7 @@ import helper from '../../common/helper';
 			align-items: center;
 			padding: 50rpx 30rpx;
 			height: 180rpx;
-			background-color: skyblue;
+			background-color: var(--indexgbcolor);
 			.state {
 				display: flex;
 				justify-content: start;
@@ -232,7 +234,7 @@ import helper from '../../common/helper';
 		
 		.banner {
 			padding: 60rpx 30rpx;
-			background-color: #999;
+			background-color: var(--indexgbcolor);
 			.user {
 				display: flex;
 				flex-direction: column;
@@ -242,7 +244,7 @@ import helper from '../../common/helper';
 				width: 100%;
 				height: 200rpx;
 				border-radius: 16rpx;
-				background-color: #666;
+				background-color: var(--indexiconbgcolor);
 				.pic {
 					// z-index: 10;
 					position: absolute;
@@ -257,6 +259,7 @@ import helper from '../../common/helper';
 				.login-online {
 					text-align: center;
 					.name {
+						color: var(--indexfontcolor);
 						padding: 10rpx;
 					}
 					.grade {
@@ -266,6 +269,7 @@ import helper from '../../common/helper';
 						display: flex;
 						align-items: center;
 						justify-content: center;
+						color: var(--searchlistfontcolor);
 						.concern {
 							padding-right: 20rpx;
 							.t1 {
@@ -280,8 +284,8 @@ import helper from '../../common/helper';
 							padding: 0 20rpx;
 							height: 1em;
 							line-height: 1em;
-							border-left: 1rpx solid #000;
-							border-right: 1rpx solid #000;
+							border-left: 1rpx solid var(--bordercolor);
+							border-right: 1rpx solid var(--bordercolor);
 							.t3 {
 								padding-right: 10rpx;
 							}
@@ -326,7 +330,8 @@ import helper from '../../common/helper';
 				height: 350rpx;
 				display: flex;
 				flex-wrap: wrap;
-				background-color: #fff;
+				background-color: var(--indexiconbgcolor);
+				color: var(--indexfontcolor);
 				border-radius: 18rpx;
 				.box {
 					display: flex;
@@ -346,7 +351,8 @@ import helper from '../../common/helper';
 				padding: 20rpx 20rpx 20rpx 30rpx;
 				margin-top: 50rpx;
 				height: 180rpx;
-				background-color: #fff;
+				color: var(--indexfontcolor);
+				background-color: var(--indexiconbgcolor);
 				border-radius: 14rpx;
 				display: flex;
 				align-items: center;
@@ -366,18 +372,23 @@ import helper from '../../common/helper';
 						font-size: 32rpx;
 						font-weight: 600;
 						.text-header {
+							line-height: 1.6;
 							font-size: 26rpx;
-							color: #999;
+							color: var(--searchlistfontcolor);
 						}
 					}
 					.icon-header {
+						box-sizing: content-box;
+						white-space: nowrap;
+						padding: 6rpx 5rpx;
 						display: flex;
 						justify-content: center;
 						align-items: center;
 						width: 160rpx;
 						height: 48rpx;
-						background-color: #000;
-						border-radius: 20rpx;
+						background-color: transparent;
+						border-radius: 35rpx;
+						border: 1rpx solid var(--bordercolor);
 						
 						.icon {
 							margin-right: 6rpx;
@@ -385,7 +396,7 @@ import helper from '../../common/helper';
 							height: 35rpx;
 						}
 						.t10 {
-							color: #fff;
+							color: var(--indexfontcolor);
 							font-size: 24rpx;
 						}
 					}
