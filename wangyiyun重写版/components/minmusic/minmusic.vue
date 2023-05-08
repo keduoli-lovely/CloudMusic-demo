@@ -276,7 +276,6 @@
 				// let tmp = e + 1
 				let arr = uni.getStorageSync('musiclist')
 				arr.splice(e, 1)
-				console.log(arr)
 				this.musicplaylist = arr
 				uni.setStorageSync('musiclist',arr)
 				if(arr.length > 0) {
