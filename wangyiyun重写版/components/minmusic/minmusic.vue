@@ -276,6 +276,7 @@
 				// let tmp = e + 1
 				let arr = uni.getStorageSync('musiclist')
 				arr.splice(e, 1)
+				console.log(arr)
 				this.musicplaylist = arr
 				uni.setStorageSync('musiclist',arr)
 				if(arr.length > 0) {
@@ -372,9 +373,10 @@
 
 					if (listboxmusic[fewnum]) {
 						if (helper.count != null) {
+							if(listboxmusic[helper.count]) {
 							listboxmusic[helper.count].style.color = ""
 							listboxmusicspan[helper.count].style.color = ""
-
+							}
 						}
 						listboxmusic[fewnum].style.color = "red"
 						listboxmusicspan[fewnum].style.color = "red"
