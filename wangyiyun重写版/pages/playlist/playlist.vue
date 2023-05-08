@@ -311,6 +311,7 @@
 				}else {
 					
 					this.songdata = this.livemusicelistdata
+					// console.log(this.songdata)
 					this.songdata = this.songdata.filter(item => {
 						return item.ar[0].name != null
 					})
@@ -407,10 +408,11 @@
 						
 						
 						helper.audiok.onEnded(() => {
-							if (uni.getStorageSync('musiclist') <= 1) {
-								helper.audiok.stop()
+							if (uni.getStorageSync('musiclist').length <= 1) {
+								helper.audiok.src = ''
 								this.$store.commit('changeControl', 1)
 							} else {
+								console.log(1111)
 								this.child.down()
 							}
 						})
