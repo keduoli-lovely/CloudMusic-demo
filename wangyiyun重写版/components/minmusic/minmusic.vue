@@ -120,7 +120,7 @@
 
 			<!-- 中心大圆图 -->
 			<view class="center-box">
-				<view class="maskcenterbox" @click="shougeci">
+				<view class="maskcenterbox" @click.stop="shougeci">
 					<view class="boxk1" v-show="!geci">
 						<view class="contentk1" :style="`top:${timeheight}rpx`">
 						</view>
@@ -142,7 +142,7 @@
 			<view class="bottom-bar">
 				<view class="play-topbar">
 					<!-- 爱心 -->
-					<view class="loveicon">
+					<view class="loveicon" @click.stop="addlist">
 						<image src="/static/icon/爱心.png" mode="aspectFit"></image>
 					</view>
 					<!-- 下载 -->
@@ -272,26 +272,29 @@
 		},
 
 		methods: {
+			addlist() {
+				console.log(1111)
+			},
 			oneclickdel(e) {
 				// let tmp = e + 1
 				let arr = uni.getStorageSync('musiclist')
 				arr.splice(e, 1)
 				this.musicplaylist = arr
 				uni.setStorageSync('musiclist',arr)
-				if(arr.length > 0) {
-					let keduoli1 = uni.getStorageSync('musiclist').length
-					if(keduoli1 > e ) {
-						this.$store.commit('changeSubscript', e + 1)
-						helper.count = e + 1
-						this.down()
+				let arr1 = uni.getStorageSync('musiclist')
+				if(arr1.length > 0) {
+					if(e < arr1.length) {
+						// this.$store.commit('changeSubscript', e + 1)
+						// helper.count = e + 1
+						// this.down()
 						this.colorchange()
-					}else if(keduoli1 === e) {
-						this.$store.commit('changeSubscript', 0)
-						helper.count = 0
+					}else if(e === arr1.length) {
+						this.$store.commit('changeSubscript', -1)
+						helper.count = -1
 						this.down()
 						this.colorchange()
 					}
- 				}else if(arr.length <= 0) {
+ 				}else if(arr1.length <= 0) {
 					helper.audiok.src = ''
 					this.showlistboxnum = false
 					this.listboxbottom = '-70%'
@@ -481,6 +484,7 @@
 					url: `${helper.url}/song/url/v1?id=${id}&level=exhigh`,
 					success: (res) => {
 						helper.audiok.src = res.data.data[0].url
+						
 						
 					}
 				})
