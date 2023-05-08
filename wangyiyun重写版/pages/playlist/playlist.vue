@@ -15,10 +15,7 @@
 
 				<view class="playicon" :style="`padding-bottom:${long}`">
 					<view class="porup" v-show="range == false">
-						<view class="icon">
-							<image src="../../static/icon/音乐演奏.png" mode="aspectFit"></image>
-
-						</view>
+						
 						<text class="t1">歌单</text>
 					</view>
 
@@ -26,7 +23,7 @@
 						placeholder-style="color: rgba(255, 255, 255, .4);padding-bottom: 10rpx" v-model="title"
 						auto-focus ref="focusk">
 
-					<view class="clear" @click="textclear" v-if="title != null">
+					<view class="clear" @click="textclear" v-if="title != ''">
 						<image src="/static/icon/关闭2.png" mode="aspectFit"></image>
 					</view>
 				</view>
@@ -240,7 +237,7 @@
 		data() {
 			return {
 				singtexttop: '推荐歌单',
-				title: null,
+				title: '',
 				range: false,
 				long: '0',
 				bankSwitch: false,
@@ -263,13 +260,15 @@
 				isshowlogding: true,
 				singtext: '',
 				singname: '',
-				ispage: 1
+				ispage: 1,
+				isplay: false
 			};
 		},
 
 		onLoad(e) {
 			this.ispage = e.page
 			if(e.page == 1) {
+				this.ishome = false
 				this.id = e.id
 				let row = uni.getStorageSync('musiclist')[this.$store.state.musicSubscript]
 				if(row) {
@@ -279,9 +278,9 @@
 				}			
 				this.getmusiclist()
 			}else if(e.page == 2) {
+				this.ishome = true
 				this.getlivelist()
 				this.singtexttop = '我喜欢的音乐'
-				// console.log(e.page)
 			}
 		},
 		mounted() {
@@ -291,8 +290,8 @@
 			})
 		},
 		methods: {
+
 			getlivelist() {
-				// console.log(this.$store.state)
 				if(this.livemusicelistdata.length === 0) {
 					let key = uni.getStorageSync('cookie')
 					uni.request({
@@ -302,19 +301,24 @@
 						},
 						success: (res) => {
 							this.songdata = res.data.songs
+							this.songdata = this.songdata.filter(item => {
+								return item.ar[0].name != null
+							})
 							this.pic1 = this.songdata[1].al.picUrl
-							// this.pic1 = this.songdata[0]
 							this.$store.commit('setmusicedata', this.songdata)
-							// console.log(res,this.livemusicelist)
 						}
 					})
 				}else {
+					
 					this.songdata = this.livemusicelistdata
+					this.songdata = this.songdata.filter(item => {
+						return item.ar[0].name != null
+					})
 					this.pic1 = this.songdata[1].al.picUrl
 				}
 			},
 			masknone() {
-				this.title = null
+				this.title = ''
 				this.range = false
 			},
 			addlistmusic() {
@@ -332,8 +336,6 @@
 								return
 							}
 							this.songdata = [...this.songdata, ...list]
-							// console.log(this.songdata)
-							// console.log(this.pic1)
 						}
 					})
 				}
@@ -381,81 +383,92 @@
 						img,
 						size
 					})
-					// console.log(tp)
 					uni.setStorageSync('musiclist', tp);
 				}
 			},
 			startgq(id,img, title, name,playsize) {
-				getApp().watchmusice()
 				
-				
-				helper.audiok.onEnded(() => {
-					if (uni.getStorageSync('musiclist') <= 1) {
-						helper.audiok.stop()
-						this.$store.commit('changeControl', 1)
-					} else {
-						this.child.down()
-					}
-				})
-				this.id = id
-				helper.moredetail.push({
-					"name": title,
-					"singer": name
-				})
-				this.hello = 0
-				
-				this.$store.commit('changeControl', 0)
 				uni.request({
-					url: `${helper.url}/comment/music?id=${id}&limit=1`,
+					url: `${helper.url}/check/music?id=${id}`,
 					success: (res) => {
-						// console.log(res)
-						let sizek = res.data.total
-						if (sizek < 10000) {
-							this.topnum = '999+'
-							helper.plnumstr = '999+'
-						} else if (sizek >= 10000 && sizek < 100000) {
-							this.topnum = '1w+'
-							helper.plnumstr = '1w+'
-						} else if (sizek > 100000) {
-							
-							this.topnum = '10w+'
-							helper.plnumstr = '10w+'
+						this.isplay = res.data.success
+				
+				
+						if(!this.isplay) {
+							uni.showToast({
+								title: res.data.message,
+								duration: 1000,
+								mask: true,
+								icon: 'none'
+							});
+							return
 						}
-						this.stormusiclist(id, img, title, name, this.topnum)
-					}
-				})
-			
-				uni.request({
-					// url: `http://localhost:3000/song/url/v1?id=${k}&level=exhigh`,
-					url: `${helper.url}/song/url/v1?id=${id}&level=exhigh`,
-					success: (res) => {
-			
-						this.musicpic = img
-						helper.contminlist.musicpic = img
+						getApp().watchmusice()
 						
-						this.name = title
-						helper.contminlist.name = title
 						
-						this.ren = name
-						helper.contminlist.ren = name
+						helper.audiok.onEnded(() => {
+							if (uni.getStorageSync('musiclist') <= 1) {
+								helper.audiok.stop()
+								this.$store.commit('changeControl', 1)
+							} else {
+								this.child.down()
+							}
+						})
+						this.id = id
+						helper.moredetail.push({
+							"name": title,
+							"singer": name
+						})
+						this.hello = 0
 						
-						// this.$paper.ch = true
-						
-						this.dd = 0
-						helper.contminlist.dd = 0
-						
-						this.$store.commit('changeshow', 1)
-						
-						// console.log('1',res.data.data[0].url)
-						helper.audiok.autoplay = true
-						helper.audiok.src = res.data.data[0].url
+						this.$store.commit('changeControl', 0)
+						uni.request({
+							url: `${helper.url}/comment/music?id=${id}&limit=1`,
+							success: (res) => {
+								let sizek = res.data.total
+								if (sizek < 10000) {
+									this.topnum = '999+'
+									helper.plnumstr = '999+'
+								} else if (sizek >= 10000 && sizek < 100000) {
+									this.topnum = '1w+'
+									helper.plnumstr = '1w+'
+								} else if (sizek > 100000) {
+									
+									this.topnum = '10w+'
+									helper.plnumstr = '10w+'
+								}
+								this.stormusiclist(id, img, title, name, this.topnum)
+							}
+						})
+					
+						uni.request({
+							url: `${helper.url}/song/url/v1?id=${id}&level=exhigh`,
+							success: (res) => {
+					
+								this.musicpic = img
+								helper.contminlist.musicpic = img
+								
+								this.name = title
+								helper.contminlist.name = title
+								
+								this.ren = name
+								helper.contminlist.ren = name
+								
+								
+								this.dd = 0
+								helper.contminlist.dd = 0
+								
+								this.$store.commit('changeshow', 1)
+								
+								helper.audiok.autoplay = true
+								helper.audiok.src = res.data.data[0].url
 
-					}
-				})
-			
+							}
+						})
+				}	
+			  })
 			},
 			okxian(e) {
-				console.log(e)
 				this.xian = e
 				helper.contminlist.xian = e
 			},
@@ -464,16 +477,13 @@
 					this.num = 1
 					this.dd = -100
 					helper.contminlist.dd = -100
-					// console.log(11,'k')
 				} else {
-					// console.log(11,'k1')
 					this.num = e
 					this.dd = 0
 					helper.contminlist.dd = 0
 				}
 			},
 			getmv() {
-				// console.log(this.id)
 				uni.reLaunch({
 
 					url: `/pages/video/video?id=${this.id}&index=1`
@@ -483,7 +493,6 @@
 				if (helper.playlistid == this.id) {
 					return
 				} else {
-					// console.log(this.getk,1111)
 					helper.songdata = null
 					this.songdata = null
 					this.getk = 1
@@ -497,22 +506,15 @@
 
 						url: `${helper.url}/playlist/track/all?id=${this.id}&limit=20&offset=1`,
 						success: (res) => {
-							// console.log(res)
-							// this.pic1 = res.data.songs[0].al.picUrl
-							// helper.playpic = res.data.songs[0].al.picUrl
 							this.getk = 0
-							// console.log(res.data.songs)
 							this.songdata = res.data.songs
 							helper.songdata = res.data.songs
-							// console.log(this.pic1)
-							// console.log(this.songdata)
 
 						}
 					})
 					uni.request({
 						url: `${helper.url}/playlist/detail?id=${this.id}`,
 						success: (res) => {
-							// console.log(res)
 							this.singname = res.data.playlist.name
 							this.singtext = res.data.playlist.description
 							this.pic1 = res.data.playlist.coverImgUrl
@@ -539,13 +541,13 @@
 
 			},
 			textclear() {
-				this.title = null
+				this.title = ''
 			},
 			back() {
 				if (this.range === true) {
 					this.range = false
 					this.long = '0'
-					this.title = null
+					this.title = ''
 				} else if(this.ispage == 1) {
 					uni.reLaunch({
 						url: '/pages/index/index'
@@ -557,7 +559,7 @@
 				}
 			},
 			find() {
-				// this.$refs.focusk.focus()
+
 				this.range = true
 				this.long = '50rpx'
 			},
@@ -578,24 +580,17 @@
 			watchnum1() {
 				return (this.watchnum / 10000).toFixed(1)
 			},
-
 			searchlist() {
-				return this.title == '' ? '' : this.songdata.filter(item => {
-					return item.name.includes(this.title) || item.ar[0].name.includes(this.title)
+				return this.title === '' ? '' : this.songdata.filter(item => {
+					return item.name.includes(this.title) || (item.ar[0].name === null ? item.ar[0].name : item.ar[0].name.includes(this.title) )
 				})
 			},
+
 			textnumche() {
 				return this.text == 1 ? true : false
 			}
-		},
-		watch: {
-			text: {
-				handler(new1, old) {
-					console.log(new1, old)
-				}
-			},
-			
 		}
+		
 
 	}
 </script>
@@ -792,12 +787,6 @@
 						display: flex;
 						justify-content: start;
 						align-items: center;
-
-						.icon {
-							padding-right: 10rpx;
-							width: 50rpx;
-							height: 50rpx;
-						}
 
 						.t1 {
 							font-size: 40rpx;
