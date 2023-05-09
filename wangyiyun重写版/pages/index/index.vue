@@ -48,7 +48,6 @@
 		:top="topnum"
 		:isshow="isshow"
 		@stopkk="bilibili"
-		@xianok="receptionShowMin"
 		></minmusic>
 	</view>
 </template>
