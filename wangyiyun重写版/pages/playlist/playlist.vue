@@ -223,6 +223,7 @@
 		:name="name" 
 		:ren="ren" 
 		:dd="dd" 
+		:love="love"
 		:top="topnum" 
 		@stopkk="bilibili"
 		@xianok="okxian" 
@@ -252,6 +253,7 @@
 				kk: helper.contminlist.kk,
 				dd: helper.contminlist.dd,
 				topnum: helper.contminlist.topnum,
+				love: helper.contminlist.islove,
 				listnum: 20,
 				getk: 0,
 				watchnum: helper.playwacth.play,
@@ -295,7 +297,7 @@
 				if(this.livemusicelistdata.length === 0) {
 					let key = uni.getStorageSync('cookie')
 					uni.request({
-						url: `${helper.url}/song/detail?ids=${this.livemusicelist}`,
+						url: `${helper.url}/song/detail?ids=${this.livemusicelist}&timestamp=${Date.now()}`,
 						data: {
 							cookie: key
 						},
@@ -341,7 +343,7 @@
 					})
 				}
 			},
-			stormusiclist(e, img, title, name, size) {
+			stormusiclist(e, img, title, name, size, love) {
 				let value = uni.getStorageSync('musiclist');
 				let np = false
 				if(value) {
@@ -370,7 +372,8 @@
 						title,
 						name,
 						img,
-						size
+						size,
+						love
 					}])
 				
 				}
@@ -382,10 +385,21 @@
 						title,
 						name,
 						img,
-						size
+						size,
+						love
 					})
 					uni.setStorageSync('musiclist', tp);
 				}
+			},
+			islove(id) {
+				let idlist = uni.getStorageSync('musiceid')
+				let x
+				if(idlist) {
+					x = idlist.some(item => {
+						return item === id
+					})					
+				}
+				return x
 			},
 			startgq(id,img, title, name,playsize) {
 				
@@ -406,13 +420,14 @@
 						}
 						getApp().watchmusice()
 						
-						
+						this.love = this.islove(id)
+						helper.contminlist.islove = this.love
 						helper.audiok.onEnded(() => {
 							if (uni.getStorageSync('musiclist').length <= 1) {
 								helper.audiok.src = ''
 								this.$store.commit('changeControl', 1)
 							} else {
-								console.log(1111)
+								// console.log(1111)
 								this.child.down()
 							}
 						})
@@ -439,7 +454,7 @@
 									this.topnum = '10w+'
 									helper.plnumstr = '10w+'
 								}
-								this.stormusiclist(id, img, title, name, this.topnum)
+								this.stormusiclist(id, img, title, name, this.topnum, this.love)
 							}
 						})
 					
