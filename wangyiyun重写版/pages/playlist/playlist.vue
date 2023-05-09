@@ -226,7 +226,6 @@
 		:love="love"
 		:top="topnum" 
 		@stopkk="bilibili"
-		@xianok="okxian" 
 		ref="child"
 		></minmusic>
 	</view>
@@ -263,8 +262,8 @@
 				singtext: '',
 				singname: '',
 				ispage: 1,
-				isplay: false
-			};
+				isplay: false,
+			}
 		},
 
 		onLoad(e) {
@@ -482,7 +481,7 @@
 
 							}
 						})
-				}	
+					}	
 			  })
 			},
 			okxian(e) {
