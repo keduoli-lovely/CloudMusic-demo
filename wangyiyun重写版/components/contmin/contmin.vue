@@ -15,6 +15,7 @@
 			
 			<view class="row" v-for="(item, index) in musicdata" :key="index" @click="startgq(item.id,item.al.picUrl,item.name,item.ar[0].name, topnum)">
 				<view class="row-left">
+					
 					<view class="row-tit">
 						<text class="t13">{{item.name}}</text>
 					</view>
@@ -81,6 +82,7 @@
 		:name="name" 
 		:ren="ren" 
 		:dd="dd"
+		:love="love"
 		:top="topnum"
 		@stopkk="bilibili"
 		@xianok="okxian"
@@ -96,6 +98,7 @@
 		name:"contmin",
 		data() {
 			return {
+				love: helper.contminlist.islove,
 				musicpic: helper.contminlist.musicpic,
 				name: helper.contminlist.name,
 				ren: helper.contminlist.ren,
@@ -132,6 +135,16 @@
 			}
 		},
 		methods: {
+			islove(id) {
+				let idlist = uni.getStorageSync('musiceid')
+				let x
+				if(idlist) {
+					x = idlist.some(item => {
+						return item === id
+					})					
+				}
+				return x
+			},
 			adddatamusiclist() {
 				// console.log(this.title)
 				let musicedatalength = this.musicdata.length
@@ -153,7 +166,7 @@
 			okxian(e) {
 				this.$store.commit('changeshow', e)
 			},
-			stormusiclist(e, img, title, name, size) {
+			stormusiclist(e, img, title, name, size, love) {
 				let value = uni.getStorageSync('musiclist');
 				let np = false
 				
@@ -183,7 +196,8 @@
 						title,
 						name,
 						img,
-						size
+						size,
+						love
 					}])
 				
 				}
@@ -196,7 +210,8 @@
 						title,
 						name,
 						img,
-						size
+						size,
+						love
 					})
 					// console.log(tp)
 					uni.setStorageSync('musiclist', tp);
@@ -204,8 +219,8 @@
 			},
 			startgq(id,img, title, name,playsize) {
 				getApp().watchmusice()
-				
-				
+				this.love = this.islove(id)
+				helper.contminlist.islove = this.love
 				helper.audiok.onEnded(() => {
 					if (uni.getStorageSync('musiclist') <= 1) {
 						helper.audiok.stop()
@@ -239,7 +254,7 @@
 							this.topnum = '10w+'
 							helper.plnumstr = '10w+'
 						}
-						this.stormusiclist(id, img, title, name, this.topnum)
+						this.stormusiclist(id, img, title, name, this.topnum, this.love)
 					}
 				})
 
@@ -359,6 +374,7 @@
 				align-items: center;
 				border-bottom: 1rpx solid var(--listboxline);
 				.row-left {
+					
 					.row-tit {
 						
 						.t13 {
@@ -377,6 +393,12 @@
 						overflow: hidden;
 						text-overflow: ellipsis;
 						color: var(--listboxrowcolor);
+						.love {
+							display: inline-block;
+							width: 40rpx;
+							height: 40rpx;
+							background-color: red;
+						}
 					}
 
 				}
