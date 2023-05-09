@@ -65,6 +65,8 @@
 					uni.reLaunch({
 							url: `/pages/goindex/goindex?name=${this.name}`
 					})
+				}else if(this.index == 3) {
+					uni.navigateBack()
 				}
 		},
 			play() {
