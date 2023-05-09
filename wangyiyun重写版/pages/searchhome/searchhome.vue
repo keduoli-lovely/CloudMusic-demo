@@ -139,6 +139,7 @@
 		:ren="ren" 
 		:dd="dd"
 		:top="topnum"
+		:love="love"
 		@stop="okstop"
 		@stopkk="bilibili"
 		></minmusic>
@@ -167,6 +168,7 @@
 				ren: helper.contminlist.ren,
 				dd: helper.contminlist.dd,
 				topnum: helper.contminlist.topnum,
+				love:  helper.contminlist.islove
 			};
 		},
 		onLoad(e) {
