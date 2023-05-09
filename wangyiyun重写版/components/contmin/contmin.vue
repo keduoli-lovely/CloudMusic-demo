@@ -26,7 +26,7 @@
 				</view>
 				
 				<view class="row-right">
-					<view class="play-mv" @click.stop="getvideo(item.id,item.name)">
+					<view class="play-mv" @click.stop="getvideo(item.id,item.name)" v-if="item.mv">
 						<image src="../../static/icon/播放5.png" mode="aspectFit"></image>
 					</view>
 					<view class="row-all">
@@ -85,8 +85,6 @@
 		:love="love"
 		:top="topnum"
 		@stopkk="bilibili"
-		@xianok="okxian"
-		@getmusic="startgq"
 		ref="child"></minmusic>
 	</view>
 </template>
@@ -107,8 +105,8 @@
 				topnum: helper.plnumstr,
 				id: null,
 				child: null,
-				musicdata: []
-				
+				musicdata: [],
+				isplay: false
 			};
 		},
 		props: {
@@ -163,9 +161,6 @@
 					url: `/pages/video/video?id=${id}&index=2&title=${name}`
 				})
 			},
-			okxian(e) {
-				this.$store.commit('changeshow', e)
-			},
 			stormusiclist(e, img, title, name, size, love) {
 				let value = uni.getStorageSync('musiclist');
 				let np = false
@@ -218,6 +213,22 @@
 				}
 			},
 			startgq(id,img, title, name,playsize) {
+				uni.request({
+					url: `${helper.url}/check/music?id=${id}`,
+					success: (res) => {
+						this.isplay = res.data.success
+				
+				
+						if(!this.isplay) {
+							uni.showToast({
+								title: res.data.message,
+								duration: 1000,
+								mask: true,
+								icon: 'none'
+							});
+							return
+						}
+						
 				getApp().watchmusice()
 				this.love = this.islove(id)
 				helper.contminlist.islove = this.love
@@ -284,8 +295,9 @@
 						helper.audiok.src = res.data.data[0].url
 
 					}
-				})
-
+				  })
+				 }
+			  })
 			},
 			bilibili(e) {
 				if(this.num != e) {
