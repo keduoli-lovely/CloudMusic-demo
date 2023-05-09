@@ -773,8 +773,8 @@
 				this.topnum = this.top
 			},
 			dd(val) {
-				// console.log(this.dd)
-				this.long = this.dd
+				console.log(val)
+				this.long = val
 				this.$store.commit('changeControl', 0)
 				this.index = 1
 
