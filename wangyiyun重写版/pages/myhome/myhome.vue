@@ -44,7 +44,7 @@
 			</view>
 		
 			<view class="content">
-				<view class="box" @click="getRecent">
+				<view class="box" @click="getRecentmusice">
 					<image src="../../static/icon/Recent.png" mode="aspectFit"></image>
 					<text class="t10">最近播放</text>
 				</view>
@@ -112,19 +112,8 @@
 		
 		</view>
 		
-		<minmusic
-		v-show="$store.state.showplaycomponent"
-		:imgk="musicpic"
-		:name="name" 
-		:ren="ren" 
-		:dd="dd"
-		:indexk="isindex"
-		:top="topnum"
-		:love="love"
-		:isshow="isshow"
-		@stopkk="bilibili"
-		@xianok="receptionShowMin"
-		></minmusic>
+		<homecomponent ref="Recentcom"></homecomponent>
+		
 	</view>
 </template>
 
@@ -134,14 +123,7 @@ import helper from '../../common/helper';
 		data() {
 			return {
 				picrow: '../../static/video/1.jpg',
-				isindex: 1,
-				musicpic: helper.contminlist.musicpic,
-				name: helper.contminlist.name,
-				ren: helper.contminlist.ren,
-				topnum: helper.contminlist.topnum,
-				love: helper.contminlist.islove,
-				isshow: 1,
-				dd: -95,
+				
 				textstate: '',
 			};
 		},
@@ -150,10 +132,18 @@ import helper from '../../common/helper';
 		},
 		methods: {
 			// 获取最近播放的歌曲
-			getRecent() {
-				uni.request({
-					url: `${helper.url}/record/recent/song?limit=`
-				})
+			getRecentmusice() {
+				let key = uni.getStorageSync('cookie')
+				if(!key) {
+					uni.navigateTo({
+						url: '/pages/login/login'
+					})
+					return
+				}
+				this.$refs.Recentcom.getmusice()
+				document.title = "最近播放"
+				uni.hideTabBar()
+				this.$store.commit('changeshowhome', 1)
 			},
 			// 获取喜欢列表的第一首歌的图片作为页面的背景
 			picone(id) {
@@ -169,28 +159,17 @@ import helper from '../../common/helper';
 					}
 				})
 			},
-			bilibili(e) {
-				if(this.numk != e) {
-					this.numk = 1
-					uni.showTabBar({
-						fail() {
-							console.log('珂朵莉')
-						}
-					})
-					helper.contminlist.dd = -100
-					this.dd = -95
-					// console.log(11,'k')
-				} else {
-					console.log(11,'k1')
-					
-					this.numk = e
-					helper.contminlist.dd = 0
-				}
-			},
 			getlivemusic() {
 				let musiceid = uni.getStorageSync('musiceid')
+				let key = uni.getStorageSync('cookie')
+				
+				if(!key) {
+					uni.navigateTo({
+						url: '/pages/login/login'
+					})
+					return
+				}
 				if(!musiceid) {
-					let key = uni.getStorageSync('cookie')
 					uni.request({
 						url: `${helper.url}/likelist?uid=${this.userid}`,
 						data: {
