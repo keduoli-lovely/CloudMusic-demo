@@ -38,7 +38,7 @@ let bodydata = {
 let moredetail = []
 let musicpiclist = []
 let musiclist = []
-
+let Recentmusic = []
 // let comments = []
 // let hotcomments = []
 
@@ -106,5 +106,8 @@ export default {
 	// 登入的用户的id
 	userid,
 	username,
-	userdt
+	userdt,
+	
+	// 最近播放的数组
+	Recentmusic
 }
