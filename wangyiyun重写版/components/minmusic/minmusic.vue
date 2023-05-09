@@ -142,7 +142,10 @@
 			<view class="bottom-bar">
 				<view class="play-topbar">
 					<!-- 爱心 -->
-					<view class="loveicon" @click.stop="addlist">
+					<view class="loveicon" @click.stop="addlist" v-if="islove">
+						<image src="/static/icon/love2.png" mode="aspectFit"></image>
+					</view>
+					<view class="loveicon" @click.stop="addlist" v-else>
 						<image src="/static/icon/爱心.png" mode="aspectFit"></image>
 					</view>
 					<!-- 下载 -->
@@ -205,7 +208,6 @@
 		name: "minmusic",
 		data() {
 			return {
-
 				strnum: 0,
 				timer: null,
 				long: this.dd,
@@ -239,7 +241,8 @@
 				musicplaylist: null,
 				newpl: [],
 				hotpl: [],
-				ad: null
+				ad: null,
+				islove: this.love
 			};
 		},
 		props: {
@@ -268,12 +271,62 @@
 				type: Number,
 				default: 0
 			},
+			'love': {
+				type: Boolean,
+				default: false
+			},
 			'startgq': {}
 		},
 
 		methods: {
+			setlove(id, msg) {
+				let key = uni.getStorageSync('cookie')
+				let sta
+				if(msg) {
+					sta = "添加为喜欢"
+				}else {
+					sta = "取消喜欢"
+				}
+				uni.request({
+					url: `${helper.url}/like?id=${id}&like=${msg}&timestamp=${Date.now()}`,
+					data: {
+						cookie: key
+					},
+					success: (res) => {
+						uni.showToast({
+							title: sta,
+							duration: 1000,
+							mask: true,
+							icon: 'none'
+						});
+						console.log(res)
+					}
+				})
+				
+				uni.removeStorageSync('musiceid')
+			},
 			addlist() {
-				console.log(1111)
+				let onemusice = uni.getStorageSync('musiclist')
+				let keduoli = onemusice[this.changemusic]
+				let id = keduoli.e
+				try{
+					if(this.islove) {
+						keduoli.love = false
+						
+						this.islove = false
+						helper.contminlist.islove = false
+						uni.setStorageSync('musiclist', onemusice)
+						this.setlove(id, false)
+					}else {
+						keduoli.love = true
+						this.islove = true
+						helper.contminlist.islove = true
+						uni.setStorageSync('musiclist', onemusice)
+						this.setlove(id, true)
+					}
+				}catch(e){
+					console.log('珂朵莉')
+				}
 			},
 			oneclickdel(e) {
 				// let tmp = e + 1
@@ -503,6 +556,7 @@
 					this.$store.commit('changeSubscript', this.musiclistdata.length - 1)
 					this.bgpic = this.musiclistdata[sub].img
 					this.musiceTitle = this.musiclistdata[sub].title
+					this.islove = this.musiclistdata[sub].love
 					this.singerName = this.musiclistdata[sub].name
 					this.getdata(this.musiclistdata[sub].e)
 					this.lrcid = this.musiclistdata[sub].e
@@ -511,6 +565,7 @@
 					this.$store.commit('changeSubscript', sub)
 					this.bgpic = this.musiclistdata[sub].img
 					this.musiceTitle = this.musiclistdata[sub].title
+					this.islove = this.musiclistdata[sub].love
 					this.singerName = this.musiclistdata[sub].name
 					this.getdata(this.musiclistdata[sub].e)
 					this.lrcid = this.musiclistdata[sub].e
@@ -529,6 +584,7 @@
 					this.$store.commit('changeSubscript', sub)
 					this.bgpic = this.musiclistdata[sub].img
 					this.musiceTitle = this.musiclistdata[sub].title
+					this.islove = this.musiclistdata[sub].love
 					this.singerName = this.musiclistdata[sub].name
 					this.getdata(this.musiclistdata[sub].e)
 					this.lrcid = this.musiclistdata[sub].e
@@ -538,6 +594,7 @@
 					this.$store.commit('changeSubscript', 0)
 					this.bgpic = this.musiclistdata[sub].img
 					this.musiceTitle = this.musiclistdata[sub].title
+					this.islove = this.musiclistdata[sub].love
 					this.singerName = this.musiclistdata[sub].name
 					this.getdata(this.musiclistdata[sub].e)
 					this.lrcid = this.musiclistdata[sub].e
@@ -705,6 +762,9 @@
 
 		},
 		watch: {
+			love(val) {
+				this.islove = val
+			},
 			changemusiceplaylength(val) {
 				this.skipmusic(val)
 				this.liveLine = this.musiceProgress
@@ -733,12 +793,14 @@
 			changemusic(val) {
 				let row = uni.getStorageSync('musiclist')[val]
 				this.musiceTitle = row.title
+				this.islove = row.love
 				this.singerName = row.name
 				this.bgpic = row.img
 
 				helper.contminlist.musicpic = row.img
 				helper.contminlist.name = row.title
 				helper.contminlist.ren = row.name
+				helper.contminlist.islove = row.love
 
 				getApp().watchmusice()
 
