@@ -10,7 +10,8 @@ let musiclength = {
 	"musicePercentage": 0,
 	"staretime": 0,
 	"endtime": 0,
-	"playlength": 0
+	"playlength": 0,
+	"islove": false
 }
 let pace = {
 	"firsttime": 0,
