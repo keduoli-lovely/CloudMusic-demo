@@ -44,44 +44,44 @@
 			</view>
 		
 			<view class="content">
-				<view class="box">
-					<image src="../../static/icon/音乐演奏1.png" mode="aspectFit"></image>
-					1
+				<view class="box" @click="getRecent">
+					<image src="../../static/icon/Recent.png" mode="aspectFit"></image>
+					<text class="t10">最近播放</text>
 				</view>
 				
 				<view class="box">
-					<image src="../../static/icon/音乐演奏1.png" mode="aspectFit"></image>
-					2
+					<image src="../../static/icon/本地.png" mode="aspectFit"></image>
+					<text class="t10">本地/下载</text>
 				</view>
 				
 				<view class="box">
-					<image src="../../static/icon/音乐演奏1.png" mode="aspectFit"></image>
-					3
+					<image src="../../static/icon/云盘2.png" mode="aspectFit"></image>
+					<text class="t10">云盘</text>
 				</view>
 				
 				<view class="box">
-					<image src="../../static/icon/音乐演奏1.png" mode="aspectFit"></image>
-					4
+					<image src="../../static/icon/已购.png" mode="aspectFit"></image>
+					<text class="t10">已购</text>
 				</view>
 				
 				<view class="box">
-					<image src="../../static/icon/音乐演奏1.png" mode="aspectFit"></image>
-					5
+					<image src="../../static/icon/好友.png" mode="aspectFit"></image>
+					<text class="t10">我的好友</text>
 				</view>
 				
 				<view class="box">
-					<image src="../../static/icon/音乐演奏1.png" mode="aspectFit"></image>
-					6
+					<image src="../../static/icon/收藏.png" mode="aspectFit"></image>
+					<text class="t10">收藏和赞</text>
 				</view>
 				
 				<view class="box">
-					<image src="../../static/icon/音乐演奏1.png" mode="aspectFit"></image>
-					7
+					<image src="../../static/icon/播客1.png" mode="aspectFit"></image>
+					<text class="t10">我的播客</text>
 				</view>
 				
-				<view class="box">
-					<image src="../../static/icon/音乐演奏1.png" mode="aspectFit"></image>
-					8
+				<view class="box addicon">
+					<image src="../../static/icon/添加1.png" mode="aspectFit"></image>
+					<text class="t10">音乐应用</text>
 				</view>
 				
 			</view>
@@ -120,6 +120,7 @@
 		:dd="dd"
 		:indexk="isindex"
 		:top="topnum"
+		:love="love"
 		:isshow="isshow"
 		@stopkk="bilibili"
 		@xianok="receptionShowMin"
@@ -138,6 +139,7 @@ import helper from '../../common/helper';
 				name: helper.contminlist.name,
 				ren: helper.contminlist.ren,
 				topnum: helper.contminlist.topnum,
+				love: helper.contminlist.islove,
 				isshow: 1,
 				dd: -95,
 				textstate: '',
@@ -147,6 +149,13 @@ import helper from '../../common/helper';
 			this.picone(this.livemusicelist[0])
 		},
 		methods: {
+			// 获取最近播放的歌曲
+			getRecent() {
+				uni.request({
+					url: `${helper.url}/record/recent/song?limit=`
+				})
+			},
+			// 获取喜欢列表的第一首歌的图片作为页面的背景
 			picone(id) {
 				if(!id) return
 				let key = uni.getStorageSync('cookie')
@@ -179,7 +188,8 @@ import helper from '../../common/helper';
 				}
 			},
 			getlivemusic() {
-				if(this.livemusicelist.length === 0) {
+				let musiceid = uni.getStorageSync('musiceid')
+				if(!musiceid) {
 					let key = uni.getStorageSync('cookie')
 					uni.request({
 						url: `${helper.url}/likelist?uid=${this.userid}`,
@@ -190,13 +200,14 @@ import helper from '../../common/helper';
 							// console.log(res.data.ids)
 							let ids = res.data.ids
 							this.$store.commit('getlivemusicelist', ids)
-							uni.setStorageSync('musicenum', ids.length)
+							uni.setStorageSync('musiceid', ids)
 							uni.navigateTo({
 								url: '/pages/playlist/playlist?page=2'
 							})
 						}
 					})
 				}else {
+					this.$store.commit('getlivemusicelist', musiceid)
 					// console.log(this.$store.state.livemusicelist)
 					uni.navigateTo({
 						
@@ -247,7 +258,7 @@ import helper from '../../common/helper';
 				return this.$store.state.livemusicelist
 			},
 			mymusicnum() {
-				return this.$store.state.livemusicelist.length || uni.getStorageSync('musicenum')
+				return this.$store.state.livemusicelist.length || uni.getStorageSync('musiceid').length
 			}
 		}
 	}
@@ -400,6 +411,9 @@ import helper from '../../common/helper';
 						width: 80rpx;
 						height: 80rpx;
 					}
+				}
+				.addicon {
+					
 				}
 			}
 		
