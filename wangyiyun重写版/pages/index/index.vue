@@ -43,6 +43,7 @@
 		:name="name" 
 		:ren="ren" 
 		:dd="dd"
+		:love="love"
 		:indexk="isindex"
 		:top="topnum"
 		:isshow="isshow"
@@ -65,6 +66,7 @@
 				ren: helper.contminlist.ren,
 				dd: -95,
 				topnum: helper.contminlist.topnum,
+				love:  helper.contminlist.islove,
 				// 负责显示底部
 				isshow: 1,
 				timer: null
