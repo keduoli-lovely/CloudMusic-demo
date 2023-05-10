@@ -69,7 +69,7 @@ export default new Vuex.Store({
 	state: {
 		// 控制底部播放组件的显示与隐藏
 		showplaycomponent: 0, // xina
-		showhome: 0,
+		showhome: 95,
 		// 控制播放与暂停
 		controlPlayAndStop: 0, // kk
 		// 标志着当前播放歌曲的下标

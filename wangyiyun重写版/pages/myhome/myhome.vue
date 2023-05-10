@@ -143,7 +143,7 @@ import helper from '../../common/helper';
 				this.$refs.Recentcom.getmusice()
 				document.title = "最近播放"
 				uni.hideTabBar()
-				this.$store.commit('changeshowhome', 1)
+				this.$store.commit('changeshowhome', -100)
 			},
 			// 获取喜欢列表的第一首歌的图片作为页面的背景
 			picone(id) {

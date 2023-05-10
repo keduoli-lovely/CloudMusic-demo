@@ -54,7 +54,6 @@
 		:indexk="isindex"
 		:isshow="isshow"
 		:top="topnum"
-		@stopkk="bilibili"
 		ref="child"></minmusic>
 	</view>
 </template>
@@ -68,13 +67,11 @@
 				musicpic: helper.contminlist.musicpic,
 				name: helper.contminlist.name,
 				ren: helper.contminlist.ren,
-				dd: helper.contminlist.dd,
+				dd: this.$store.state.showhome,
 				topnum: helper.plnumstr,
 				isindex: 1,
 				isplay: false,
 				isshow: 1,
-				numk: 1,
-				keduoli: 100,
 			};
 		},
 		props: ['musicelist', 'isminshow'],
@@ -235,32 +232,6 @@
 				}
 			  })
 			},
-			bilibili() {
-				// if(this.numk != e) {
-				// 	this.numk = 1
-					
-					
-					if(this.keduoli == 0) {
-						uni.hideTabBar()
-						this.dd = -100
-					}else {
-						uni.showTabBar({
-							fail() {
-								console.log('珂朵莉')
-							}
-						})
-						this.dd = -95
-						
-					}
-					helper.contminlist.dd = -100
-					// console.log(11,'k')
-				// } else {
-				// 	console.log(11,'k1')
-					
-				// 	this.numk = e
-				// 	helper.contminlist.dd = 0
-				// }
-			},
 			getmv(id,name) {
 				uni.navigateTo({
 					url: `/pages/video/video?id=${id}&index=3&title=${name}`
@@ -268,20 +239,14 @@
 			}
 		},
 		computed: {
-			showhomein() {
-				this.$store.state.showhome
+			showhomeink() {
+				return this.$store.state.showhome
 			}
 		},
 		watch: {
-			isminshow(val) {
-				this.keduoli = val
-				this.bilibili()
-			},
-			showhomein(val) {
-				if(val == 0) {
-					helper.contminlist.dd = -100
-					this.dd = -100
-				}
+			showhomeink(val) {
+				this.dd = val
+				
 			}
 		}
 	}

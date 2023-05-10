@@ -693,6 +693,11 @@
 				let stop1 = 2
 				this.$emit('stopkk', stop1)
 				if (this.indexk) {
+					uni.showTabBar({
+						fail() {
+							console.log('珂朵莉')
+						}
+					})
 					this.long = -95
 				} else {
 					this.long = -100
@@ -773,7 +778,6 @@
 				this.topnum = this.top
 			},
 			dd(val) {
-				console.log(val)
 				this.long = val
 				this.$store.commit('changeControl', 0)
 				this.index = 1
