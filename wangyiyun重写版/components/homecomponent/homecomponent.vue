@@ -1,7 +1,7 @@
 <template>
 	<view class="homecomponent night" :style="{top: top + '%'}">
 		<homeheader @changetop="changetop"></homeheader>
-		<homebanner :musicelist="musicelist" :isminshow="top"></homebanner>
+		<homebanner :musicelist="musicelist" :isminshow="top" :page="page"></homebanner>
 		
 	</view>
 </template>
@@ -11,6 +11,7 @@
 	export default {
 		data() {
 			return {
+				page: 1,
 				top: 100,
 				musicelist: helper.Recentmusic,
 			};
