@@ -397,7 +397,7 @@
 				this.$store.commit('changeshow', 0)
 				this.isdel = false
 				this.musicplaylist = ''
-
+				helper.audiok.src = ''
 				this.$store.commit('changeControl', 1)
 				this.$store.commit('changefirsttime', 0)
 				this.$store.commit('changelasttime', 0)
