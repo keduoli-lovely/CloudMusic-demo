@@ -39,6 +39,7 @@ let moredetail = []
 let musicpiclist = []
 let musiclist = []
 let Recentmusic = []
+let cloudmusice = []
 // let comments = []
 // let hotcomments = []
 
@@ -109,5 +110,8 @@ export default {
 	userdt,
 	
 	// 最近播放的数组
-	Recentmusic
+	Recentmusic,
+	
+	// 云盘
+	cloudmusice
 }
