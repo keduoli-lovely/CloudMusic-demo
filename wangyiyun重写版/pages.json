@@ -84,6 +84,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/similarPage/similarPage",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
