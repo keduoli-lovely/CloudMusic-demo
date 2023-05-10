@@ -9,7 +9,7 @@
 					播放全部
 				</view>
 				<view class="num">
-					(300)
+					{{'(' + musicemach + ')'}}
 				</view>
 			</view>
 			<view class="topright">
@@ -19,9 +19,9 @@
 			</view>
 		</view>
 		
-		<view class="musicelist">
+		<view class="musicelist" v-if="page == 1">
 			<view class="row"
-			 v-for="(item, index) in musicelist" :key="index" @click="startgq(item.data.id, item.data.al.picUrl, item.data.name, item.data.ar[0].name, topnum)" >
+			 v-for="(item, index) in musicelist" :key="index" @click="startgq(item.data.id, item.data.al.picUrl, item.data.name, item.data.ar[0].name, topnum)">
 				<view class="row-left">
 					<view class="title">
 						{{item.data.name}}
@@ -33,6 +33,30 @@
 				</view>
 				<view class="row-right">
 					<view class="playmv"  v-if="item.data.mv" @click="getmv(item.data.id, item.data.name)">
+						<view class="playmask">
+							<image src="/static/icon/播放4.png" mode="aspectFit"></image>
+						</view>
+					</view>
+					<view class="more">
+						<image src="/static/icon/Android更多.png" mode="aspectFit"></image>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="musicelist" v-else-if="page == 2">
+			<view class="row"
+			 v-for="(item, index) in musicelist" :key="index" @click="startgq(item.simpleSong.id, item.simpleSong.al.picUrl, item.simpleSong.name, item.simpleSong.ar[0].name, topnum)">
+				<view class="row-left">
+					<view class="title">
+						{{item.simpleSong.name}}
+					</view>
+					<view class="name">
+						{{item.simpleSong.ar[0].name}} - {{item.simpleSong.al.name}}
+						{{item.simpleSong.alia[0]}}
+					</view>
+				</view>
+				<view class="row-right">
+					<view class="playmv"  v-if="item.simpleSong.mv" @click="getmv(item.simpleSong.id, item.simpleSong.name)">
 						<view class="playmask">
 							<image src="/static/icon/播放4.png" mode="aspectFit"></image>
 						</view>
@@ -74,7 +98,7 @@
 				isshow: 1,
 			};
 		},
-		props: ['musicelist', 'isminshow'],
+		props: ['musicelist', 'isminshow', 'page'],
 		mounted() {
 			this.$nextTick(() => {
 				this.child = this.$refs.child
@@ -241,6 +265,9 @@
 		computed: {
 			showhomeink() {
 				return this.$store.state.showhome
+			},
+			musicemach() {
+				return this.musicelist == undefined ? 0 : this.musicelist.length
 			}
 		},
 		watch: {
@@ -254,8 +281,10 @@
 
 <style lang="scss">
 	.homebanner {
-		overflow: hidden;
 		padding: 30rpx;
+		overflow: hidden;
+		height: 100%;
+		// padding: 30rpx;
 		.top {
 			padding-bottom: 40rpx;
 			display: flex;
@@ -286,9 +315,12 @@
 	
 		.musicelist {
 			overflow-y: auto;
-			height: 100vh;
+			height: 100%;
 			.row:first-child {
 				padding-top: 0;
+			}
+			.row:last-child {
+				padding-bottom: 400rpx;
 			}
 			.row {
 				padding-top: 50rpx;
@@ -297,6 +329,10 @@
 				color: var(--indexfontcolor);
 				.row-left {
 					.title {
+						width: 550rpx;
+						overflow-x: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
 						color: var(--indexfontcolor);
 						font-size: 34rpx;
 					}
