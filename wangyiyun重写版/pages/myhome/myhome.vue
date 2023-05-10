@@ -54,7 +54,7 @@
 					<text class="t10">本地/下载</text>
 				</view>
 				
-				<view class="box">
+				<view class="box" @click.stop="getcloud">
 					<image src="../../static/icon/云盘2.png" mode="aspectFit"></image>
 					<text class="t10">云盘</text>
 				</view>
@@ -131,6 +131,15 @@ import helper from '../../common/helper';
 			this.picone(this.livemusicelist[0])
 		},
 		methods: {
+			// 云盘
+			getcloud() {
+				document.title = "音乐云盘"
+				uni.hideTabBar()
+				this.$store.commit('changeshowhome', -100)
+				uni.reLaunch({
+					url: '/pages/similarPage/similarPage'
+				})
+			},
 			// 获取最近播放的歌曲
 			getRecentmusice() {
 				let key = uni.getStorageSync('cookie')
