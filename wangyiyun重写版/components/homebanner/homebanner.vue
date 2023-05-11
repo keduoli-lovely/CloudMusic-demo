@@ -1,5 +1,5 @@
 <template>
-	<view class="homebanner">
+	<view class="homebanner night">
 		<view class="top">
 			<view class="top-left">
 				<view class="playicon">
@@ -18,21 +18,26 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<view class="musicelist" v-if="page == 1">
-			<view class="row"
-			 v-for="(item, index) in musicelist" :key="index" @click="startgq(item.data.id, item.data.al.picUrl, item.data.name, item.data.ar[0].name, topnum)">
-				<view class="row-left">
-					<view class="title">
-						{{item.data.name}}
+			<view class="row" v-for="(item, index) in musicelist" :key="index"
+				@click="senddata(item.data.id, item.data.al.picUrl, item.data.name, item.data.ar[0].name, topnum)">
+				<view class="passsolt">
+					<view class="stor">
+						{{index + 1}}
 					</view>
-					<view class="name">
-						{{item.data.ar[0].name}} - {{item.data.al.name}}
-						{{item.data.alia[0]}}
+					<view class="row-left">
+						<view class="title">
+							{{item.data.name}}
+						</view>
+						<view class="name">
+							{{item.data.ar[0].name}} - {{item.data.al.name}}
+							{{item.data.alia[0]}}
+						</view>
 					</view>
 				</view>
 				<view class="row-right">
-					<view class="playmv"  v-if="item.data.mv" @click="getmv(item.data.id, item.data.name)">
+					<view class="playmv" v-if="item.data.mv" @click="getmv(item.data.id, item.data.name)">
 						<view class="playmask">
 							<image src="/static/icon/播放4.png" mode="aspectFit"></image>
 						</view>
@@ -44,19 +49,25 @@
 			</view>
 		</view>
 		<view class="musicelist" v-else-if="page == 2">
-			<view class="row"
-			 v-for="(item, index) in musicelist" :key="index" @click="startgq(item.simpleSong.id, item.simpleSong.al.picUrl, item.simpleSong.name, item.simpleSong.ar[0].name, topnum)">
-				<view class="row-left">
-					<view class="title">
-						{{item.simpleSong.name}}
+			<view class="row" v-for="(item, index) in musicelist" :key="index"
+				@click="senddata(item.simpleSong.id, item.simpleSong.al.picUrl, item.simpleSong.name, item.simpleSong.ar[0].name, topnum)">
+				<view class="passsolt">
+					<view class="stor">
+						{{index + 1}}
 					</view>
-					<view class="name">
-						{{item.simpleSong.ar[0].name}} - {{item.simpleSong.al.name}}
-						{{item.simpleSong.alia[0]}}
+					<view class="row-left">
+						<view class="title">
+							{{item.simpleSong.name}}
+						</view>
+						<view class="name">
+							{{item.simpleSong.ar[0].name}} - {{item.simpleSong.al.name}}
+							{{item.simpleSong.alia[0]}}
+						</view>
 					</view>
 				</view>
 				<view class="row-right">
-					<view class="playmv"  v-if="item.simpleSong.mv" @click="getmv(item.simpleSong.id, item.simpleSong.name)">
+					<view class="playmv" v-if="item.simpleSong.mv"
+						@click="getmv(item.simpleSong.id, item.simpleSong.name)">
 						<view class="playmask">
 							<image src="/static/icon/播放4.png" mode="aspectFit"></image>
 						</view>
@@ -68,17 +79,6 @@
 			</view>
 		</view>
 		
-		<minmusic
-		v-show="this.$store.state.showplaycomponent"
-		:imgk="musicpic" 
-		:name="name" 
-		:ren="ren" 
-		:dd="dd"
-		:love="love"
-		:indexk="isindex"
-		:isshow="isshow"
-		:top="topnum"
-		ref="child"></minmusic>
 	</view>
 </template>
 
@@ -87,15 +87,7 @@
 	export default {
 		data() {
 			return {
-				love: helper.contminlist.islove,
-				musicpic: helper.contminlist.musicpic,
-				name: helper.contminlist.name,
-				ren: helper.contminlist.ren,
-				dd: this.$store.state.showhome,
-				topnum: helper.plnumstr,
-				isindex: 1,
-				isplay: false,
-				isshow: 1,
+				topnum: helper.plnumstr
 			};
 		},
 		props: ['musicelist', 'isminshow', 'page'],
@@ -105,175 +97,24 @@
 			})
 		},
 		methods: {
-			okxian(e) {
-				this.$store.commit('changeshow', e)
-			},
-			islove(id) {
-				let idlist = uni.getStorageSync('musiceid')
-				let x
-				if(idlist) {
-					x = idlist.some(item => {
-						return item === id
-					})					
-				}
-				return x
-			},
-			stormusiclist(e, img, title, name, size, love) {
-				let value = uni.getStorageSync('musiclist');
-				let np = false
-				
-				if(value) {
-					let kenum = value.findIndex(function(item) {
-						return item.e === e
-					})
-					if(kenum >= 0) {
-						this.$store.commit('changeSubscript', kenum)
-					}else if(kenum <= 0) {
-						this.$store.commit('changeSubscript', 0)
-					}
-				}
-					
-				if(value.length > 0) {
-					let keke = value.filter((item) => {
-						return item.e == e
-					})
-					if(keke.length == 0) {
-						np = true
-					}else {
-						np = false
-					}
-				}else if(!value || value.length === 0) {
-					uni.setStorageSync('musiclist', [{
-						e,
-						title,
-						name,
-						img,
-						size,
-						love
-					}])
-				
-				}
-				
-				if(np) {
-					// console.log(np)
-					let tp = value
-					tp.unshift({
-						e,
-						title,
-						name,
-						img,
-						size,
-						love
-					})
-					// console.log(tp)
-					uni.setStorageSync('musiclist', tp);
-				}
-			},
-			startgq(id,img, title, name,playsize) {
-				uni.request({
-					url: `${helper.url}/check/music?id=${id}`,
-					success: (res) => {
-						this.isplay = res.data.success
-				
-				
-						if(!this.isplay) {
-							uni.showToast({
-								title: res.data.message,
-								duration: 1000,
-								mask: true,
-								icon: 'none'
-							});
-							return
-						}
-						
-				getApp().watchmusice()
-				this.love = this.islove(id)
-				helper.contminlist.islove = this.love
-				helper.audiok.onEnded(() => {
-					if (uni.getStorageSync('musiclist') <= 1) {
-						helper.audiok.stop()
-						this.$store.commit('changeControl', 1)
-					} else {
-						this.child.down()
-					}
+			senddata(id, img, title, name, size) {
+				this.$emit('fulldata', {
+					id,
+					img,
+					title,
+					name,
+					size
 				})
-				
-				
-				this.id = id
-				helper.moredetail.push({
-					"name": title,
-					"singer": name
-				})
-				
-				this.$store.commit('changeControl', 0)
-				uni.request({
-					url: `${helper.url}/comment/music?id=${id}&limit=1`,
-					success: (res) => {
-						// console.log(res)
-						let sizek = res.data.total
-						if (sizek < 10000) {
-							this.topnum = '999+'
-							helper.plnumstr = '999+'
-						} else if (sizek >= 10000 && sizek < 100000) {
-							this.topnum = '1w+'
-							helper.plnumstr = '1w+'
-						} else if (sizek > 100000) {
-							
-							this.topnum = '10w+'
-							helper.plnumstr = '10w+'
-						}
-						this.stormusiclist(id, img, title, name, this.topnum, this.love)
-					}
-				})
-			
-				uni.request({
-					// url: `http://localhost:3000/song/url/v1?id=${k}&level=exhigh`,
-					url: `${helper.url}/song/url/v1?id=${id}&level=exhigh`,
-					success: (res) => {
-			
-						this.musicpic = img
-						helper.contminlist.musicpic = img
-						
-						this.name = title
-						helper.contminlist.name = title
-						
-						this.ren = name
-						helper.contminlist.ren = name
-						
-						// this.$paper.ch = true
-						
-						this.dd = 0
-						helper.contminlist.dd = 0
-						
-						this.$store.commit('changeshow', 1)
-						
-						// console.log('1',res.data.data[0].url)
-						helper.audiok.autoplay = true
-						helper.audiok.src = res.data.data[0].url
-			
-					}
-				  })
-				}
-			  })
 			},
-			getmv(id,name) {
+			getmv(id, name) {
 				uni.navigateTo({
 					url: `/pages/video/video?id=${id}&index=3&title=${name}`
 				})
 			}
 		},
 		computed: {
-			showhomeink() {
-				return this.$store.state.showhome
-			},
 			musicemach() {
 				return this.musicelist == undefined ? 0 : this.musicelist.length
-			}
-		},
-		watch: {
-			showhomeink(val) {
-				this.dd = val
-				
 			}
 		}
 	}
@@ -281,30 +122,43 @@
 
 <style lang="scss">
 	.homebanner {
-		padding: 30rpx;
+		padding: 0 30rpx 100rpx;
 		overflow: hidden;
 		height: 100%;
+		background-color: var(--indexgbcolor);
+
 		// padding: 30rpx;
+
 		.top {
-			padding-bottom: 40rpx;
+			z-index: 10;
+			position: sticky;
+			top: 0;
+			// margin-bottom: 40rpx;
+			height: 100rpx;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
+			background-color: var(--indexgbcolor);
+
 			.top-left {
 				display: flex;
+
 				.playicon {
-					margin-right: 10rpx;
+					margin-right: 18rpx;
 					width: 45rpx;
 					height: 45rpx;
 				}
+
 				.text {
 					margin-right: 15rpx;
 					color: var(--indexfontcolor);
 				}
+
 				.num {
 					color: var(--searchlistfontcolor);
 				}
 			}
+
 			.topright {
 				.allicon {
 					width: 45rpx;
@@ -312,32 +166,45 @@
 				}
 			}
 		}
-	
+
 		.musicelist {
 			overflow-y: auto;
-			height: 100%;
+			height: calc(100% - 200rpx);
+			// margin-bottom: 400rpx;
 			.row:first-child {
 				padding-top: 0;
 			}
+
 			.row:last-child {
-				padding-bottom: 400rpx;
+				padding-bottom: 255rpx;
 			}
+
 			.row {
 				padding-top: 50rpx;
 				display: flex;
 				justify-content: space-between;
 				color: var(--indexfontcolor);
+				.passsolt {
+					display: flex;
+					align-items: center;
+					.stor {
+						font-size: 32rpx;
+						padding-right: 35rpx;
+						color: #666;
+					}
+				}
 				.row-left {
 					.title {
-						width: 550rpx;
+						width: 480rpx;
 						overflow-x: hidden;
 						white-space: nowrap;
 						text-overflow: ellipsis;
 						color: var(--indexfontcolor);
 						font-size: 34rpx;
 					}
+
 					.name {
-						width: 550rpx;
+						width: 480rpx;
 						overflow-x: hidden;
 						white-space: nowrap;
 						text-overflow: ellipsis;
@@ -345,9 +212,11 @@
 						color: var(--searchlistfontcolor);
 					}
 				}
-				.row-right{
+
+				.row-right {
 					display: flex;
 					align-items: center;
+
 					.playmv {
 						margin-right: 20rpx;
 						box-sizing: border-box;
@@ -359,11 +228,13 @@
 						width: 50rpx;
 						height: 40rpx;
 						border-radius: 14rpx;
+
 						.playmask {
 							width: 20rpx;
 							height: 20rpx;
 						}
 					}
+
 					.more {
 						width: 40rpx;
 						height: 40rpx;
@@ -371,6 +242,6 @@
 				}
 			}
 		}
-	
+
 	}
 </style>
