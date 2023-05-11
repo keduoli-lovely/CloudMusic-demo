@@ -49,17 +49,17 @@
 				</view>
 			</view>
 			
-			<view class="banner-con">
+			<view class="banner-con" @click="getplay(item.id)" v-for="(item,index) in songdata" :key="index">
 				<view class="name-left">
 					<view class="pic">
-						<image src="/static/video/1.jpg" mode="aspectFill"></image>
+						<image :src="item.coverImgUrl" mode="aspectFill"></image>
 					</view>
 					<view class="textbox">
 						<view class="title">
-							铃芽之旅
+							{{item.name}}
 						</view>
 						<view class="name">
-							<<铃芽之旅>>
+						{{item.trackCount}}首,by{{item.creator.nickname}}
 						</view>
 					</view>
 				</view>
@@ -68,35 +68,78 @@
 				</view>
 			</view>
 			
-			<view class="banner-con">
-				<view class="name-left">
-					<view class="pic">
-						<image src="/static/video/1.jpg" mode="aspectFill"></image>
-					</view>
-					<view class="textbox">
-						<view class="title">
-							铃芽之旅
-						</view>
-						<view class="name">
-							<<铃芽之旅>>
-						</view>
-					</view>
-				</view>
-				<view class="icon-right">
-					<image src="/static/icon/更多1.png" mode="aspectFit"></image>
-				</view>
-			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import helper from '../../common/helper.js'
 	export default {
 		name:"MyHomegather",
 		data() {
 			return {
-				
+				songdata: helper.mygedan,
+				userlivemusice: []
 			};
+		},
+		onLoad() {
+			this.getsong()
+		},
+		methods: {
+			getplay(id) {
+				let key = uni.getStorageSync('cookie')
+				uni.request({
+					url: `${helper.url}/playlist/detail?id=${id}`,
+					data: {
+						cookie: key
+					},
+					success: (res) => {
+						let tracks = res.data.playlist.trackIds
+						let name = res.data.playlist.name
+						tracks.forEach(item => {
+							this.userlivemusice.push(item.id)
+						})
+						if(this.userlivemusice.length > 200) {
+							this.userlivemusice.length = 200
+						}
+						
+						this.$store.commit('getlivemusicelist', this.userlivemusice)
+						uni.reLaunch({
+							url: '/pages/playlist/playlist?page=3&name=${name}'
+						})
+					}
+				})
+			},
+			getsong() {
+				if(!helper.mygedan) {
+					let key = uni.getStorageSync('cookie')
+					let id = uni.getStorageSync('id')
+					if(!key && !id) return
+					uni.request({
+						url: `${helper.url}/user/playlist?uid=${id}`,
+						data: {
+							cookie: key
+						},
+						success: (res) => {
+							// console.log(res)
+							this.songdata = res.data.playlist
+							
+							let obj = {
+								userid: this.songdata[0].id,
+								num: this.songdata[0].trackCount,
+								imgurl: this.songdata[0].coverImgUrl
+							}
+							// console.log(obj)
+							uni.setStorageSync('userlive', obj)
+							this.songdata.shift()
+							helper.mygedan = this.songdata
+					
+						}
+					})
+				}else {
+					this.songdata = helper.mygedan
+				}
+			}
 		}
 	}
 </script>
@@ -226,10 +269,19 @@
 					}
 					.textbox {
 						.title {
+							width: 450rpx;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
 							font-size: 34rpx;
 							color: #fff;
 						}
 						.name {
+							width: 450rpx;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							padding-top: 10rpx;
 							font-size: 24rpx;
 							color: #666;
 						}
