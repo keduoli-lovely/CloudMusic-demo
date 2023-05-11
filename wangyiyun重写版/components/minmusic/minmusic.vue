@@ -220,7 +220,7 @@
 				skipnum: helper.pace.skipnum,
 				liveLinemusic: 0,
 				picnum: 0,
-				picpath: "../../static/icon/循环.png",
+				picpath: "/static/icon/循环.png",
 				bgpic: this.imgk,
 				musiceTitle: this.name,
 				singerName: this.ren,
@@ -243,7 +243,7 @@
 				hotpl: [],
 				ad: null,
 				islove: this.love
-			};
+			}
 		},
 		props: {
 			'imgk': {
@@ -299,7 +299,6 @@
 							mask: true,
 							icon: 'none'
 						});
-						console.log(res)
 					}
 				})
 				
@@ -795,6 +794,7 @@
 				this.singerName = this.ren
 			},
 			changemusic(val) {
+				console.log(val)
 				let row = uni.getStorageSync('musiclist')[val]
 				this.musiceTitle = row.title
 				this.islove = row.love
