@@ -104,7 +104,6 @@
 				num: 1,
 				topnum: helper.plnumstr,
 				id: null,
-				child: null,
 				musicdata: [],
 				isplay: false
 			};
@@ -237,7 +236,8 @@
 						helper.audiok.stop()
 						this.$store.commit('changeControl', 1)
 					} else {
-						this.child.down()
+						console.log(this.$refs.child)
+						this.$refs.child.down()
 					}
 				})
 				
@@ -322,11 +322,6 @@
 
 				return str
 			}
-		},
-		mounted() {
-			this.$nextTick(() => {
-				this.child = this.$refs.child
-			})
 		},
 		watch: {
 			back(val) {

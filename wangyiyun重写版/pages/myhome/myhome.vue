@@ -1,6 +1,10 @@
 <template>
-	<view class="myhome night">
+	<view class="myhome night" @touchmove="movechangeop" @touchstart="keduoli1">
 		<view class="header">
+			
+			<view class="afterdiv" :style="{opacity: opactiv}">
+				
+			</view>
 			<indexleftbar></indexleftbar>
 			<view class="state">
 				<!-- <input type="text" class="ipt" v-model="textstate"> -->
@@ -49,7 +53,7 @@
 					<text class="t10">最近播放</text>
 				</view>
 				
-				<view class="box">
+				<view class="box" @click="localfile">
 					<image src="../../static/icon/本地.png" mode="aspectFit"></image>
 					<text class="t10">本地/下载</text>
 				</view>
@@ -59,27 +63,27 @@
 					<text class="t10">云盘</text>
 				</view>
 				
-				<view class="box">
+				<view class="box" @click="localfile">
 					<image src="../../static/icon/已购.png" mode="aspectFit"></image>
 					<text class="t10">已购</text>
 				</view>
 				
-				<view class="box">
+				<view class="box" @click="localfile">
 					<image src="../../static/icon/好友.png" mode="aspectFit"></image>
 					<text class="t10">我的好友</text>
 				</view>
 				
-				<view class="box">
+				<view class="box" @click="localfile">
 					<image src="../../static/icon/收藏.png" mode="aspectFit"></image>
 					<text class="t10">收藏和赞</text>
 				</view>
 				
-				<view class="box">
+				<view class="box" @click="localfile">
 					<image src="../../static/icon/播客1.png" mode="aspectFit"></image>
 					<text class="t10">我的播客</text>
 				</view>
 				
-				<view class="box addicon">
+				<view class="box addicon" @click="localfile">
 					<image src="../../static/icon/添加1.png" mode="aspectFit"></image>
 					<text class="t10">音乐应用</text>
 				</view>
@@ -111,6 +115,8 @@
 			</view>
 		
 		</view>
+		
+		<MyHomegather></MyHomegather>
 			
 		<minmusic
 		v-show="$store.state.showplaycomponent"
@@ -144,13 +150,31 @@ import helper from '../../common/helper';
 				topnum: helper.contminlist.topnum,
 				love:  helper.contminlist.islove,
 				isshow: 1,
-				key: uni.getStorageSync('cookie')
+				key: uni.getStorageSync('cookie'),
+				opnum: 0,
+				opactiv: 0
 			};
 		},
 		onLoad() {
 			this.picone(this.livemusicelist[0])
 		},
 		methods: {
+			keduoli1(e) {
+				this.opnum = e.touches[0].pageY
+			},
+			movechangeop(e) {
+				// console.log(this.opnum - e.touches[0].pageY)
+				this.opactiv = (this.opnum - e.touches[0].pageY)
+				
+			},
+			// 本地文件
+			localfile() {
+				uni.showToast({
+					title: 'error',
+					duration: 1000,
+					icon: 'none'
+				});
+			},
 			// 云盘
 			getcloud() {
 				if(!this.key) {
@@ -294,15 +318,33 @@ import helper from '../../common/helper';
 		box-sizing: border-box;
 	}
 	.myhome {
+		padding-top: 180rpx;
 		width: 750rpx;
 		height: 100%;
+		background-color: var(--indexgbcolor);
 		.header {
+			width: 100%;
+			z-index: 10;
+			position: fixed;
+			top: 0;
+			left: 0;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 			padding: 50rpx 30rpx;
 			height: 180rpx;
-			background-color: var(--indexgbcolor);
+			// background-color: var(--indexgbcolor);
+			.afterdiv {
+				transition: all .9s ease;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 180rpx;
+				content: '';
+				background-color: var(--indexgbcolor);
+				// opacity: 0;
+			}
 			.state {
 				display: flex;
 				justify-content: start;
@@ -325,7 +367,7 @@ import helper from '../../common/helper';
 		}
 		
 		.banner {
-			padding: 60rpx 30rpx;
+			padding: 60rpx 30rpx 40rpx;
 			background-color: var(--indexgbcolor);
 			.user {
 				display: flex;

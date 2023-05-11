@@ -262,7 +262,7 @@
 				singtext: '',
 				singname: '',
 				ispage: 1,
-				isplay: false,
+				isplay: false
 			}
 		},
 
@@ -284,12 +284,7 @@
 				this.singtexttop = '我喜欢的音乐'
 			}
 		},
-		mounted() {
 
-			this.$nextTick(() => {
-				this.child = this.$refs.child
-			})
-		},
 		methods: {
 
 			getlivelist() {
@@ -427,7 +422,8 @@
 								this.$store.commit('changeControl', 1)
 							} else {
 								// console.log(1111)
-								this.child.down()
+								console.log(this.$refs.child)
+								this.$refs.child.down()
 							}
 						})
 						this.id = id
