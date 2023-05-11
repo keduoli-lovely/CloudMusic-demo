@@ -42,7 +42,7 @@ import helper from '../../common/helper';
 		
 		methods: {
 			backk(e) {
-				uni.navigateTo({
+				uni.reLaunch({
 					url: `/pages/searchhome/searchhome?tit=${e}`
 				})
 			},
