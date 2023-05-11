@@ -21,6 +21,10 @@
 		},
 		methods: {
 			getuser(key) {
+				
+				if(!key) {
+					return
+				}
 				uni.request({
 					url: `${helper.url}/user/account`,
 					data:{
