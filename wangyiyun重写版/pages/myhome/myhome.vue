@@ -90,16 +90,16 @@
 				
 			</view>
 		
-			<view class="live">
+			<view class="live" @click="getlivemusic">
 				<view class="live-pic">
-					<image :src="picrow" mode="aspectFill"></image>
+					<image :src="userlive.imgurl" mode="aspectFill"></image>
 				</view>
-				<view class="live-box" @click="getlivemusic">
+				<view class="live-box">
 					
 					<view class="title">
 						我喜欢的音乐
 						<view class="text-header">
-							{{mymusicnum}}
+							{{userlive.num}}
 						</view>
 						</view>
 						
@@ -116,7 +116,7 @@
 		
 		</view>
 		
-		<MyHomegather></MyHomegather>
+		<MyHomegather ref="gather"></MyHomegather>
 			
 		<minmusic
 		v-show="$store.state.showplaycomponent"
@@ -139,8 +139,6 @@ import helper from '../../common/helper';
 	export default {
 		data() {
 			return {
-				picrow: '../../static/video/1.jpg',
-				
 				textstate: '',
 				isindex: 1,
 				musicpic: helper.contminlist.musicpic,
@@ -152,11 +150,19 @@ import helper from '../../common/helper';
 				isshow: 1,
 				key: uni.getStorageSync('cookie'),
 				opnum: 0,
-				opactiv: 0
+				opactiv: 0,
+				userlive: '',
+				userlivemusice: []
 			};
 		},
 		onLoad() {
-			this.picone(this.livemusicelist[0])
+			this.picone() 
+		},
+		mounted() {
+			
+			this.$nextTick(() => {
+				this.$refs.gather.getsong()
+			})
 		},
 		methods: {
 			keduoli1(e) {
@@ -200,20 +206,36 @@ import helper from '../../common/helper';
 				})
 			},
 			// 获取喜欢列表的第一首歌的图片作为页面的背景
-			picone(id) {
-				if(!id) return
+			picone() {
+				let live = uni.getStorageSync('userlive')
+				let userliveid = uni.getStorageSync('userliveid')
+				this.userlive = live
+				if(!live && !userliveid.length) {
+				
 				uni.request({
-					url: `${helper.url}/song/detail?ids=${id}`,
+					url: `${helper.url}/playlist/detail?id=${live.userid}`,
 					data: {
 						cookie: this.key
 					},
 					success: (res) => {
-						this.picrow = res.data.songs[0].al.picUrl
+						console.log(res)
+						let tracks = res.data.playlist.tracks
+						console.log(tracks)
+						tracks.forEach(item => {
+							this.userlivemusice.push(item.id)
+						})
+						
+						this.$store.commit('getlivemusicelist', this.userlivemusice)
+						uni.setStorageSync('userliveid', this.userlivemusice)
 					}
 				})
+				}else {
+					this.$store.commit('getlivemusicelist', userliveid)
+				}
 			},
 			getlivemusic() {
-				let musiceid = uni.getStorageSync('musiceid')
+				// console.log(111)
+				let userliveid = uni.getStorageSync('userliveid')
 				
 				if(!this.key) {
 					uni.navigateTo({
@@ -221,27 +243,8 @@ import helper from '../../common/helper';
 					})
 					return
 				}
-				if(!musiceid) {
-					uni.request({
-						url: `${helper.url}/likelist?uid=${this.userid}`,
-						data: {
-							cookie: this.key
-						},
-						success: (res) => {
-							// console.log(res.data.ids)
-							let ids = res.data.ids
-							this.$store.commit('getlivemusicelist', ids)
-							uni.setStorageSync('musiceid', ids)
-							uni.navigateTo({
-								url: '/pages/playlist/playlist?page=2'
-							})
-						}
-					})
-				}else {
-					this.$store.commit('getlivemusicelist', musiceid)
-					// console.log(this.$store.state.livemusicelist)
-					uni.navigateTo({
-						
+				if(userliveid) {					
+					uni.reLaunch({
 						url: '/pages/playlist/playlist?page=2'
 					})
 				}
@@ -261,7 +264,7 @@ import helper from '../../common/helper';
 			},
 			getSearchHome() {
 				uni.navigateTo({
-					url:"/pages/searchhome/searchhome"
+					url:"/pages/searchhome/searchhome?page=2"
 				})
 			},
 			bilibili(e) {
@@ -305,10 +308,7 @@ import helper from '../../common/helper';
 			},
 			livemusicelist() {
 				return this.$store.state.livemusicelist
-			},
-			mymusicnum() {
-				return this.$store.state.livemusicelist.length || uni.getStorageSync('musiceid').length
-			}
+			}		
 		}
 	}
 </script>
