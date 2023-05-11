@@ -103,7 +103,7 @@
 						</view>
 						<view class="playtext">
 							<text class="t6">播放全部</text>
-							<text class="t8">{{'(' + listnum + ')'}}</text>
+							<text class="t8">{{'(' + comlistnum + ')'}}</text>
 						</view>
 									
 						<view class="down">
@@ -253,7 +253,6 @@
 				dd: helper.contminlist.dd,
 				topnum: helper.contminlist.topnum,
 				love: helper.contminlist.islove,
-				listnum: 20,
 				getk: 0,
 				watchnum: helper.playwacth.play,
 				readnum: helper.playwacth.read,
@@ -262,7 +261,7 @@
 				singtext: '',
 				singname: '',
 				ispage: 1,
-				isplay: false
+				isplay: false,
 			}
 		},
 
@@ -282,16 +281,37 @@
 				this.ishome = true
 				this.getlivelist()
 				this.singtexttop = '我喜欢的音乐'
+			}else if(e.page == 3) {
+				this.ishome = true
+				this.livemusiceget()
+				this.singtexttop = 'name'
 			}
 		},
 
 		methods: {
+			livemusiceget() {
+				let key = uni.getStorageSync('cookie')
+				uni.request({
+					url: `${helper.url}/song/detail?ids=${this.livemusicelist}`,
+					data: {
+						cookie: key
+					},
+					success: (res) => {
+						this.songdata = res.data.songs
+						this.songdata = this.songdata.filter(item => {
+							return item.ar[0].name != null
+						})
+						this.pic1 = this.songdata[0].al.picUrl
+					}
+				})
+			},
 
 			getlivelist() {
 				if(this.livemusicelistdata.length === 0) {
 					let key = uni.getStorageSync('cookie')
+					
 					uni.request({
-						url: `${helper.url}/song/detail?ids=${this.livemusicelist}&timestamp=${Date.now()}`,
+						url: `${helper.url}/song/detail?ids=${this.livemusicelist}`,
 						data: {
 							cookie: key
 						},
@@ -300,12 +320,11 @@
 							this.songdata = this.songdata.filter(item => {
 								return item.ar[0].name != null
 							})
-							this.pic1 = this.songdata[1].al.picUrl
+							this.pic1 = this.songdata[0].al.picUrl
 							this.$store.commit('setmusicedata', this.songdata)
 						}
 					})
 				}else {
-					
 					this.songdata = this.livemusicelistdata
 					// console.log(this.songdata)
 					this.songdata = this.songdata.filter(item => {
@@ -322,7 +341,6 @@
 				if (this.songdata != null) {
 					let tpe = this.songdata.length
 
-					this.listnum = tpe + 20
 					let numk = 20
 					uni.request({
 						url: `${helper.url}/playlist/track/all?id=${this.id}&limit=${numk}&offset=${tpe}`,
@@ -564,7 +582,7 @@
 					uni.reLaunch({
 						url: '/pages/index/index'
 					})
-				}else if(this.ispage == 2) {
+				}else if(this.ispage == 2 || this.ispage == 3) {
 					uni.reLaunch({
 						url: '/pages/myhome/myhome'
 					})
@@ -583,6 +601,9 @@
 			},
 		},
 		computed: {
+			comlistnum() {
+				return this.songdata == null ? 0 : this.songdata.length
+			},
 			livemusicelist() {
 				return this.$store.state.livemusicelist
 			},
