@@ -39,13 +39,7 @@
 		},
 		methods: {
 			back() {
-				this.$emit('changetop', 100)
-				this.$store.commit('changeshowhome', -95)
-				uni.showTabBar({
-					fail() {
-						console.log('珂朵莉')
-					}
-				})
+				uni.navigateBack()
 			}
 		}
 	}
