@@ -39,9 +39,7 @@
 		},
 		methods: {
 			back() {
-				uni.reLaunch({
-					url: '/pages/myhome/myhome'
-				})
+				uni.navigateBack()
 			}
 		}
 	}
