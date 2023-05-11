@@ -10,8 +10,17 @@
 
 		<homebanner :page="page" :musicelist="musicelist" :isminshow="topmach" @fulldata="playmin"></homebanner>
 
-		<minmusic v-show="this.$store.state.showplaycomponent" :imgk="musicpic" :name="name" :ren="ren" :dd="dd"
-			:love="love" :top="topnum" @stopkk="bilibili" ref="child"></minmusic>
+		<minmusic 
+			v-show="this.$store.state.showplaycomponent" 
+			:imgk="musicpic"
+			:name="name" 
+			:ren="ren" 
+			:dd="dd"
+			:love="love" 
+			:top="topnum" 
+			@stopkk="bilibili" 
+			ref="child"
+		></minmusic>
 	</view>
 </template>
 
