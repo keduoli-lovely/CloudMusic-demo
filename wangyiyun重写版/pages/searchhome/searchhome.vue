@@ -169,9 +169,13 @@
 				dd: helper.contminlist.dd,
 				topnum: helper.contminlist.topnum,
 				love:  helper.contminlist.islove
+				
 			};
 		},
 		onLoad(e) {
+			if(e.page) {
+				helper.page = e.page
+			}
 			if(e.tit) {
 				this.wait = 2
 				this.title = e.tit
@@ -264,23 +268,18 @@
 			hotclear(e) {
 				setTimeout(() => {
 					this.title = null
-					// console.log(e.detail.value)
 					this.value = null
 				}, 500)
 			},
 			newgetlist(e) {
 				if(this.title) {
-					// uni.setStorageSync('key', [e]);
 					this.ifvalue(e)
-					// const value = uni.getStorageSync('key');
-					// console.log(value)	
 					this.goindex(this.title)
 				}
 			},
 			ifvalue(e) {
 				let value = uni.getStorageSync('key');
 				let np = false
-				// console.log(value.length)
 				if(value.length > 0) {
 					for(let i = 0; i < value.length; i++) {
 						if(value[i] === e) {
@@ -299,13 +298,11 @@
 				if(np) {
 					let tp = value
 					tp.unshift(e)
-					// console.log(tp)
 					uni.setStorageSync('key', tp);
 				}
 
 			},
 			goindex(name) {
-				// console.log(1)
 				uni.reLaunch({
 					url: `/pages/goindex/goindex?name=${name}`
 				})
@@ -321,10 +318,17 @@
 				this.title = null	
 			},
 			back() {
-				if(this.wait == 1) {
+				if(helper.page == 1) {
 					uni.reLaunch({
-						url:"/pages/index/index"
+						url: '/pages/index/index'
 					})
+				}else if(helper.page == 2) {
+					uni.reLaunch({
+						url: '/pages/myhome/myhome'
+					})
+				}
+				else if(this.wait == 1) {
+					uni.navigateBack()
 				}else {
 					this.he = "-100vh"
 					this.hotlist = null
