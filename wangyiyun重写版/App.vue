@@ -11,6 +11,7 @@
 				},
 				success: (res) => {
 					// console.log(res)
+					uni.setStorageSync('id', res.data.data.account.id)
 					let  id = res.data.data.account
 					if(id) {
 						this.$store.commit('changeLogin', true)
