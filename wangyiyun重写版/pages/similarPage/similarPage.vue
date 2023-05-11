@@ -3,28 +3,15 @@
 		<view class="Recent" v-if="page == 1">
 			<homeheader></homeheader>
 		</view>
-		
+
 		<view class="Clouddisk" v-else-if="page == 2">
-			<similarcomp></similarcomp>	
+			<similarcomp></similarcomp>
 		</view>
-		
-		<homebanner
-			:page="page" 
-			:musicelist="musicelist" 
-			:isminshow="topmach"
-			@fulldata="playmin"
-		></homebanner>
-		
-		<minmusic
-		v-show="this.$store.state.showplaycomponent"
-		:imgk="musicpic"
-		:name="name" 
-		:ren="ren" 
-		:dd="dd" 
-		:love="love"
-		:top="topnum" 
-		@stopkk="bilibili"
-		ref="minch"></minmusic>
+
+		<homebanner :page="page" :musicelist="musicelist" :isminshow="topmach" @fulldata="playmin"></homebanner>
+
+		<minmusic v-show="this.$store.state.showplaycomponent" :imgk="musicpic" :name="name" :ren="ren" :dd="dd"
+			:love="love" :top="topnum" @stopkk="bilibili" ref="child"></minmusic>
 	</view>
 </template>
 
@@ -37,7 +24,7 @@
 				musicpic: helper.contminlist.musicpic,
 				name: helper.contminlist.name,
 				ren: helper.contminlist.ren,
-				dd:  helper.contminlist.dd,
+				dd: helper.contminlist.dd,
 				topnum: helper.plnumstr,
 				topmach: 100,
 				musicelist: helper.cloudmusice,
@@ -46,20 +33,23 @@
 		},
 		onLoad(e) {
 			this.page = e.page
-			if(this.page == 1) {
+			if (this.page == 1) {
 				document.title = "最近播放"
 				this.getmusice()
-			}else if(this.page == 2) {
+			} else if (this.page == 2) {
 				document.title = "音乐云盘"
 				this.getcloud()
-			}	
+			}
+		},
+		beforeDestroy() {
+			console.log(1111)
 		},
 		methods: {
 			getmusice() {
 				let key = uni.getStorageSync('cookie')
 				this.top = 0
-				if(key) {
-					if(!helper.Recentmusic.length || helper.Recentmusic.length != this.musicelist.length) {
+				if (key) {
+					if (!helper.Recentmusic.length || helper.Recentmusic.length != this.musicelist.length) {
 						uni.request({
 							url: `${helper.url}/record/recent/song?limit=50`,
 							data: {
@@ -71,7 +61,7 @@
 								helper.Recentmusic = this.musicelist
 							}
 						})
-					}else {
+					} else {
 						this.musicelist = helper.Recentmusic
 					}
 				}
@@ -93,38 +83,38 @@
 			islove(id) {
 				let idlist = uni.getStorageSync('musiceid')
 				let x
-				if(idlist) {
+				if (idlist) {
 					x = idlist.some(item => {
 						return item === id
-					})					
+					})
 				}
 				return x
 			},
 			stormusiclist(e, img, title, name, size, love) {
 				let value = uni.getStorageSync('musiclist');
 				let np = false
-				
-				if(value) {
+
+				if (value) {
 					let kenum = value.findIndex(function(item) {
 						return item.e === e
 					})
-					if(kenum >= 0) {
+					if (kenum >= 0) {
 						this.$store.commit('changeSubscript', kenum)
-					}else if(kenum <= 0) {
+					} else if (kenum <= 0) {
 						this.$store.commit('changeSubscript', 0)
 					}
 				}
-					
-				if(value.length > 0) {
+
+				if (value.length > 0) {
 					let keke = value.filter((item) => {
 						return item.e == e
 					})
-					if(keke.length == 0) {
+					if (keke.length == 0) {
 						np = true
-					}else {
+					} else {
 						np = false
 					}
-				}else if(!value || value.length === 0) {
+				} else if (!value || value.length === 0) {
 					uni.setStorageSync('musiclist', [{
 						e,
 						title,
@@ -133,10 +123,10 @@
 						size,
 						love
 					}])
-				
+
 				}
-				
-				if(np) {
+
+				if (np) {
 					// console.log(np)
 					let tp = value
 					tp.unshift({
@@ -151,14 +141,14 @@
 					uni.setStorageSync('musiclist', tp);
 				}
 			},
-			startgq(id,img, title, name,playsize) {
+			startgq(id, img, title, name, playsize) {
 				uni.request({
 					url: `${helper.url}/check/music?id=${id}`,
 					success: (res) => {
 						this.isplay = res.data.success
-				
-				
-						if(!this.isplay) {
+
+
+						if (!this.isplay) {
 							uni.showToast({
 								title: res.data.message,
 								duration: 1000,
@@ -167,86 +157,104 @@
 							});
 							return
 						}
-						
-				getApp().watchmusice()
-				this.love = this.islove(id)
-				helper.contminlist.islove = this.love
-				helper.audiok.onEnded(() => {
-					if (uni.getStorageSync('musiclist') <= 1) {
-						helper.audiok.stop()
-						this.$store.commit('changeControl', 1)
-					} else {
-						
-						this.$nextTick(() => {
-							if(this.$refs.minch)
-							this.$refs.minch.down()
+
+						getApp().watchmusice()
+						this.love = this.islove(id)
+						helper.contminlist.islove = this.love
+						helper.audiok.onEnded(() => {
+							if (uni.getStorageSync('musiclist').length <= 1) {
+								helper.audiok.src = ''
+								this.$store.commit('changeControl', 1)
+							} else {
+								// console.log(1111)
+								console.log(this.$refs.child)
+								// if(this.$refs.child) {
+								// 	this.$refs.child.down()
+								// }else {
+									this.down()
+								// }
+								
+								
+							}
+						})
+
+
+						this.id = id
+						helper.moredetail.push({
+							"name": title,
+							"singer": name
+						})
+
+						this.$store.commit('changeControl', 0)
+						uni.request({
+							url: `${helper.url}/comment/music?id=${id}&limit=1`,
+							success: (res) => {
+								// console.log(res)
+								let sizek = res.data.total
+								if (sizek < 10000) {
+									this.topnum = '999+'
+									helper.plnumstr = '999+'
+								} else if (sizek >= 10000 && sizek < 100000) {
+									this.topnum = '1w+'
+									helper.plnumstr = '1w+'
+								} else if (sizek > 100000) {
+
+									this.topnum = '10w+'
+									helper.plnumstr = '10w+'
+								}
+								this.stormusiclist(id, img, title, name, this.topnum, this.love)
+							}
+						})
+
+						uni.request({
+							// url: `http://localhost:3000/song/url/v1?id=${k}&level=exhigh`,
+							url: `${helper.url}/song/url/v1?id=${id}&level=exhigh`,
+							success: (res) => {
+
+								this.musicpic = img
+								helper.contminlist.musicpic = img
+
+								this.name = title
+								helper.contminlist.name = title
+
+								this.ren = name
+								helper.contminlist.ren = name
+
+								// this.$paper.ch = true
+
+								this.dd = 0
+								helper.contminlist.dd = 0
+
+								this.$store.commit('changeshow', 1)
+
+								// console.log('1',res.data.data[0].url)
+								helper.audiok.autoplay = true
+								helper.audiok.src = res.data.data[0].url
+
+							}
 						})
 					}
 				})
+			},
+			down() {
+				this.musiclistdata = uni.getStorageSync('musiclist')
+				let sub = this.musicSubscript
 				
-				
-				this.id = id
-				helper.moredetail.push({
-					"name": title,
-					"singer": name
-				})
-				
-				this.$store.commit('changeControl', 0)
-				uni.request({
-					url: `${helper.url}/comment/music?id=${id}&limit=1`,
-					success: (res) => {
-						// console.log(res)
-						let sizek = res.data.total
-						if (sizek < 10000) {
-							this.topnum = '999+'
-							helper.plnumstr = '999+'
-						} else if (sizek >= 10000 && sizek < 100000) {
-							this.topnum = '1w+'
-							helper.plnumstr = '1w+'
-						} else if (sizek > 100000) {
-							
-							this.topnum = '10w+'
-							helper.plnumstr = '10w+'
-						}
-						this.stormusiclist(id, img, title, name, this.topnum, this.love)
-					}
-				})
-			
-				uni.request({
-					// url: `http://localhost:3000/song/url/v1?id=${k}&level=exhigh`,
-					url: `${helper.url}/song/url/v1?id=${id}&level=exhigh`,
-					success: (res) => {
-			
-						this.musicpic = img
-						helper.contminlist.musicpic = img
-						
-						this.name = title
-						helper.contminlist.name = title
-						
-						this.ren = name
-						helper.contminlist.ren = name
-						
-						// this.$paper.ch = true
-						
-						this.dd = 0
-						helper.contminlist.dd = 0
-						
-						this.$store.commit('changeshow', 1)
-						
-						// console.log('1',res.data.data[0].url)
-						helper.audiok.autoplay = true
-						helper.audiok.src = res.data.data[0].url
-			
-					}
-				  })
+				if (sub < this.musiclistdata.length - 1) {
+					sub += 1
+					this.$store.commit('changeSubscript', sub)
+					console.log(sub)
+				} else if (sub + 1 >= this.musiclistdata.length) {
+					console.log(2222)
+					sub = 0
+					this.$store.commit('changeSubscript', 0)
 				}
-			  })
 			},
 			getcloud() {
 				let key = uni.getStorageSync('cookie')
-				if(!key) return
-				if(!helper.cloudmusice.length || helper.cloudmusice.length != this.musicelist.length) {
-					
+				if (!key) return
+				if (!helper.cloudmusice.length || helper.cloudmusice.length != this.musicelist.length) {
+
 					uni.request({
 						url: `${helper.url}/user/cloud`,
 						data: {
@@ -260,7 +268,7 @@
 							console.log(err)
 						}
 					})
-				}else {
+				} else {
 					this.musicelist = helper.cloudmusice
 				}
 			}
