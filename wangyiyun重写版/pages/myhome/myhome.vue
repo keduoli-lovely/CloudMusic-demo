@@ -111,8 +111,19 @@
 			</view>
 		
 		</view>
-		
-		<homecomponent ref="Recentcom"></homecomponent>
+			
+		<minmusic
+		v-show="$store.state.showplaycomponent"
+		:imgk="musicpic"
+		:name="name" 
+		:ren="ren" 
+		:dd="dd"
+		:love="love"
+		:indexk="isindex"
+		:top="topnum"
+		:isshow="isshow"
+		@stopkk="bilibili"
+		></minmusic>
 		
 	</view>
 </template>
@@ -125,6 +136,15 @@ import helper from '../../common/helper';
 				picrow: '../../static/video/1.jpg',
 				
 				textstate: '',
+				isindex: 1,
+				musicpic: helper.contminlist.musicpic,
+				name: helper.contminlist.name,
+				ren: helper.contminlist.ren,
+				dd: -95,
+				topnum: helper.contminlist.topnum,
+				love:  helper.contminlist.islove,
+				isshow: 1,
+				key: uni.getStorageSync('cookie')
 			};
 		},
 		onLoad() {
@@ -133,35 +153,35 @@ import helper from '../../common/helper';
 		methods: {
 			// 云盘
 			getcloud() {
-				document.title = "音乐云盘"
-				uni.hideTabBar()
-				this.$store.commit('changeshowhome', -100)
-				uni.reLaunch({
-					url: '/pages/similarPage/similarPage'
+				if(!this.key) {
+					uni.reLaunch({
+						url: '/pages/login/login'
+					})
+					return
+				}			
+				uni.navigateTo({
+					url: '/pages/similarPage/similarPage?page=2'
 				})
 			},
 			// 获取最近播放的歌曲
 			getRecentmusice() {
-				let key = uni.getStorageSync('cookie')
-				if(!key) {
-					uni.navigateTo({
+				if(!this.key) {
+					uni.reLaunch({
 						url: '/pages/login/login'
 					})
 					return
-				}
-				this.$refs.Recentcom.getmusice()
-				document.title = "最近播放"
-				uni.hideTabBar()
-				this.$store.commit('changeshowhome', -100)
+				}			
+				uni.navigateTo({
+					url: '/pages/similarPage/similarPage?page=1'
+				})
 			},
 			// 获取喜欢列表的第一首歌的图片作为页面的背景
 			picone(id) {
 				if(!id) return
-				let key = uni.getStorageSync('cookie')
 				uni.request({
 					url: `${helper.url}/song/detail?ids=${id}`,
 					data: {
-						cookie: key
+						cookie: this.key
 					},
 					success: (res) => {
 						this.picrow = res.data.songs[0].al.picUrl
@@ -170,9 +190,8 @@ import helper from '../../common/helper';
 			},
 			getlivemusic() {
 				let musiceid = uni.getStorageSync('musiceid')
-				let key = uni.getStorageSync('cookie')
 				
-				if(!key) {
+				if(!this.key) {
 					uni.navigateTo({
 						url: '/pages/login/login'
 					})
@@ -182,7 +201,7 @@ import helper from '../../common/helper';
 					uni.request({
 						url: `${helper.url}/likelist?uid=${this.userid}`,
 						data: {
-							cookie: key
+							cookie: this.key
 						},
 						success: (res) => {
 							// console.log(res.data.ids)
@@ -220,7 +239,25 @@ import helper from '../../common/helper';
 				uni.navigateTo({
 					url:"/pages/searchhome/searchhome"
 				})
-			}
+			},
+			bilibili(e) {
+				if(this.numk != e) {
+					this.numk = 1
+					uni.showTabBar({
+						fail() {
+							console.log('珂朵莉')
+						}
+					})
+					helper.contminlist.dd = -100
+					this.dd = -95
+					// console.log(11,'k')
+				} else {
+					console.log(11,'k1')
+					
+					this.numk = e
+					helper.contminlist.dd = 0
+				}
+			},
 		},
 		computed: {
 			islogin() {
