@@ -42,6 +42,7 @@ let Recentmusic = []
 let cloudmusice = []
 // let comments = []
 // let hotcomments = []
+let mygedan = ''
 
 let kk1 = 1
 let lrc = null
@@ -52,6 +53,9 @@ let playpic = null
 let lrcid = null
 let count = null
 let plnumstr = ''
+let page = 1
+
+let picrow = ''
 
 const audiok = uni.createInnerAudioContext();
 
@@ -113,5 +117,13 @@ export default {
 	Recentmusic,
 	
 	// 云盘
-	cloudmusice
+	cloudmusice,
+	
+	// 喜欢页面的banner图片
+	picrow,
+	
+	// 用户歌单
+	mygedan,
+	
+	page
 }
