@@ -94,7 +94,7 @@
 			},
 			getSearchHome() {
 				uni.navigateTo({
-					url:"/pages/searchhome/searchhome"
+					url:"/pages/searchhome/searchhome?page=1"
 				})
 			}
 		}
