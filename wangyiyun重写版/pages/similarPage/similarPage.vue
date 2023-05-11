@@ -24,7 +24,7 @@
 		:love="love"
 		:top="topnum" 
 		@stopkk="bilibili"
-		ref="child"></minmusic>
+		ref="minch"></minmusic>
 	</view>
 </template>
 
@@ -176,7 +176,11 @@
 						helper.audiok.stop()
 						this.$store.commit('changeControl', 1)
 					} else {
-						this.child.down()
+						
+						this.$nextTick(() => {
+							if(this.$refs.minch)
+							this.$refs.minch.down()
+						})
 					}
 				})
 				
