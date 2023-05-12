@@ -133,7 +133,7 @@
 		},
 		methods: {
 			islove(id) {
-				let idlist = uni.getStorageSync('musiceid')
+				let idlist = uni.getStorageSync('userliveid')
 				let x
 				if(idlist) {
 					x = idlist.some(item => {
