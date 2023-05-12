@@ -86,7 +86,6 @@
 					this.dd = -95
 					// console.log(11,'k')
 				} else {
-					console.log(11,'k1')
 					
 					this.numk = e
 					helper.contminlist.dd = 0
