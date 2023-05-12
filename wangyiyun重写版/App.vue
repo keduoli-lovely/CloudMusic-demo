@@ -3,6 +3,10 @@
 	export default {
 		onLaunch() {
 			let key = uni.getStorageSync('cookie')
+			if(!key) {
+				this.$store.commit('changeLogin', false)
+				return
+			}
 			uni.request({
 				url: `${helper.url}/login/status`,
 				// withCredentials: true,
@@ -104,6 +108,7 @@
 		--indexsearchbgcolor: #2f2f2d;
 
 		/* // 字体 */
+		--liveuserfontcolor: #e7e7e7;
 		--indexfontcolor: #fff;
 		--zhuanshufontcolor: #fff;
 		--liveboxfontcolor: #fefefe;
