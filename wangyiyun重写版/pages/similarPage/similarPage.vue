@@ -50,9 +50,6 @@
 				this.getcloud()
 			}
 		},
-		beforeDestroy() {
-			console.log(1111)
-		},
 		methods: {
 			getmusice() {
 				let key = uni.getStorageSync('cookie')
@@ -90,7 +87,7 @@
 				}
 			},
 			islove(id) {
-				let idlist = uni.getStorageSync('musiceid')
+				let idlist = uni.getStorageSync('userliveid')
 				let x
 				if (idlist) {
 					x = idlist.some(item => {
@@ -175,14 +172,12 @@
 								helper.audiok.src = ''
 								this.$store.commit('changeControl', 1)
 							} else {
-								// console.log(1111)
-								console.log(this.$refs.child)
-								// if(this.$refs.child) {
-								// 	this.$refs.child.down()
-								// }else {
-									this.down()
-								// }
-								
+								if(this.$refs.child != undefined) {
+									this.$refs.child.down()
+									
+								}else {
+									uni.$emit('simllardown')
+								}
 								
 							}
 						})
