@@ -90,7 +90,7 @@
 				
 			</view>
 		
-			<view class="live" @click="getlivemusic">
+			<view class="live" @click.stop="getlivemusic">
 				<view class="live-pic">
 					<image :src="userlive.imgurl" mode="aspectFill"></image>
 				</view>
@@ -129,6 +129,7 @@
 		:top="topnum"
 		:isshow="isshow"
 		@stopkk="bilibili"
+		ref="child"
 		></minmusic>
 		
 	</view>
@@ -152,19 +153,36 @@ import helper from '../../common/helper';
 				opnum: 0,
 				opactiv: 0,
 				userlive: '',
-				userlivemusice: []
+				userlivemusice: [],
 			};
 		},
-		onLoad() {
+		mounted() {		
 			this.picone() 
-		},
-		mounted() {
-			
 			this.$nextTick(() => {
+				uni.$on('simllardown',this.simllarON)
+				uni.$on('playlistdown',this.playlistON)
 				this.$refs.gather.getsong()
 			})
 		},
+		beforeDestroy() {
+			this.$off('simllardown')
+			this.$off('playlistdown')
+		},
 		methods: {
+			playlistON() {
+				try{
+					this.$refs.child.down()
+				}catch(e){
+					console.log('珂朵莉世界第一可爱')
+				}
+			},
+			simllarON() {
+				try{
+					this.$refs.child.down()
+				}catch(e){
+					console.log('珂朵莉世界第一可爱')
+				}
+			},
 			keduoli1(e) {
 				this.opnum = e.touches[0].pageY
 			},
@@ -210,7 +228,7 @@ import helper from '../../common/helper';
 				let live = uni.getStorageSync('userlive')
 				let userliveid = uni.getStorageSync('userliveid')
 				this.userlive = live
-				if(!live && !userliveid.length) {
+				if(!live || !userliveid.length) {
 				
 				uni.request({
 					url: `${helper.url}/playlist/detail?id=${live.userid}`,
@@ -218,7 +236,7 @@ import helper from '../../common/helper';
 						cookie: this.key
 					},
 					success: (res) => {
-						console.log(res)
+						// console.log(res)
 						let tracks = res.data.playlist.tracks
 						console.log(tracks)
 						tracks.forEach(item => {
@@ -244,6 +262,11 @@ import helper from '../../common/helper';
 					return
 				}
 				if(userliveid) {					
+					uni.reLaunch({
+						url: '/pages/playlist/playlist?page=2'
+					})
+				}else {
+					this.picone()
 					uni.reLaunch({
 						url: '/pages/playlist/playlist?page=2'
 					})
@@ -499,6 +522,7 @@ import helper from '../../common/helper';
 					border-radius: 8rpx;
 					width: 130rpx;
 					height: 120rpx;
+					background-color: #333;
 				}
 				.live-box {
 					width: 85%;
