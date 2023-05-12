@@ -24,14 +24,6 @@
             
         }
         ,{
-            "path" : "pages/sing/sing",
-            "style" : {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
             "path" : "pages/goindex/goindex",
             "style" : {
                 "navigationBarTitleText": "wyy",
@@ -93,6 +85,15 @@
             }
             
         }
+        ,{
+            "path" : "pages/concern/concern",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "关注",
+                "enablePullDownRefresh": true
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -127,10 +128,10 @@
 				"selectedIconPath": "/static/icon/my1.png"
 			},
 			{
-				"pagePath": "pages/sing/sing",
-				"text": "社区",
+				"pagePath": "pages/concern/concern",
+				"text": "关注",
 				"iconPath": "/static/icon/ol.png",
-				"selectedIconPath": "/static/icon//ol1.png"
+				"selectedIconPath": "/static/icon/ol1.png"
 			}
 		]
 	}
