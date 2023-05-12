@@ -242,7 +242,8 @@
 				newpl: [],
 				hotpl: [],
 				ad: null,
-				islove: this.love
+				islove: this.love,
+				isdown: 1
 			}
 		},
 		props: {
@@ -302,7 +303,7 @@
 					}
 				})
 				
-				uni.removeStorageSync('musiceid')
+				uni.removeStorageSync('userliveid')
 			},
 			addlist() {
 				let onemusice = uni.getStorageSync('musiclist')
@@ -454,7 +455,7 @@
 					}
 				}, 100)
 				this.musicplaylist = uni.getStorageSync('musiclist')
-				if (this.indexk) {
+				if (this.isdown) {
 					this.listboxbottom = '110rpx'
 				} else {
 					this.listboxbottom = '35rpx'
@@ -691,7 +692,7 @@
 				this.geci = true
 				let stop1 = 2
 				this.$emit('stopkk', stop1)
-				if (this.indexk) {
+				if (this.isdown) {
 					uni.showTabBar({
 						fail() {
 							console.log('珂朵莉')
@@ -766,6 +767,10 @@
 
 		},
 		watch: {
+			indexk(val) {
+				console.log(val)
+				this.isdown = val
+			},
 			love(val) {
 				this.islove = val
 			},
@@ -794,7 +799,6 @@
 				this.singerName = this.ren
 			},
 			changemusic(val) {
-				console.log(val)
 				let row = uni.getStorageSync('musiclist')[val]
 				this.musiceTitle = row.title
 				this.islove = row.love
