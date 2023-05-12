@@ -45,7 +45,7 @@
 	}
 </script>
 
-<style long="scss">
+<style long="scss" scoped>
 	.homeheader {
 		background-color: var(--indexiconbgcolor);
 		.top {
