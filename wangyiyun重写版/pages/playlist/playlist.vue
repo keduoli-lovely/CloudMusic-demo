@@ -278,6 +278,7 @@
 				}			
 				this.getmusiclist()
 			}else if(e.page == 2) {
+				// console.log(111)
 				this.ishome = true
 				this.getlivelist()
 				this.singtexttop = '我喜欢的音乐'
@@ -404,7 +405,7 @@
 				}
 			},
 			islove(id) {
-				let idlist = uni.getStorageSync('musiceid')
+				let idlist = uni.getStorageSync('userliveid')
 				let x
 				if(idlist) {
 					x = idlist.some(item => {
@@ -439,9 +440,11 @@
 								helper.audiok.src = ''
 								this.$store.commit('changeControl', 1)
 							} else {
-								// console.log(1111)
-								console.log(this.$refs.child)
-								this.$refs.child.down()
+								if(this.$refs.child != undefined) {
+									this.$refs.child.down()
+								}else {
+									uni.$emit('playlistdown')
+								}
 							}
 						})
 						this.id = id
