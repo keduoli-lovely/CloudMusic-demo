@@ -47,7 +47,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 
 			<view class="scrollowned">
 
-				<view class="myowned" v-for="(item, index) in follow" :key="index">
+				<view class="myowned" v-for="(item, index) in follow" :key="index" @click="getliveuserhome(item.userId)">
 					<view class="owed-img">
 						<image :src="item.avatarUrl" mode="aspectFill"></image>
 					</view>
@@ -75,16 +75,8 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 				</view>
 
 				<view class="bar-right">
-					<view class="all">
-						全部
-					</view>
-
-					<view class="song">
-						音乐人
-					</view>
-
-					<view class="firend">
-						朋友
+					<view class="all" v-for="(item, index) in barlist" :key="index" @click="getdet(index)" :class="index == subind ? 'atv' : ''">
+						{{item}}
 					</view>
 				</view>
 			</view>
@@ -93,31 +85,40 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 
 			</view>
 		</view>
-
+		
+		<spareWheel v-if="issparewheel || subind == 2"></spareWheel>
+		
 		<NewsThatCares 
-		v-for="(item, index) in liveusertolive"
-		:name="item.user.nickname"
+		v-show="subind == 0 || subind == 1"
+		v-for="(item, index) in liveusertolive" 
+		:name="item.user.nickname" 
 		:pic="item.user.avatarUrl"
-		:id="item.user.userId"
-		:con="item.json"
-		:livenum="item.info.likedCount"
+		:id="item.user.userId" 
+		:con="item.json" 
+		:livenum="item.info.likedCount" 
 		:plun="item.info.commentCount"
 		:give="item.insiteForwardCount"
+		:listpic="item.pics"
 		></NewsThatCares>
 		
 		
-		<minmusic
-		v-show="$store.state.showplaycomponent"
-		:imgk="musicpic"
+
+		<minmusic 
+		v-show="$store.state.showplaycomponent" 
+		:imgk="musicpic" 
 		:name="name" 
 		:ren="ren" 
-		:dd="dd"
+		:dd="dd" 
 		:love="love"
-		:indexk="isindex"
-		:top="topnum"
-		:isshow="isshow"
+		:indexk="isindex" 
+		:top="topnum" 
+		:isshow="isshow" 
 		@stopkk="bilibili"
 		></minmusic>
+		
+		<view class="bg">
+			
+		</view>
 	</view>
 </template>
 
@@ -139,26 +140,44 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 				ren: helper.contminlist.ren,
 				topnum: helper.contminlist.topnum,
 				love: helper.contminlist.islove,
+				// 阻止没有数据还发送请求
+				stopsend: false,
+				barlist: ['全部', '音乐人', '朋友'],
+				subind: 0
 			};
 		},
 		onLoad() {
 			this.getliveuser()
+			this.gethot()
+			this.stopsend = false
 		},
 		onReachBottom() {
-			this.getlasttime()
-			uni.showToast({
-				title: '加载中...',
-				duration: 1500,
-				mask:true,
-				icon: 'none'
-			});
+			this.gethot()
+			if(!this.stopsend) {
+				uni.showToast({
+					title: '加载中...',
+					duration: 1500,
+					mask: true,
+					icon: 'none'
+				});
+			}else {
+				uni.showToast({
+					title: '没有更多了',
+					duration: 1500,
+					mask: true,
+					icon: 'none'
+				});
+			}		
 		},
 		mounted() {
 			uni.$on('conceplay', this.playmin)
 		},
 		methods: {
+			getdet(i) {
+				this.subind = i
+			},
 			bilibili(e) {
-				if(this.numk != e) {
+				if (this.numk != e) {
 					this.numk = 1
 					uni.showTabBar({
 						fail() {
@@ -167,220 +186,211 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 					})
 					helper.contminlist.dd = -100
 					this.dd = -95
-					// console.log(11,'k')
 				} else {
 					this.dd = -100
 					this.numk = e
 					helper.contminlist.dd = 0
 				}
 			},
-				playmin(e) {
-					this.startgq(e.id, e.img, e.title, e.name, e.size)
-				},
-				stormusiclist(e, img, title, name, size, love) {
-					let value = uni.getStorageSync('musiclist');
-					let np = false
-					if(value) {
-						let kenum = value.findIndex(function(item) {
-							return item.e === e
-						})
-						if(kenum >= 0) {
-							this.$store.commit('changeSubscript', kenum)
-						}else if(kenum <= 0) {
-							this.$store.commit('changeSubscript', 0)
-						}
+			playmin(e) {
+				this.startgq(e.id, e.img, e.title, e.name, e.size)
+			},
+			stormusiclist(e, img, title, name, size, love) {
+				let value = uni.getStorageSync('musiclist');
+				let np = false
+				if (value) {
+					let kenum = value.findIndex(function(item) {
+						return item.e === e
+					})
+					if (kenum >= 0) {
+						this.$store.commit('changeSubscript', kenum)
+					} else if (kenum <= 0) {
+						this.$store.commit('changeSubscript', 0)
 					}
-						
-					if(value.length > 0) {
-						let keke = value.filter((item) => {
-							return item.e == e
-						})
-						if(keke.length == 0) {
-							np = true
-						}else {
-							np = false
-						}
-					}else if(!value || value.length === 0) {
-						uni.setStorageSync('musiclist', [{
-							e,
-							title,
-							name,
-							img,
-							size,
-							love
-						}])
-					
+				}
+
+				if (value.length > 0) {
+					let keke = value.filter((item) => {
+						return item.e == e
+					})
+					if (keke.length == 0) {
+						np = true
+					} else {
+						np = false
 					}
-					
-					if(np) {
-						let tp = value
-						tp.unshift({
-							e,
-							title,
-							name,
-							img,
-							size,
-							love
-						})
-						uni.setStorageSync('musiclist', tp);
-					}
-				},
-				islove(id) {
-					let idlist = uni.getStorageSync('userliveid')
-					let x
-					if(idlist) {
-						x = idlist.some(item => {
-							return item === id
-						})					
-					}
-					return x
-				},
-				startgq(id,img, title, name,playsize) {
-					uni.hideTabBar()
-					uni.request({
-						url: `${helper.url}/check/music?id=${id}`,
-						success: (res) => {
-							this.isplay = res.data.success
-					
-					
-							if(!this.isplay) {
-								uni.showToast({
-									title: res.data.message,
-									duration: 1000,
-									mask: true,
-									icon: 'none'
-								});
-								return
-							}
-							getApp().watchmusice()
-							
-							this.love = this.islove(id)
-							helper.contminlist.islove = this.love
-							helper.audiok.onEnded(() => {
-								if (uni.getStorageSync('musiclist').length <= 1) {
-									helper.audiok.src = ''
-									this.$store.commit('changeControl', 1)
-								} else {
-									if(this.$refs.child != undefined) {
-										this.$refs.child.down()
-									}else {
-										uni.$emit('playlistdown')
-									}
-								}
-							})
-							this.id = id
-							helper.moredetail.push({
-								"name": title,
-								"singer": name
-							})
-							this.hello = 0
-							
-							this.$store.commit('changeControl', 0)
-							uni.request({
-								url: `${helper.url}/comment/music?id=${id}&limit=1`,
-								success: (res) => {
-									let sizek = res.data.total
-									if (sizek < 10000) {
-										this.topnum = '999+'
-										helper.plnumstr = '999+'
-									} else if (sizek >= 10000 && sizek < 100000) {
-										this.topnum = '1w+'
-										helper.plnumstr = '1w+'
-									} else if (sizek > 100000) {
-										
-										this.topnum = '10w+'
-										helper.plnumstr = '10w+'
-									}
-									this.stormusiclist(id, img, title, name, this.topnum, this.love)
-								}
-							})
-						
-							uni.request({
-								url: `${helper.url}/song/url/v1?id=${id}&level=exhigh`,
-								success: (res) => {
-						
-									this.musicpic = img
-									helper.contminlist.musicpic = img
-									
-									this.name = title
-									helper.contminlist.name = title
-									
-									this.ren = name
-									helper.contminlist.ren = name
-									
-									
-									this.dd = 0
-									helper.contminlist.dd = 0
-									
-									this.$store.commit('changeshow', 1)
-									
-									helper.audiok.autoplay = true
-									helper.audiok.src = res.data.data[0].url
-				
-								}
-							})
-						}	
-				  })
-				},
-			getlasttime() {
-				let id = uni.getStorageSync('id')
-				if(!id && !this.follow) return
+				} else if (!value || value.length === 0) {
+					uni.setStorageSync('musiclist', [{
+						e,
+						title,
+						name,
+						img,
+						size,
+						love
+					}])
+
+				}
+
+				if (np) {
+					let tp = value
+					tp.unshift({
+						e,
+						title,
+						name,
+						img,
+						size,
+						love
+					})
+					uni.setStorageSync('musiclist', tp);
+				}
+			},
+			islove(id) {
+				let idlist = uni.getStorageSync('userliveid')
+				let x
+				if (idlist) {
+					x = idlist.some(item => {
+						return item === id
+					})
+				}
+				return x
+			},
+			startgq(id, img, title, name, playsize) {
+				uni.hideTabBar()
 				uni.request({
-					url: `${helper.url}/user/follows?uid=${id}`,
+					url: `${helper.url}/check/music?id=${id}`,
 					success: (res) => {
-						this.follow = res.data.follow
-						
-						if(this.follow) {
-							this.follow.forEach(item => {
-								uni.request({
-									url: `${helper.url}/user/event?uid=${item.userId}&lasttime=${this.lasttime}`,
-									success: (res) => {
-										console.log(res)
-										this.lasttime = res.data.lasttime
-										let rows = res.data.events
-										this.liveusertolive = [...rows, ...this.liveusertolive]
-									}
-								})
-							})
+						this.isplay = res.data.success
+
+
+						if (!this.isplay) {
+							uni.showToast({
+								title: res.data.message,
+								duration: 1000,
+								mask: true,
+								icon: 'none'
+							});
+							return
 						}
+						getApp().watchmusice()
+
+						this.love = this.islove(id)
+						helper.contminlist.islove = this.love
+						helper.audiok.onEnded(() => {
+							if (uni.getStorageSync('musiclist').length <= 1) {
+								helper.audiok.src = ''
+								this.$store.commit('changeControl', 1)
+							} else {
+								if (this.$refs.child != undefined) {
+									this.$refs.child.down()
+								} else {
+									uni.$emit('playlistdown')
+								}
+							}
+						})
+						this.id = id
+						helper.moredetail.push({
+							"name": title,
+							"singer": name
+						})
+						this.hello = 0
+
+						this.$store.commit('changeControl', 0)
+						uni.request({
+							url: `${helper.url}/comment/music?id=${id}&limit=1`,
+							success: (res) => {
+								let sizek = res.data.total
+								if (sizek < 10000) {
+									this.topnum = '999+'
+									helper.plnumstr = '999+'
+								} else if (sizek >= 10000 && sizek < 100000) {
+									this.topnum = '1w+'
+									helper.plnumstr = '1w+'
+								} else if (sizek > 100000) {
+
+									this.topnum = '10w+'
+									helper.plnumstr = '10w+'
+								}
+								this.stormusiclist(id, img, title, name, this.topnum, this.love)
+							}
+						})
+
+						uni.request({
+							url: `${helper.url}/song/url/v1?id=${id}&level=exhigh`,
+							success: (res) => {
+
+								this.musicpic = img
+								helper.contminlist.musicpic = img
+
+								this.name = title
+								helper.contminlist.name = title
+
+								this.ren = name
+								helper.contminlist.ren = name
+
+
+								this.dd = 0
+								helper.contminlist.dd = 0
+
+								this.$store.commit('changeshow', 1)
+
+								helper.audiok.autoplay = true
+								helper.audiok.src = res.data.data[0].url
+
+							}
+						})
 					}
 				})
 			},
+			gethot() {
+				if(this.stopsend) return
+				let key = uni.getStorageSync('cookie')
+				uni.request({
+					url: `${helper.url}/event?pagesize=30`,
+					data: {
+						cookie: key
+					},
+					success: (res) => {
+						console.log(res,111)
+						if (this.lasttime == res.data.lasttime) {
+							this.stopsend = true
+							uni.showToast({
+								title: '没有更多了',
+								duration: 1500,
+								mask: true,
+								icon: 'none'
+							});
+							return
+
+						}
+						this.lasttime = res.data.lasttime
+						let rows = res.data.event
+						this.liveusertolive = [...rows, ...this.liveusertolive]
+					}
+				})
+
+			},
 			getliveuser() {
 				let id = uni.getStorageSync('id')
-				if(!id && !this.follow) return
+				if (!id && !this.follow) return
 				uni.request({
 					url: `${helper.url}/user/follows?uid=${id}`,
 					success: (res) => {
 						this.follow = res.data.follow
-						
-						if(this.follow) {
-							this.follow.forEach(item => {
-								uni.request({
-									url: `${helper.url}/user/event?uid=${item.userId}`,
-									success: (res) => {
-										if(this.lasttime == res.data.lasttime) {
-											uni.showToast({
-												title: '没有更多了',
-												duration: 1500,
-												mask:true,
-												icon: 'none'
-											});
-											return
-											
-										}
-										this.lasttime = res.data.lasttime
-										let rows = res.data.events
-										this.liveusertolive = [...rows, ...this.liveusertolive]
-									}
-								})
-							})
-						}
+						console.log(res)
 					}
 				})
 			},
 			sendcon() {
 				this.showmore = !this.showmore
+			},
+			getliveuserhome(id) {
+				uni.reLaunch({
+					url: `/pages/loveuserhome/loveuserhome?id=${id}`
+				})
+			}
+		},
+		computed: {
+			issparewheel() {
+				return this.liveusertolive.length == 0 ? true : false
 			}
 		}
 	}
@@ -394,11 +404,20 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 	.concern {
 		padding: 140rpx 20rpx 140rpx;
 		width: 750rpx;
-		// height: 100v;
-		overflow: hidden;
+		height: 100%;
+		// overflow: hidden;
 		background-color: var(--searchlistbgcolor);
+		.bg {
+			z-index: -1;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: var(--searchlistbgcolor);
+		}
 		.mask-essay {
-			z-index: 999;
+			z-index: 99;
 			position: fixed;
 			top: 0;
 			left: 0;
@@ -418,10 +437,12 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 			height: 140rpx;
 			// background-color: #999;
 			background-color: var(--searchlistbgcolor);
+
 			.header-title {
 				font-size: 34rpx;
 				color: var(--indexfontcolor);
 			}
+
 			.addessay {
 				position: relative;
 				height: 60rpx;
@@ -498,6 +519,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 					border-radius: 50%;
 					background-color: #fff;
 				}
+
 				.t1 {
 					color: var(--indexfontcolor);
 					font-size: 28rpx;
@@ -538,7 +560,8 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 					flex: 3;
 					display: flex;
 					justify-content: space-between;
-					.all {
+
+					.atv {
 						color: var(--indexfontcolor);
 					}
 				}
