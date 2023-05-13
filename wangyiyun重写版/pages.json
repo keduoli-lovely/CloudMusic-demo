@@ -90,7 +90,16 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "关注",
-                "enablePullDownRefresh": true
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/loveuserhome/loveuserhome",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
             }
             
         }
