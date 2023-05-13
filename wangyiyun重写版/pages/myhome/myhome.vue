@@ -187,7 +187,6 @@ import helper from '../../common/helper';
 				this.opnum = e.touches[0].pageY
 			},
 			movechangeop(e) {
-				// console.log(this.opnum - e.touches[0].pageY)
 				this.opactiv = (this.opnum - e.touches[0].pageY)
 				
 			},
@@ -238,7 +237,6 @@ import helper from '../../common/helper';
 					success: (res) => {
 						// console.log(res)
 						let tracks = res.data.playlist.tracks
-						console.log(tracks)
 						tracks.forEach(item => {
 							this.userlivemusice.push(item.id)
 						})
@@ -252,7 +250,6 @@ import helper from '../../common/helper';
 				}
 			},
 			getlivemusic() {
-				// console.log(111)
 				let userliveid = uni.getStorageSync('userliveid')
 				
 				if(!this.key) {
@@ -276,7 +273,6 @@ import helper from '../../common/helper';
 				uni.request({
 					url: `${helper.url}/user/cloud`,
 					success: (res) => {
-						// console.log(res)
 					}
 				})
 			},		
@@ -300,9 +296,7 @@ import helper from '../../common/helper';
 					})
 					helper.contminlist.dd = -100
 					this.dd = -95
-					// console.log(11,'k')
 				} else {
-					console.log(11,'k1')
 					
 					this.numk = e
 					helper.contminlist.dd = 0
