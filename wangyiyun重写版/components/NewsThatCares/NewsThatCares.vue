@@ -1,6 +1,6 @@
 <template>
 	<view class="cares night">
-		<view class="title-pic">
+		<view class="title-pic" @click="getlivehome(id)">
 			<image :src="pic" mode="aspectFill"></image>
 		</view>
 		<view class="con-text">
@@ -33,6 +33,15 @@
 					{{context.msg}}
 				</view>
 				
+				<view class="pics" v-if="listpic.length">
+					<view class="rowpic" v-for="(item, index) in listpic" :key="index" >
+						<view class="picbox" v-if="isshowpic" @click="quitpic">
+							<image  :src="clickpic" mode="widthFix"></image>
+						</view>
+						<image @click="shownew(index)" class="pic1"  :src="item.squareUrl" mode="widthFix"></image>
+					</view>
+				</view>
+				
 				<view class="cite-musice" v-if="context.song" @click="playke(context.song.id,
 				context.song.album.blurPicUrl,
 				context.song.name,
@@ -52,6 +61,7 @@
 						</view>
 					</view>
 				</view>
+				
 			</view>
 			
 			<!-- // 分享,评论下的评论, 点赞 -->
@@ -98,11 +108,28 @@
 		name:"NewsThatCares",
 		data() {
 			return {
-				topnum: helper.plnumstr
+				topnum: helper.plnumstr,
+				isshowpic: false,
+				clickpic: ''
 			};
 		},
-		props:['name','pic', 'id', 'con', 'livenum', 'plun', 'give'],
+		props:['name','pic', 'id', 'con', 'livenum', 'plun', 'give', 'listpic'],
+
 		methods: {
+			getlivehome(id) {
+				uni.reLaunch({
+					url: `/pages/loveuserhome/loveuserhome?id=${id}`
+				})
+			},
+			quitpic() {
+				document.body.style.cssText = ''
+				this.isshowpic = !this.isshowpic
+			},
+			shownew(e) {
+				document.body.style.cssText = `overflow:hidden`
+				this.clickpic = this.listpic[e].originUrl
+				this.isshowpic = !this.isshowpic
+			},
 			playke(id, img, title, name, size) {
 				let obj = {
 					id, 
@@ -198,6 +225,26 @@
 					margin-bottom: 20rpx;
 					font-size: 30rpx;
 					color: var(--liveuserfontcolor);
+				}
+				.pics {
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: space-around;
+					.rowpic {
+						.pic1 {
+							width: 280rpx;
+							// height: 180rpx;
+						}
+						.picbox {
+							z-index: 99;
+							position: fixed;
+							top: 50%;
+							left: 0;
+							width: 750rpx;
+							// height: 600rpx;
+							transform: translateY(-50%);
+						}
+					}
 				}
 				.cite-musice {
 					margin-bottom: 20rpx;
