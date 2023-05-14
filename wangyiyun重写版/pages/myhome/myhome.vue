@@ -17,9 +17,9 @@
 		<view class="banner">
 			<view class="user">
 				<view class="pic">
-					<image :src="usertitlepic" mode="aspectFill"></image>
+					<image :src="userheadpic" mode="aspectFill"></image>
 				</view>
-				<view class="login-online" v-if="islogin">
+				<view class="login-online" v-if="loginState">
 					<view class="name">
 						{{username}}
 					</view>
@@ -39,7 +39,7 @@
 					</view>
 				</view>
 				
-				<view class="out-line" v-if="!islogin" @click="login">
+				<view class="out-line" v-if="!loginState" @click="login">
 					<text class="out-text">立即登入</text>
 					<view class="out-icon">
 						<image src="/static/icon/前往.png" mode="aspectFit"></image>
@@ -137,6 +137,7 @@
 
 <script>
 import helper from '../../common/helper';
+import {mapState} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -304,28 +305,8 @@ import helper from '../../common/helper';
 			},
 		},
 		computed: {
-			islogin() {
-				return this.$store.state.loginState
-				// return false
-			},
-			usertitlepic() {
-				return this.$store.state.userheadpic
-			},
-			username() {
-				return this.$store.state.username
-			},
-			followeds() {
-				return this.$store.state.followeds
-			},
-			follow() {
-				return this.$store.state.follow
-			},
-			userid() {
-				return this.$store.state.userid
-			},
-			livemusicelist() {
-				return this.$store.state.livemusicelist
-			}		
+			...mapState(['loginState', 'userheadpic', 'username', 'followeds', 'follow', 'userid', 'livemusicelist'])
+			
 		}
 	}
 </script>

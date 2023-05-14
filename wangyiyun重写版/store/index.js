@@ -64,6 +64,30 @@ export default new Vuex.Store({
 		},
 		changeshowhome(con, value) {
 			con.showhome = value
+		},
+		
+		// 用户动态的信息
+		
+		changesecondaryExpertIdentiy(con, value) {
+			con.secondaryExpertIdentiy = value
+		},
+		changebriefDesc(con, value) {
+			con.briefDesc = value
+		},
+		changelovename(con, value) {
+			con.lovename = value
+		},
+		changeavatar(con, value) {
+			con.avatar = value
+		},
+		changeuserhomemusice(con, value) {
+			con.userhomemusice = value
+		},
+		changeshowheader(con, value) {
+			con.showheader = value
+		},
+		changeshowrevtop(con, value) {
+			con.showrevtop = value
 		}
 	},
 	state: {
@@ -101,6 +125,20 @@ export default new Vuex.Store({
 		// 喜欢的音乐的id列表
 		livemusicelist: [],
 		
-		livemusicelistdata: []
+		livemusicelistdata: [],
+		
+		// 用户动态的信息
+		
+		secondaryExpertIdentiy: [],
+		briefDesc: '',
+		lovename: '',
+		avatar: '',
+		userhomemusice: [],
+		
+		// 控制关注页面header的显示与隐藏
+		showheader: true,
+		
+		// 控制关注页面详情的显示与隐藏
+		showrevtop: 100
 	}
 })

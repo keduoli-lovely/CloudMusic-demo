@@ -3,9 +3,10 @@
 		<view class="mask-essay" v-if="showmore" @click="sendcon">
 
 		</view>
-		<view class="header">
+		
+		<view class="header" v-show="showheader">
 			<indexleftbar></indexleftbar>
-
+			
 			<view class="header-title">
 				动态
 			</view>
@@ -47,15 +48,15 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 
 			<view class="scrollowned">
 
-				<view class="myowned" v-for="(item, index) in follow" :key="index" @click="getliveuserhome(item.userId)">
-					<view class="owed-img">
-						<image :src="item.avatarUrl" mode="aspectFill"></image>
+				<view class="myowned" v-for="(item, index) in follow" :key="index" >
+					<view class="owed-img" @click.stop="getliveuserhome(item.id)">
+						<image :src="item.img1v1Url" mode="aspectFill"></image>
 					</view>
-					<text class="t1">{{item.nickname}}</text>
+					<text class="t1">{{item.name}}</text>
 				</view>
 
 				<view class="myowned">
-					<view class="owed-img" style="background-color: #666;padding: 14rpx">
+					<view class="owed-img" style="background-color: #666;padding: 14rpx;width: 90rpx,height: 90rpx">
 						<image src="/static/icon/更多2.png" mode="aspectFill"></image>
 					</view>
 					<text class="t1">全部好友</text>
@@ -99,6 +100,8 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 		:plun="item.info.commentCount"
 		:give="item.insiteForwardCount"
 		:listpic="item.pics"
+		:time="item.eventTime"
+		:threadId="item.threadId"
 		></NewsThatCares>
 		
 		
@@ -114,7 +117,10 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 		:top="topnum" 
 		:isshow="isshow" 
 		@stopkk="bilibili"
+		ref="child"
 		></minmusic>
+		
+		<ReviewDetails></ReviewDetails>
 		
 		<view class="bg">
 			
@@ -171,8 +177,20 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 		},
 		mounted() {
 			uni.$on('conceplay', this.playmin)
+			uni.$on('lovedown', this.lovedownplay)
+			
+		},
+		beforeDestroy() {
+			this.$off('lovedown')
 		},
 		methods: {
+			lovedownplay() {
+				try{
+					this.$refs.child.down()
+				}catch(e){
+					console.log('珂朵莉世界第一可爱')
+				}
+			},
 			getdet(i) {
 				this.subind = i
 			},
@@ -193,7 +211,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 				}
 			},
 			playmin(e) {
-				this.startgq(e.id, e.img, e.title, e.name, e.size)
+				this.startgq(e.id, e.img, e.title, e.name)
 			},
 			stormusiclist(e, img, title, name, size, love) {
 				let value = uni.getStorageSync('musiclist');
@@ -253,7 +271,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 				}
 				return x
 			},
-			startgq(id, img, title, name, playsize) {
+			startgq(id, img, title, name) {
 				uni.hideTabBar()
 				uni.request({
 					url: `${helper.url}/check/music?id=${id}`,
@@ -279,10 +297,10 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 								helper.audiok.src = ''
 								this.$store.commit('changeControl', 1)
 							} else {
-								if (this.$refs.child != undefined) {
+								try{
 									this.$refs.child.down()
-								} else {
-									uni.$emit('playlistdown')
+								}catch(e){
+									console.log('珂朵莉世界第一可爱')
 								}
 							}
 						})
@@ -349,7 +367,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 						cookie: key
 					},
 					success: (res) => {
-						console.log(res,111)
+						console.log(res)
 						if (this.lasttime == res.data.lasttime) {
 							this.stopsend = true
 							uni.showToast({
@@ -369,13 +387,15 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 
 			},
 			getliveuser() {
-				let id = uni.getStorageSync('id')
-				if (!id && !this.follow) return
+				let key = uni.getStorageSync('cookie')
+				if (!key && !this.follow) return
 				uni.request({
-					url: `${helper.url}/user/follows?uid=${id}`,
+					url: `${helper.url}/artist/sublist`,
+					data: {
+						cookie: key
+					},
 					success: (res) => {
-						this.follow = res.data.follow
-						console.log(res)
+						this.follow = res.data.data
 					}
 				})
 			},
@@ -391,6 +411,9 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 		computed: {
 			issparewheel() {
 				return this.liveusertolive.length == 0 ? true : false
+			},
+			showheader() {
+				return this.$store.state.showheader
 			}
 		}
 	}
@@ -402,6 +425,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 	}
 
 	.concern {
+		overflow-x: hidden;
 		padding: 140rpx 20rpx 140rpx;
 		width: 750rpx;
 		height: 100%;
@@ -424,9 +448,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 			width: 100%;
 			height: 100%;
 		}
-
 		.header {
-			z-index: 99;
 			display: flex;
 			justify-content: space-between;
 			padding: 40rpx 40rpx 40rpx 30rpx;
@@ -435,6 +457,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 			left: 0;
 			width: 100%;
 			height: 140rpx;
+			z-index: 999;
 			// background-color: #999;
 			background-color: var(--searchlistbgcolor);
 
@@ -510,11 +533,10 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 				justify-content: center;
 				align-items: center;
 				padding-right: 30rpx;
-
 				.owed-img {
 					margin-bottom: 8rpx;
-					width: 120rpx;
-					height: 120rpx;
+					width: 110rpx;
+					height: 110rpx;
 					overflow: hidden;
 					border-radius: 50%;
 					background-color: #fff;

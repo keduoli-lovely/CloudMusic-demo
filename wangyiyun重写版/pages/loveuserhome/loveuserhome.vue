@@ -1,12 +1,12 @@
 <template>
-	<view class="love">
+	<view class="love" @touchmove="move">
 		<view class="bg">
 
 		</view>
 		<view class="header-bg">
 			<image src="/static/video/1.jpg" mode="widthFix"></image>
 		</view>
-		<view class="header">
+		<view class="header" :class="isbg==true ? 'avtbg' : ''">
 			<view class="header-left" @click="back">
 				<image src="/static/icon/系统返回2.png" mode="aspectFit"></image>
 			</view>
@@ -29,17 +29,17 @@
 								<image src="/static/img/109951164255589642.jpg" mode="aspectFill"></image>
 							</view>						
 							<view class="img-tit">
-								<image src="/static/img/ban2.png" mode="aspectFill"></image>
+								<image :src="avatar" mode="aspectFill"></image>
 							</view>
 						</view>
 						
 					</view>
 					<view class="name">
-						神里凌华
-						<view class="wyy">
+						{{lovename}}
+						<view class="wyy" v-if="identify">
 							<image src="/static/img/wyy.png" mode="heightFix"></image>
 						</view>
-						<view class="vip">
+						<view class="vip" v-if="identify">
 							<image src="/static/img/2.png" mode="heightFix"></image>
 						</view>
 					</view>
@@ -49,7 +49,7 @@
 						<text class="t3">Lv.8</text>
 					</view>
 					<view class="detail">
-						网易音乐人、歌手、作词、作曲
+						{{identify}}
 					</view>
 					<view class="box">
 						<view class="focus">
@@ -84,35 +84,264 @@
 
 			
 		</view>
+		
+		<minmusic
+		v-show="$store.state.showplaycomponent" 
+		:imgk="musicpic" 
+		:name="name" 
+		:ren="ren" 
+		:dd="dd" 
+		:love="love"
+		:top="topnum"
+		:islovehome="islovehome"
+		@stopkk="bilibili"
+		ref="child"
+		></minmusic>
 	</view>
 </template>
 
 <script>
 	import helper from '../../common/helper.js'
+	import {mapState} from 'vuex'
 	export default {
 		data() {
 			return {
-				tarbar: ['主页', '歌曲', '专辑', '动态', '视频']
+				islovehome: 1,
+				musicpic: helper.contminlist.musicpic,
+				name: helper.contminlist.name,
+				ren: helper.contminlist.ren,
+				topnum: helper.contminlist.topnum,
+				love: helper.contminlist.islove,
+				dd: helper.contminlist.dd,
+				tarbar: ['主页', '歌曲', '专辑', '动态', '视频'],
+				identify: '',
+				isbg: false,
 			};
 		},
 		onLoad(e) {
-			console.log(e.id)
 			this.getlivedetail(e.id)
+			
+		},
+		mounted() {
+			uni.$on('sendlivehome', this.keduoli)
 		},
 		methods: {
-			getlivedetail(id) {
-				uni.request({
-					url: `${helper.url}/user/event?uid=${id}`,
-					success: (res) => {
-						console.log(res)
-					}
-				})
+			keduoli(e) {
+				this.startgq(e.id, e.pic, e.title, e.name)
 			},
+			move(e) {
+				let x =document.documentElement.scrollTop
+				if(x > 130) {
+					this.isbg = true
+				}else if(x < 130) {
+					this.isbg = false
+				}
+			},
+			setiden(e) {
+				this.identify = e
+			},
+			getlivedetail(id) {
+					this.getlovemusicehot(id)
+					uni.request({
+						url: `${helper.url}/artist/detail?id=${id}`,
+						success: (res) => {
+							this.$store.commit('changesecondaryExpertIdentiy', res.data.data.secondaryExpertIdentiy)
+							
+							
+							this.$store.commit('changebriefDesc', res.data.data.artist.briefDesc)
+							
+							this.$store.commit('changelovename', res.data.data.artist.name)
+							this.$store.commit('changeavatar', res.data.data.artist.avatar)
+							this.iswyy = (res.data.data.artist.identifyTag == null ? '' : res.data.data.artist.identifyTag[0])
+			
+							helper.userbaike.iswyy = this.iswyy
+							try{
+								this.identify = res.data.data.identify.imageDesc
+							}catch(e){
+								this.identify = ''
+							}
+							
+						}
+					})
+				},
+				getlovemusicehot(id) {
+					uni.request({
+						url: `${helper.url}/artist/top/song?id=${id}`,
+						success: (res) => {
+							this.$store.commit('changeuserhomemusice', res.data.songs)
+							
+						}
+					})
+					
+				},
 			back() {
 				uni.reLaunch({
 					url: '/pages/concern/concern'
 				})
+			},
+			stormusiclist(e, img, title, name, size, love) {
+				let value = uni.getStorageSync('musiclist');
+				let np = false
+				if (value) {
+					let kenum = value.findIndex(function(item) {
+						return item.e === e
+					})
+					if (kenum >= 0) {
+						this.$store.commit('changeSubscript', kenum)
+					} else if (kenum <= 0) {
+						this.$store.commit('changeSubscript', 0)
+					}
+				}
+			
+				if (value.length > 0) {
+					let keke = value.filter((item) => {
+						return item.e == e
+					})
+					if (keke.length == 0) {
+						np = true
+					} else {
+						np = false
+					}
+				} else if (!value || value.length === 0) {
+					uni.setStorageSync('musiclist', [{
+						e,
+						title,
+						name,
+						img,
+						size,
+						love
+					}])
+			
+				}
+			
+				if (np) {
+					let tp = value
+					tp.unshift({
+						e,
+						title,
+						name,
+						img,
+						size,
+						love
+					})
+					uni.setStorageSync('musiclist', tp);
+				}
+			},
+			islove(id) {
+				let idlist = uni.getStorageSync('userliveid')
+				let x
+				if (idlist) {
+					x = idlist.some(item => {
+						return item === id
+					})
+				}
+				return x
+			},
+			startgq(id, img, title, name) {
+				uni.request({
+					url: `${helper.url}/check/music?id=${id}`,
+					success: (res) => {
+						this.isplay = res.data.success
+			
+			
+						if (!this.isplay) {
+							uni.showToast({
+								title: res.data.message,
+								duration: 1000,
+								mask: true,
+								icon: 'none'
+							});
+							return
+						}
+						getApp().watchmusice()
+			
+						this.love = this.islove(id)
+						helper.contminlist.islove = this.love
+						helper.audiok.onEnded(() => {
+							if (uni.getStorageSync('musiclist').length <= 1) {
+								helper.audiok.src = ''
+								this.$store.commit('changeControl', 1)
+							} else {
+								if(this.$refs.child != undefined) {
+									this.$refs.child.down()
+									
+								}else {
+									uni.$emit('lovedown')
+								}
+								
+							}
+						})
+						this.id = id
+						helper.moredetail.push({
+							"name": title,
+							"singer": name
+						})
+						this.hello = 0
+			
+						this.$store.commit('changeControl', 0)
+						uni.request({
+							url: `${helper.url}/comment/music?id=${id}&limit=1`,
+							success: (res) => {
+								let sizek = res.data.total
+								if (sizek < 10000) {
+									this.topnum = '999+'
+									helper.plnumstr = '999+'
+								} else if (sizek >= 10000 && sizek < 100000) {
+									this.topnum = '1w+'
+									helper.plnumstr = '1w+'
+								} else if (sizek > 100000) {
+			
+									this.topnum = '10w+'
+									helper.plnumstr = '10w+'
+								}
+								this.stormusiclist(id, img, title, name, this.topnum, this.love)
+							}
+						})
+			
+						uni.request({
+							url: `${helper.url}/song/url/v1?id=${id}&level=exhigh`,
+							success: (res) => {
+			
+								this.musicpic = img
+								helper.contminlist.musicpic = img
+			
+								this.name = title
+								helper.contminlist.name = title
+			
+								this.ren = name
+								helper.contminlist.ren = name
+			
+			
+								this.dd = 0
+								helper.contminlist.dd = 0
+			
+								this.$store.commit('changeshow', 1)
+			
+								helper.audiok.autoplay = true
+								helper.audiok.src = res.data.data[0].url
+			
+							}
+						})
+					}
+				})
+			},
+			bilibili(e) {
+				if (this.num != e) {
+					this.num = 1
+					this.dd = -100
+					helper.contminlist.dd = -100
+				} else {
+					this.num = e
+					this.dd = 0
+					helper.contminlist.dd = 0
+				}
 			}
+		},
+		beforeDestroy() {
+			uni.$off('sendlivehome')
+		},
+		computed: {
+			...mapState(['lovename', 'avatar'])
 		}
 	}
 </script>
@@ -128,8 +357,12 @@
 			opacity: .8;
 			// height: 50%;
 		}
-
+		.avtbg {
+			transition: all .9s ease;
+			background-color: #151515;
+		}
 		.header {
+			z-index: 99;
 			padding: 30rpx 20rpx;
 			position: fixed;
 			top: 0;
