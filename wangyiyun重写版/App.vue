@@ -155,7 +155,9 @@
 	::-webkit-scrollbar {
 		display: none;
 	}
-
+	uni-tabbar .uni-tabbar {
+		z-index: 500;
+	}
 	image {
 		width: 100%;
 		height: 100%;
