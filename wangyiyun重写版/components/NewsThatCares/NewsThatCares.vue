@@ -1,6 +1,6 @@
 <template>
 	<view class="cares night">
-		<view class="title-pic" @click="getlivehome(id)">
+		<view class="title-pic" >
 			<image :src="pic" mode="aspectFill"></image>
 		</view>
 		<view class="con-text">
@@ -12,7 +12,7 @@
 						{{name}}
 					</view>
 					<view class="introduce">
-						世界第一可爱
+						{{timedate}}
 					</view>
 				</view>
 				
@@ -29,7 +29,7 @@
 			
 			<view class="row-text">
 				<!-- // 回复,或发表的评论 -->
-				<view class="vital-text">
+				<view class="vital-text" @click="getdetail(context.msg, name, listpic, threadId, pic, timedate)">
 					{{context.msg}}
 				</view>
 				
@@ -104,6 +104,8 @@
 
 <script>
 	import helper from '../../common/helper.js'
+	import day from 'dayjs'
+import dayjs from 'dayjs';
 	export default {
 		name:"NewsThatCares",
 		data() {
@@ -113,13 +115,21 @@
 				clickpic: ''
 			};
 		},
-		props:['name','pic', 'id', 'con', 'livenum', 'plun', 'give', 'listpic'],
+		props:['name','pic', 'id', 'con', 'livenum', 'plun', 'give', 'listpic', 'time', 'threadId'],
 
 		methods: {
-			getlivehome(id) {
-				uni.reLaunch({
-					url: `/pages/loveuserhome/loveuserhome?id=${id}`
-				})
+			getdetail(con, name, pic, id, bgimg, time) {
+				let obj = {
+					con, 
+					pic, 
+					name, 
+					id,
+					bgimg,
+					time
+				}
+				document.body.style.cssText = `overflow:hidden`
+				this.$store.commit('changeshowrevtop', 0)
+				uni.$emit('sendmsg', obj)
 			},
 			quitpic() {
 				document.body.style.cssText = ''
@@ -130,19 +140,22 @@
 				this.clickpic = this.listpic[e].originUrl
 				this.isshowpic = !this.isshowpic
 			},
-			playke(id, img, title, name, size) {
+			playke(id, img, title, name) {
+				this.$store.commit('changeshowheader', false)
 				let obj = {
 					id, 
 					img, 
 					title,
-					name, 
-					size
+					name
 						}
 						
 				uni.$emit('conceplay', obj)		
 			}
 		},
 		computed: {
+			timedate() {
+				return dayjs(this.time).format('M月DD日')
+			},
 			context() {
 				return JSON.parse(this.con)
 			},
@@ -222,6 +235,11 @@
 			.row-text {
 				margin: 20rpx 0 10rpx;
 				.vital-text {
+					overflow: hidden;
+					text-overflow: ellipsis;
+					display: -webkit-box;
+					-webkit-line-clamp: 4;
+					-webkit-box-orient: vertical;
 					margin-bottom: 20rpx;
 					font-size: 30rpx;
 					color: var(--liveuserfontcolor);
