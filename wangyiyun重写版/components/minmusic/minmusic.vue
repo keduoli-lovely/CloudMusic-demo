@@ -51,7 +51,7 @@
 					<view class="musiclist">
 						<scroll-view scroll-y>
 							<view class="scr-list" v-for="(item, index) in musicplaylist" :key="item.e"
-								@click="horplay(index)">
+								@click.stop="horplay(index)">
 								<view class="scr-box" id="list">
 									<text class="name">{{item.title}}</text> <text class="t4">-</text><text
 										class="singer">{{item.name}}</text>
@@ -275,6 +275,10 @@
 			'love': {
 				type: Boolean,
 				default: false
+			},
+			'islovehome': {
+				type: Number,
+				default: 0
 			},
 			'startgq': {}
 		},
@@ -555,6 +559,7 @@
 					sub = this.musiclistdata.length - 1
 					this.$store.commit('changeSubscript', this.musiclistdata.length - 1)
 					this.bgpic = this.musiclistdata[sub].img
+					this.topnum = this.musiclistdata[sub].size
 					this.musiceTitle = this.musiclistdata[sub].title
 					this.islove = this.musiclistdata[sub].love
 					this.singerName = this.musiclistdata[sub].name
@@ -564,6 +569,7 @@
 					sub -= 1
 					this.$store.commit('changeSubscript', sub)
 					this.bgpic = this.musiclistdata[sub].img
+					this.topnum = this.musiclistdata[sub].size
 					this.musiceTitle = this.musiclistdata[sub].title
 					this.islove = this.musiclistdata[sub].love
 					this.singerName = this.musiclistdata[sub].name
@@ -583,6 +589,7 @@
 					sub += 1
 					this.$store.commit('changeSubscript', sub)
 					this.bgpic = this.musiclistdata[sub].img
+					this.topnum = this.musiclistdata[sub].size
 					this.musiceTitle = this.musiclistdata[sub].title
 					this.islove = this.musiclistdata[sub].love
 					this.singerName = this.musiclistdata[sub].name
@@ -592,6 +599,7 @@
 
 					sub = 0
 					this.$store.commit('changeSubscript', 0)
+					this.topnum = this.musiclistdata[sub].size
 					this.bgpic = this.musiclistdata[sub].img
 					this.musiceTitle = this.musiclistdata[sub].title
 					this.islove = this.musiclistdata[sub].love
@@ -658,7 +666,7 @@
 			},
 			full() {
 				this.geci = true
-
+				this.$store.commit('changeshowheader', false)
 				this.long = 0
 				if (this.isshow == 1) {
 					uni.hideTabBar()
@@ -688,11 +696,15 @@
 			},
 			minbark() {
 				// 歌词的初始高度
+				this.$store.commit('changeshowheader', true)
 				this.timeheight = 560
 				this.geci = true
 				let stop1 = 2
+				if(this.islovehome == 1) {
+					this.isdown = 0
+				}
 				this.$emit('stopkk', stop1)
-				if (this.isdown) {
+				if (this.isdown == 1) {
 					uni.showTabBar({
 						fail() {
 							console.log('珂朵莉')
