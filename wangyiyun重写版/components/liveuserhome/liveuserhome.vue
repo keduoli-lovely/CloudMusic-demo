@@ -42,29 +42,16 @@
 			<view class="title">
 				TA的热门作品
 			</view>
-			<view class="hotlist">
+			<view class="hotlist" v-for="(item, i) in hotmusice" :key="i" @click="playmusice(item.id, item.al.picUrl,item.name,item.ar[0].name)">
 				<view class="hot-pic">
-					<image src="/static/video/1.jpg" mode="aspectFill"></image>
+					<image :src="item.al.picUrl" mode="aspectFill"></image>
 				</view>
 				<view class="hot-detail">
 					<view class="hot-title">
-						把回忆拼好给你
+						{{item.al.name}}
 					</view>
 					<view class="hot-name">
-						王拾浪
-					</view>
-				</view>
-			</view>
-			<view class="hotlist">
-				<view class="hot-pic">
-					<image src="/static/video/1.jpg" mode="aspectFill"></image>
-				</view>
-				<view class="hot-detail">
-					<view class="hot-title">
-						把回忆拼好给你
-					</view>
-					<view class="hot-name">
-						王拾浪
+						{{item.ar[0].name}}
 					</view>
 				</view>
 			</view>
@@ -77,23 +64,25 @@
 			</view>
 			
 			<view class="bai-illustrate">
-				<view class="bai-box">
+				<view class="bai-box" v-if="iswyy">
 					<view class="bai-icon">
 						<image src="/static/img/wyy.png" mode="heightFix"></image>
 					</view>
 					<view class="bai-wyy">
-						网易云音乐人
+						{{iswyy}}
 					</view>
 				</view>
 				
 				<view class="bai-name">
-					艺人名:<text class="t11">王拾浪</text>
+					艺人名:<text class="t11">{{lovename}}</text>
 				</view>
 				<view class="bai-name">
-					身份:<text class="t11">歌手、作词、作曲</text>
+					身份:<text class="t11">
+						{{zhiye}}
+					</text>
 				</view>
-				<view class="bai-name">
-					歌手简介:<text class="t11">kkkkkkkkkkk</text>
+				<view class="bai-name t20">
+					歌手简介:<text class="t11">{{briefDesc}}</text>
 				</view>
 			</view>
 			
@@ -127,12 +116,44 @@
 </template>
 
 <script>
+	import helper from '../../common/helper.js'
+	import {mapState} from 'vuex'
 	export default {
 		name:"liveuserhome",
 		data() {
 			return {
-				
+				iswyy: helper.userbaike.iswyy,
+				zhiye: ''
 			};
+		},
+		mounted() {
+			this.zhiyek()
+		},
+		methods: {
+			zhiyek() {
+				let x = ''
+				this.secondaryExpertIdentiy.forEach(item => {
+					x += '、' + item.expertIdentiyName
+				})
+				x = x.substring(1, 9)
+				this.zhiye = x
+			},
+			playmusice(id, pic, title, name) {
+				let obj = {
+					id,
+					pic,
+					title,
+					name
+					   }
+					   
+				uni.$emit('sendlivehome', obj)
+			}
+		},	
+		computed: {
+			...mapState(['secondaryExpertIdentiy', 'briefDesc', 'lovename', 'avatar', 'userhomemusice']),
+			hotmusice() {
+				return this.userhomemusice.slice(0,5)
+			}
 		}
 	}
 </script>
@@ -257,7 +278,15 @@
 				.bai-name {
 					margin-top: 20rpx;
 					.t11 {
+						
 						margin-left: 10rpx;
+					}
+					.t20 {
+						overflow: hidden;
+						text-overflow: ellipsis;
+						display: -webkit-box;
+						-webkit-line-clamp: 4;
+						-webkit-box-orient: vertical;
 					}
 				}
 				.bai-name:last-child {
