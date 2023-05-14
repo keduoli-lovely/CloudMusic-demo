@@ -135,9 +135,10 @@
 
 <style lang="scss" scoped>
 	.indexbar {
+		z-index: 999;
 		box-sizing: border-box;
 		.indexbarmask {
-			z-index: 999;
+			z-index: 99;
 			position: fixed;
 			top: 0;
 			left: 0;
@@ -146,22 +147,21 @@
 			background-color: rgba(0,0,0,.5);
 		}
 		.moreicon {
+			// z-index: 99;
 			margin: 0 40rpx 0 0;
 			width: 42rpx;
 			height: 42rpx;
 		}
 
 		.morelist {
-			
 			padding: 30rpx;
-			z-index: 999;
+			z-index: 99;
 			position: fixed;
 			top: 0;
 			left: 0;
 			width: 600rpx;
 			height: 100%;
 			background-color: #151515;
-
 			.user-top {
 				padding: 20rpx 0;
 				display: flex;
