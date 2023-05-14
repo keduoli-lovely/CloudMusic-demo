@@ -29,6 +29,12 @@ let playwacth = {
 	"give": 0
 }
 
+let userbaike = {
+
+	'iswyy': '',
+	'musice': [],
+}
+
 let bodydata = {
 	"bannerTitlePic": '',
 	"bannerTitleIcon": '',
@@ -125,5 +131,7 @@ export default {
 	// 用户歌单
 	mygedan,
 	
-	page
+	page,
+	// 用户百科内容
+	userbaike
 }
