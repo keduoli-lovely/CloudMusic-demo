@@ -9,7 +9,7 @@
 					音乐云盘
 				</view>
 				<view class="size">
-					4.8G/60G
+					0.0G/00G
 				</view>
 			</view>
 		</view>
