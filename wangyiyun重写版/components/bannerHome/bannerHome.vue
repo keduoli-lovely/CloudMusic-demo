@@ -1,7 +1,8 @@
 <template>
-		<view class="banner night">
-			<view class="play-img">
-				<swiper  :autoplay="true" :interval="2000" :duration="1000" circular>
+		<view class="banner night" @touchstart="movestart" @touchmove="move" @touchend="moveend" :style="{paddingTop: `${bannertop}px`}" >
+
+			<view class="play-img" >
+				<swiper :autoplay="true" :interval="2000" :duration="1000" circular>
 					<swiper-item v-for="(item, i) in bannerTitlePic" :key="i">
 						<view class="swiper-item">
 							<image :src="item.pic" mode="scaleToFill	"></image>
@@ -26,6 +27,10 @@
 				</swiper>
 			</view>
 			
+			<view class="msgbcckc">
+				加载中...
+			</view>
+			
 			<view class="content">
 				<view class="cont1 min-box" v-for="item in titleIcon" :key="item.id">
 					<view class="cont-box" @click="star">
@@ -33,30 +38,7 @@
 					</view>
 					<text>{{item.name}}</text>
 				</view>
-				<!-- <view class="cont2 min-box">
-					<view class="cont-box">
-						
-					</view>
-					<text>猜你喜欢</text>
-				</view>
-				<view class="cont3 min-box">
-					<view class="cont-box">
-						
-					</view>
-					<text>每日推荐</text>
-				</view>
-				<view class="cont4 min-box">
-					<view class="cont-box">
-						
-					</view>
-					<text>排行榜</text>
-				</view>
-				<view class="cont5 min-box">
-					<view class="cont-box">
-						
-					</view>
-					<text>更多</text>
-				</view> -->
+				
 			</view>
 			
 			<view class="live-box">
@@ -88,52 +70,9 @@
 								{{item.name}}
 							</text>
 						</view>
-						<!-- <view class="keduoli">
-							<view class="ke-img">
-								<image src="../../static/img/cont2.png" mode="aspectFill"></image>
-							</view>
-							<text class="t2">
-								百听不厌的日文歌曲,一生强推
-							</text>
-						</view>
-						<view class="keduoli">
-							<view class="ke-img">
-								<image src="../../static/img/cont3.png" mode="aspectFill"></image>
-							</view>
-							<text class="t2">
-								日本电影原声收藏
-							</text>
-						</view>
-					
-					<view class="keduoli">
-						<view class="ke-img">
-							<image src="../../static/img/cont1.png" mode="aspectFill"></image>
-						</view>
-						<text class="t2">
-							一夜火遍全网最好听流行热曲2023
-						</text>
-					</view>
-					<view class="keduoli">
-						<view class="ke-img">
-							<image src="../../static/img/cont2.png" mode="aspectFill"></image>
-						</view>
-						<text class="t2">
-							百听不厌的日文歌曲,一生强推
-						</text>
-					</view>
-					<view class="keduoli">
-						<view class="ke-img">
-							<image src="../../static/img/cont3.png" mode="aspectFill"></image>
-						</view>
-						<text class="t2">
-							日本电影原声收藏
-						</text>
-					</view> -->
+
 				</view>
 				</view>
-			</view>
-			<view class="sendbtn" @click="getbtnlist1">
-				加载更多....
 			</view>
 		</view>
 		
@@ -149,36 +88,41 @@ import helper from '../../common/helper';
 				bannerTitlePic: [],
 				titleIcon: [],
 				titleSing: null,
-				triggered: false
+				triggered: false,
+				movestartnum: '',
+				bannertop: 0,
+				timer: null
 			}
 		},
 		methods: {
-
-			// xiala() {
-			// 	helper.bodydata.bannerTitlePic = ''
-			// 	helper.bodydata.bannerTitleSing = ''
-			// 	helper.bodydata.bannerTitleIcon = ''
-			// 	setTimeout(() => {
-			// 		// this.isstart = true
-			// 		this.isxiala = false
-			// 	},1000)
+			movestart(e) {
+				this.movestartnum =  e.touches[0].pageY
+			},
+			move(e) {
+				if(this.movestartnum - e.touches[0].pageY < 0) {
+					if(this.movestartnum - e.touches[0].pageY > -120) {
+						this.bannertop = -(this.movestartnum - e.touches[0].pageY)
+					}
+				}
 				
-			// },
+			},
+			moveend() {
+				let msg = document.querySelector(".msgbcckc")
+				msg.style.display = "block"
+				this.getSing()
+			},
+			
 			getbtnlist1() {
 				this.bannerTitlePic = ''
 				helper.bodydata.bannerTitlePic = ''
 				let ye = Math.random()*5
 				let ye1 = Math.floor(ye)
 				uni.request({
-					// url: `http://localhost:3000/personalized?limit=${6 + ye1}`,
 					url: `${helper.url}/personalized?limit=${6 + ye1}`,
 					success: (res) => {
 						this.titleSing = res.data.result
-						// console.log(this.titleSing)
 						helper.bodydata.bannerTitleSing = res.data.result
-						// console.log(helper.bodydata.bannerTitlePic,11111)
 						
-						// console.log(getApp().globalData.titleSing)
 					}
 				})
 			},
@@ -190,13 +134,11 @@ import helper from '../../common/helper';
 			getBanner() {
 				if(helper.bodydata.bannerTitlePic == '') {
 					uni.request({
-						// url: 'http://localhost:3000/banner?type=2',
 						url: `${helper.url}/banner?type=2`,
 						success: (res) => {
 							// console.log(res)
 							helper.bodydata.bannerTitlePic = res.data.banners
 							this.bannerTitlePic = res.data.banners
-							// console.log(helper.bodydata.bannerTitlePic)
 						}
 					})
 				}else {
@@ -207,18 +149,13 @@ import helper from '../../common/helper';
 			getIcon() {
 				if(helper.bodydata.bannerTitleIcon == '') {
 					uni.request({
-						// url: 'http://localhost:3000/homepage/dragon/ball',
 						url: `${helper.url}/homepage/dragon/ball`,
 						success: (res) => {
 							helper.bodydata.bannerTitleIcon = res.data.data
-							// console.log(res.data.data,111)
 							this.titleIcon = res.data.data
-							// console.log(helper.bodydata.bannerTitleIcon,1111)
-							// console.log(getApp().globalData.titleIcon)
 						}
 					})
 				}else {
-					// console.log(helper.bodydata.bannerTitleIcon)
 					this.titleIcon = helper.bodydata.bannerTitleIcon
 				}
 			},
@@ -228,22 +165,21 @@ import helper from '../../common/helper';
 					let ye = Math.random()*5
 					let ye1 = Math.floor(ye)
 					uni.request({
-						// url: `http://localhost:3000/personalized?limit=${6 + ye1}`,
 						url: `${helper.url}/personalized?limit=${6 + ye1}`,
 						success: (res) => {
 							this.titleSing = res.data.result
-							// console.log(this.titleSing)
 							helper.bodydata.bannerTitleSing = res.data.result
-							// console.log(helper.bodydata.bannerTitlePic,11111)
 							
-							// console.log(getApp().globalData.titleSing)
 						}
 					})
 				}else {
-					// console.log(99999)
 					this.titleSing = helper.bodydata.bannerTitleSing
 				}
-				
+				let msg = document.querySelector(".msgbcckc")
+				setTimeout(() => {
+					msg.style.display = "none"
+					this.bannertop = 0
+				}, 1000)
 			}
 			
 		},
@@ -257,18 +193,20 @@ import helper from '../../common/helper';
 </script>
 
 <style lang="scss" scoped>
-	.sendbtn {
-		border-radius: 8rpx;
-		padding: 10rpx 10rpx;
-		margin: 40rpx auto 100rpx;
-		text-align: center;
-		width: 30%;
-		color: var(--btnfontcolor);
-		background-color: var(--btnbgcolor);
-		// margin-bottom: 50rpx;
-	}
 	.banner {
-		
+		position: relative;
+		.msgbcckc {
+			filter: blur(1rpx);
+			opacity: .5;
+			padding: 20rpx 100rpx;
+			position: fixed;
+			top: 170rpx;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: var(--listboxline);
+			border-radius: 14rpx;
+			display: none;
+		}
 		.play-img {
 			overflow: hidden;
 			width: 100%;
