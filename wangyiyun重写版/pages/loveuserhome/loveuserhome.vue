@@ -4,7 +4,7 @@
 
 		</view>
 		<view class="header-bg">
-			<image src="/static/video/1.jpg" mode="widthFix"></image>
+			<image :src="ispic ? avatar : backpic" mode="widthFix"></image>
 		</view>
 		<view class="header" :class="isbg==true ? 'avtbg' : ''">
 			<view class="header-left" @click="back">
@@ -22,7 +22,7 @@
 		<view class="about">
 			<view class="top">
 				<view class="topbox">
-					<view class="pic">
+					<view class="pic" v-if="!ispic">
 						<view class="picbox">
 							
 							<view class="Pendants">
@@ -44,19 +44,19 @@
 						</view>
 					</view>
 					<view class="livenum">
-						<text class="t1">13 关注</text>
-						<text class="t2">356.3万 粉丝</text>
+						<text class="t1">{{livefollowCnt}} 关注</text>
+						<text class="t2">{{livefancntW}}万 粉丝</text>
 						<text class="t3">Lv.8</text>
 					</view>
 					<view class="detail">
 						{{identify}}
 					</view>
 					<view class="box">
-						<view class="focus">
-							关注
+						<view class="focus" :class="isfollowDay == '已关注' ? '' : 'atvred'" @click="liveuser(id)">
+							{{isfollowDay}}
 						</view>
 					
-						<view class="chat">
+						<view class="chat" v-if="isfollowDay == '已关注'">
 							聊天
 						</view>
 					
@@ -116,16 +116,71 @@
 				tarbar: ['主页', '歌曲', '专辑', '动态', '视频'],
 				identify: '',
 				isbg: false,
+				backpic: '',
+				livefancnt: 0,
+				livefollowCnt: 0,
+				isfollowDay: '关注',
+				ispic: false,
+				id: ''
 			};
 		},
 		onLoad(e) {
+			this.id = e.id
 			this.getlivedetail(e.id)
+			this.userhomefenshi(e.id)
 			
 		},
 		mounted() {
 			uni.$on('sendlivehome', this.keduoli)
 		},
 		methods: {
+			liveuser(e) {
+				let key = uni.getStorageSync('cookie')
+				if(this.isfollowDay == '关注') {
+					this.getliveguanzhu(e, key, 1)
+				}else {
+					this.getliveguanzhu(e, key, 0)
+				}
+			},
+			
+			getliveguanzhu(id, key, state) {
+				uni.request({
+					url: `${helper.url}/follow?id=${id}&t=${state}`,
+					data: {
+						cookie: key
+					},
+					success: (res) => {
+						console.log(res)
+						if(res.data.code == 200) {
+							uni.showToast({
+								title: '关注成功',
+								duration: 1000,
+								icon:'none',
+								mask:true
+							});
+						}else {
+							uni.showToast({
+								title: '关注失败',
+								duration: 1000,
+								icon:'none',
+								mask:true
+							});
+						}
+					}
+				})
+			},
+			userhomefenshi(id) {
+				uni.request({
+					url: `${helper.url}/artist/follow/count?id=${id}`,
+					success: (res) => {
+						console.log(res)
+						this.livefancnt = res.data.data.fansCnt
+						this.livefollowCnt = res.data.data.followCnt
+						this.isfollowDay = res.data.data.followDay
+						
+					}
+				})
+			},
 			keduoli(e) {
 				this.startgq(e.id, e.pic, e.title, e.name)
 			},
@@ -146,8 +201,11 @@
 						url: `${helper.url}/artist/detail?id=${id}`,
 						success: (res) => {
 							this.$store.commit('changesecondaryExpertIdentiy', res.data.data.secondaryExpertIdentiy)
-							
-							
+							try{
+								this.backpic = res.data.data.user.backgroundUrl
+							}catch(e){
+								this.ispic = true
+							}
 							this.$store.commit('changebriefDesc', res.data.data.artist.briefDesc)
 							
 							this.$store.commit('changelovename', res.data.data.artist.name)
@@ -341,7 +399,10 @@
 			uni.$off('sendlivehome')
 		},
 		computed: {
-			...mapState(['lovename', 'avatar'])
+			...mapState(['lovename', 'avatar']),
+			livefancntW() {
+				return (this.livefancnt / 10000).toFixed(1)
+			}
 		}
 	}
 </script>
@@ -473,6 +534,12 @@
 					.box {
 						border-bottom: 1rpx solid #666;
 						padding-bottom: 50rpx;
+						.focus {
+							background-color: #333;
+						}
+						.atvred {
+							background-color: red;
+						}
 						.focus,
 						.chat {
 							padding: 6rpx 45rpx;
