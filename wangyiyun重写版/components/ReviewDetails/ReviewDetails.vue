@@ -1,6 +1,6 @@
 <template>
-	<view class="Reviewdetails" :style="{top: revtop + '%'}">
-		<view class="top">
+	<view class="Reviewdetails" :style="{top: revtop + '%'}" @touchmove="move">
+		<view class="top" v-show="showheader">
 			<view class="left">
 				<view class="back-icon" @click.stop="back">
 					<image src="/static/icon/系统返回2.png" mode="aspectFit"></image>
@@ -46,18 +46,18 @@
 		</view>
 
 		<view class="floor">
-			<view class="floor-bar">
+			<view class="floor-bar" :class="ischangecolor ? 'atvcolor' : ''">
 				<!-- // 评论 -->
 				<view class="floor-pl">
-					评论<text class="t1">13</text>
+					评论<text class="t1">{{context.plun}}</text>
 				</view>
 				<!-- // forward : 转发 -->
 				<view class="forward">
-					转发<text class="t1">13</text>
+					转发<text class="t1">{{context.give}}</text>
 				</view>
 
 				<view class="Like">
-					赞<text class="t1">13</text>
+					赞<text class="t1">{{context.live}}</text>
 				</view>
 			</view>
 
@@ -82,7 +82,7 @@
 }}
 								</view>
 								<view class="row-user-add">
-									155
+									{{item.likedCount}}
 									<view class="row-user-add-icon">
 										<image src="/static/icon/点赞1.png" mode="aspectFit"></image>
 									</view>
@@ -99,14 +99,14 @@
 						</view>
 
 
-						<view class="row-more">
+						<!-- <view class="row-more">
 							<view class="more-num">
 								3条回复
 							</view>
 							<view class="more-icon">
 								<image src="/static/icon/前往.png" mode="aspectFit"></image>
 							</view>
-						</view>
+						</view> -->
 					</view>
 
 				</view>
@@ -123,25 +123,32 @@
 			return {
 				context: '',
 				hotComments: [],
-				comments: []
+				comments: [],
+				ischangecolor: false
 			};
 		},
 		mounted() {
 			uni.$on('sendmsg', this.getdata)
 		},
 		methods: {
+			move(e) {
+				let x = document.querySelector(".Reviewdetails").scrollTop
+				if(x > 95) {
+					this.ischangecolor = true
+				}else if(x < 95) {
+					this.ischangecolor = false
+				}
+			},
 			getthread(id) {
 				uni.request({
 					url: `${helper.url}/comment/event?threadId=${id}`,
 					success: (res) => {
-						console.log(res)
 						this.hotComments = res.data.hotComments
 						this.comments = res.data.comments
 					}
 				})
 			},
 			getdata(e) {
-				console.log(e)
 				this.context = e
 				this.getthread(e.id)
 			},
@@ -153,12 +160,18 @@
 		computed: {
 			revtop() {
 				return this.$store.state.showrevtop
+			},
+			showheader() {
+				return this.$store.state.showheader
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
+	* {
+		box-sizing: border-box;
+	}
 	.Reviewdetails {
 		z-index: 999;
 		position: fixed;
@@ -166,16 +179,23 @@
 		left: 0;
 		width: 750rpx;
 		height: 100vh;
+		overflow-y: auto;
 		background-color: #151515;
 		color: #fff;
-		transition: all .6s ease;
-
+		transition: all .4s ease;
+		padding-top: 135rpx;
+		transform: translateX(0);
 		.top {
+			z-index: 10;
+			width: 100%;
+			position: fixed;
+			top: 0;
+			left: 0;
 			padding: 50rpx 30rpx 35rpx;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-
+			background-color: #151515;
 			.left {
 				display: flex;
 
@@ -237,14 +257,24 @@
 
 		.floor {
 			margin-top: 50rpx;
-			padding: 0 30rpx;
-
+			.atvcolor {
+				width: 750rpx;
+				background-color: #666;
+			}
 			.floor-bar {
-				padding: 20rpx 0;
-				width: 65%;
+				z-index: 10;
+				position: sticky;
+				top: 0;
+				left: 40rpx;
+				height: 80rpx;
+				line-height: 80rpx;
+				padding: 0 30rpx;
+				margin-bottom: 20rpx;
+				width: 100%;
 				display: flex;
-				justify-content: space-between;
-
+				.forward {
+					margin: 0 100rpx;
+				}
 				.floor-pl,
 				.forward,
 				.Like {
@@ -254,7 +284,7 @@
 					.t1 {
 						margin-left: 10rpx;
 						font-size: 24rpx;
-						color: #666;
+						color: #999;
 					}
 				}
 			}
@@ -270,14 +300,16 @@
 			}
 
 			.pl-box {
-				padding: 30rpx 0;
+				padding: 0 30rpx 30rpx;
 				position: relative;
 				// border-top: 1rpx solid #666;
 				.bar-title {
+					padding-top: 30rpx;
 					letter-spacing: 5rpx;
 					font-size: 30rpx;
 					margin-bottom: 30rpx;
 				}
+				
 				.row-comments {
 					margin-bottom: 30rpx;
 					display: flex;
