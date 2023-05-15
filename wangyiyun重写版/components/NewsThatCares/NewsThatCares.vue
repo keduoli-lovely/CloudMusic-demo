@@ -17,12 +17,12 @@
 				</view>
 				
 				<!-- // 关注按钮 -->
-				<view class="addlive">
+				<!-- <view class="addlive">
 					<view class="addicon">
 						+
 					</view>
 					<text class="t2">关注</text>
-				</view>
+				</view> -->
 			</view>
 			
 			<!-- // 内容区域 -->
@@ -77,15 +77,19 @@
 				
 				<!-- // floor 楼层/地板的意思 -->
 				
-				<view class="floor">
+				<view class="floor" @click.stop="getdetail(context.msg, name, listpic, threadId, pic, timedate)">
 					<view class="floor-icon">
 						<image src="/static/icon/评论.png" mode="aspectFit"></image>
 					</view>
 					{{plun}}
 				</view>
 				<!-- // 神马情况，Like有点赞的意思 -->
-				<view class="Like">
-					<view class="Like-icon">
+				<view class="Like" @click="addlive">
+					<view class="Like-icon" v-if="islive">
+						<image src="/static/icon/点赞2.png" mode="aspectFit"></image>
+						
+					</view>
+					<view class="Like-icon" v-else>
 						<image src="/static/icon/点赞1.png" mode="aspectFit"></image>
 						
 					</view>
@@ -112,12 +116,33 @@ import dayjs from 'dayjs';
 			return {
 				topnum: helper.plnumstr,
 				isshowpic: false,
-				clickpic: ''
+				clickpic: '',
+				islive: false
 			};
 		},
 		props:['name','pic', 'id', 'con', 'livenum', 'plun', 'give', 'listpic', 'time', 'threadId'],
 
 		methods: {
+			addlive() {
+				let key = uni.getStorageSync('cookie')
+				if(this.islive) {
+					this.livegtefn(key, 0)
+				}else {
+					this.livegtefn(key, 1)
+				}
+				this.islive = !this.islive
+			},
+			livegtefn(key, state) {
+				uni.request({
+					url: `${helper.url}/comment/like?type=6&cid=${this.id}&threadId=${this.threadId}&t=${state}`,
+					data: {
+						cookie: key
+					},
+					success: (res) => {
+						console.log(res)
+					}
+				})
+			},
 			getdetail(con, name, pic, id, bgimg, time) {
 				let obj = {
 					con, 
@@ -125,7 +150,10 @@ import dayjs from 'dayjs';
 					name, 
 					id,
 					bgimg,
-					time
+					time,
+					live: this.livenum,
+					give: this.give,
+					plun: this.plun
 				}
 				document.body.style.cssText = `overflow:hidden`
 				this.$store.commit('changeshowrevtop', 0)
@@ -319,7 +347,7 @@ import dayjs from 'dayjs';
 				}
 				.floor {
 					display: flex;
-					padding: 0 100rpx 0 80rpx;
+					margin: 0 100rpx 0 80rpx;
 					.floor-icon {
 						margin-right: 6rpx;
 					}
