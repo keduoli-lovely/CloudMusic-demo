@@ -13,7 +13,7 @@
 
 			<view class="addessay">
 				<view class="essayicon" @click="sendcon">
-					<image src="/static/icon/add.png" mode=""></image>
+					<image src="/static/icon/add.png" mode="aspectFit"></image>
 				</view>
 
 				<view class="more" v-if="showmore">
@@ -153,9 +153,12 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 			};
 		},
 		onLoad() {
-			this.getliveuser()
-			this.gethot()
-			this.stopsend = false
+			let key = uni.getStorageSync('cookie')
+			if(key) {
+				this.getliveuser()
+				this.gethot()
+				this.stopsend = false
+			}
 		},
 		onReachBottom() {
 			this.gethot()
@@ -367,7 +370,6 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 						cookie: key
 					},
 					success: (res) => {
-						console.log(res)
 						if (this.lasttime == res.data.lasttime) {
 							this.stopsend = true
 							uni.showToast({
@@ -395,6 +397,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 						cookie: key
 					},
 					success: (res) => {
+						console.log(res)
 						this.follow = res.data.data
 					}
 				})
