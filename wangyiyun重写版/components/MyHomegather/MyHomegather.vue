@@ -114,7 +114,11 @@
 				if(!helper.mygedan) {
 					let key = uni.getStorageSync('cookie')
 					let id = uni.getStorageSync('id')
-					if(!key && !id) return
+					if(!key) {
+						if(!id) {
+							return
+						}
+					}
 					uni.request({
 						url: `${helper.url}/user/playlist?uid=${id}`,
 						data: {
