@@ -157,11 +157,12 @@ import {mapState} from 'vuex'
 				userlivemusice: [],
 			};
 		},
-		mounted() {		
+		onLoad() {		
 			this.picone() 
 			this.$nextTick(() => {
 				uni.$on('simllardown',this.simllarON)
 				uni.$on('playlistdown',this.playlistON)
+				this.$refs.gather.getsong()
 				this.$refs.gather.getsong()
 			})
 		},
@@ -214,11 +215,13 @@ import {mapState} from 'vuex'
 			// 获取最近播放的歌曲
 			getRecentmusice() {
 				if(!this.key) {
+					
 					uni.reLaunch({
 						url: '/pages/login/login'
 					})
 					return
-				}			
+				}
+				this.picone()
 				uni.navigateTo({
 					url: '/pages/similarPage/similarPage?page=1'
 				})
@@ -227,6 +230,8 @@ import {mapState} from 'vuex'
 			picone() {
 				let live = uni.getStorageSync('userlive')
 				let userliveid = uni.getStorageSync('userliveid')
+				let key = uni.getStorageSync('cookie')
+				if(!key) return
 				this.userlive = live
 				if(!live || !userliveid.length) {
 				
@@ -236,7 +241,6 @@ import {mapState} from 'vuex'
 						cookie: this.key
 					},
 					success: (res) => {
-						// console.log(res)
 						let tracks = res.data.playlist.tracks
 						tracks.forEach(item => {
 							this.userlivemusice.push(item.id)
@@ -322,7 +326,7 @@ import {mapState} from 'vuex'
 		background-color: var(--indexgbcolor);
 		.header {
 			width: 100%;
-			z-index: 10;
+			z-index: 999;
 			position: fixed;
 			top: 0;
 			left: 0;
