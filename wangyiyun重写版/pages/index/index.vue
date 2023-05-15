@@ -108,40 +108,7 @@
 		background-color: var(--indexgbcolor);
 		color: #ad9998;
 		
-		// .tabbar {
-		// 	margin-bottom: 30rpx;
-		// 	display: flex;
-		// 	justify-content: space-between;
-		// 	align-items: center;
-		// 	height: 60rpx;
-		// 	.bar-left {
-		// 		font-size: 30rpx;
-		// 		display: flex;
-		// 		.read {
-		// 			padding-left: 15rpx;
-		// 		}
-		// 		.audio {
-		// 			margin: 0 40rpx;
-		// 		}
-		// 	}
-		// 	.bar-right {
-		// 		display: flex;
-		// 		.hover {
-		// 			width: 40rpx;
-		// 			image {
-		// 				width: 100%;
-		// 			}
-		// 		}
-		// 		.show{
-		// 			margin-left: 20rpx;
-		// 			width: 40rpx;
-		// 			image {
-		// 				width: 100%;
-		// 			}
-		// 		}
-				
-		// 	}
-		// }
+
 	
 		.Search {
 			
