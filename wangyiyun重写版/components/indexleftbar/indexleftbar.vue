@@ -1,13 +1,14 @@
 <template>
 	<view class="indexbar night">
 		<view class="indexbarmask" @click="isbgmask" v-show="ischange">
-			
+
 		</view>
 		<view class="moreicon" @click="isbgmask">
 			<image src="/static/icon/更多5.png" mode="aspectFit"></image>
 		</view>
 
-		<view class="morelist" v-show="ischange" @touchmove="movemorebox" @touchstart="startmovebox" @touchend="endmovebox" :style="{left: leftbox+ 'rpx'}">
+		<view class="morelist" v-show="ischange" @touchmove="movemorebox" @touchstart="startmovebox"
+			@touchend="endmovebox" :style="{left: leftbox+ 'rpx'}">
 			<!-- 更多列表页面 -->
 			<view class="user-top">
 				<!-- 用户头像 -->
@@ -40,14 +41,14 @@
 							<image src="/static/icon/排序.png" mode="aspectFit"></image>
 						</view>
 						<view class="list1text">
-							珂朵莉世界第一
+							我的消息
 						</view>
 					</view>
-					
+
 					<view class="toget">
 						<image src="../../static/icon/前往.png" mode="aspectFit"></image>
 					</view>
-					
+
 					<view class="listline">
 
 					</view>
@@ -59,20 +60,53 @@
 							<image src="/static/icon/排序.png" mode="aspectFit"></image>
 						</view>
 						<view class="list1text">
-							珂朵莉世界第一
+							设置
 						</view>
 					</view>
-					
+
 					<view class="toget">
 						<image src="../../static/icon/前往.png" mode="aspectFit"></image>
 					</view>
-					
+
 					<view class="listline">
 
 					</view>
 				</view>
 
+
+
 			</view>
+
+			<!-- // 退出登入 -->
+
+			<view class="out-log" @click="showoutup(-280)" v-if="isbtn">
+				退出登入
+			</view>
+			<view class="out-log" @click="golog" v-else>
+				登入
+			</view>
+
+		</view>
+
+		<view class="mask-out" :style="{transform: `translateY(${isshowout}rpx)`} ">
+			<view class="out-msg">
+				退出登入/关闭
+			</view>
+
+			<view class="msg-box">
+				<view class="clear-musice" @click="clearapp">
+					关闭云音乐
+				</view>
+
+				<view class="clear-log" @click="outuser">
+					退出云音乐登入
+				</view>
+			</view>
+		</view>
+
+
+		<view class="out-show-mask" v-if="isshowout" @click="showoutup(0)">
+
 		</view>
 	</view>
 </template>
@@ -85,10 +119,42 @@
 				ischange: false,
 				movestart: 0,
 				movebox: 0,
-				leftbox: 0
+				leftbox: 0,
+				isshowout: 0,
+				isbtn: true
 			};
 		},
+		mounted() {
+			let key = uni.getStorageSync('cookie')
+			if(key) {
+				this.isbtn = true
+			}else {
+				this.isbtn = false
+			}
+		},
 		methods: {
+			golog() {
+				uni.reLaunch({
+					url: '/pages/login/login'
+				})
+			},
+			outuser() {
+				uni.removeStorageSync('cookie')
+				uni.removeStorageSync('userlive')
+				uni.removeStorageSync('userliveid')
+				uni.removeStorageSync('id')
+				uni.reLaunch({
+					url: '/pages/login/login'
+				})
+			},
+			clearapp() {			
+				window.open("about:blank","_self")
+				window.close();
+
+			},
+			showoutup(e) {
+				this.isshowout = e
+			},
 			isbgmask() {
 				// console.log()
 				this.leftbox = 0
@@ -98,10 +164,10 @@
 			movemorebox(e) {
 				this.movebox = e.changedTouches[0].pageX
 				// console.log(this.movestart,this.movebox)
-				
-				if(this.leftbox <= 0) {
+
+				if (this.leftbox <= 0) {
 					this.leftbox = -(this.movestart - this.movebox)
-				}else {
+				} else {
 					return
 				}
 				// console.log(e.changedTouches[0].pageX)
@@ -111,12 +177,12 @@
 				// console.log(e.changedTouches[0].pageX)
 			},
 			endmovebox(e) {
-				
-				if(this.leftbox > -300) {
+
+				if (this.leftbox > -300) {
 					this.leftbox = 0
 					this.ischange = true
-					
-				}else {
+
+				} else {
 					this.leftbox = -700
 					this.ischange = !this.ischange
 				}
@@ -137,6 +203,48 @@
 	.indexbar {
 		z-index: 999;
 		box-sizing: border-box;
+
+		.out-show-mask {
+			z-index: 1000;
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+		}
+
+		.mask-out {
+			box-sizing: border-box;
+			z-index: 1001;
+			position: fixed;
+			left: 0;
+			bottom: -280rpx;
+			width: 100%;
+			height: 280rpx;
+			color: #e0e0e0;
+			border-top-left-radius: 30rpx;
+			border-top-right-radius: 30rpx;
+			background-color: var(--bordercolor);
+
+			.out-msg {
+				padding: 25rpx 30rpx 20rpx;
+				border-bottom: 1rpx solid #999;
+			}
+
+			.msg-box {
+				color: #999;
+				padding: 0 30rpx 20rpx;
+
+				.clear-musice {
+					padding: 30rpx 0 25rpx;
+				}
+
+				.clear-log {
+					padding-top: 10rpx;
+				}
+			}
+		}
+
 		.indexbarmask {
 			z-index: 99;
 			position: fixed;
@@ -144,8 +252,9 @@
 			left: 0;
 			width: 100%;
 			height: 100%;
-			background-color: rgba(0,0,0,.5);
+			background-color: rgba(0, 0, 0, .5);
 		}
+
 		.moreicon {
 			// z-index: 99;
 			margin: 0 40rpx 0 0;
@@ -162,6 +271,7 @@
 			width: 600rpx;
 			height: 100%;
 			background-color: #151515;
+
 			.user-top {
 				padding: 20rpx 0;
 				display: flex;
@@ -173,6 +283,7 @@
 					align-items: center;
 
 					.user-pic {
+						background-color: #999;
 						margin-right: 15rpx;
 						overflow: hidden;
 						width: 80rpx;
@@ -227,6 +338,7 @@
 					.list1text {
 						display: flex;
 						align-items: center;
+
 						.list1icon {
 							padding-right: 15rpx;
 							width: 60rpx;
@@ -238,11 +350,23 @@
 							font-size: 36rpx;
 						}
 					}
+
 					.toget {
 						width: 39rpx;
 						height: 39rpx;
 					}
 				}
+			}
+
+			.out-log {
+				margin-top: 50rpx;
+				padding: 30rpx 100rpx;
+				text-align: center;
+				background-color: var(--bordercolor);
+				border-radius: 14rpx;
+				font-size: 35rpx;
+				font-weight: 550;
+				color: red;
 			}
 		}
 	}
