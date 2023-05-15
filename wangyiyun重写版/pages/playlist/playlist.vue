@@ -310,13 +310,13 @@
 			getlivelist() {
 				if(this.livemusicelistdata.length === 0) {
 					let key = uni.getStorageSync('cookie')
-					
 					uni.request({
 						url: `${helper.url}/song/detail?ids=${this.livemusicelist}`,
 						data: {
 							cookie: key
 						},
 						success: (res) => {
+							console.log(res)
 							this.songdata = res.data.songs
 							this.songdata = this.songdata.filter(item => {
 								return item.ar[0].name != null
