@@ -1,6 +1,6 @@
 <template>
 	<view class="livehome">
-		<view class="announcement">
+		<!-- <view class="announcement">
 			<view class="top">
 				<view class="left">
 					<view class="top-icon">
@@ -36,7 +36,7 @@
 					</view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 		
 		<view class="hotopus">
 			<view class="title">
@@ -86,7 +86,7 @@
 				</view>
 			</view>
 			
-			<view class="bg-pic">
+			<!-- <view class="bg-pic">
 				<view class="bg-icon">
 					<image src="/static/video/1.jpg" mode="aspectFill"></image>
 				</view>
@@ -104,7 +104,7 @@
 						<image src="/static/icon/前往.png" mode="aspectFit"></image>
 					</view>
 				</view>
-			</view>
+			</view> -->
 			
 			<view class="see-more">
 				查看更多<view class="more-icon">
