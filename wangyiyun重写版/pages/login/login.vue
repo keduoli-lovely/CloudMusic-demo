@@ -56,24 +56,35 @@
 				qrimg: ``,
 				timer: null,
 				isqr: false,
-				tras: 0
+				tras: 0,
+				tim: null
 
 			};
 		},
 		methods: {
 			getindex() {
+				clearTimeout(this.timer)
+				clearTimeout(this.tim)
+				this.tim = null
+				this.timer = null
+				this.qrimg = ''
+				this.isqr = false
+				this.tras = 0
 				uni.reLaunch({
 					url: '/pages/index/index'
 				})
 			},
 			back() {
 				clearTimeout(this.timer)
+				clearTimeout(this.tim)
+				this.qrimg = ''
+				this.tim = null
 				this.timer = null
 				this.isqr = false
 				this.tras = 0
 			},
 			qrlogin() {
-				setTimeout(() => {
+				this.tim = setTimeout(() => {
 					this.tras = 150
 				}, 100)
 				this.isqr = true
@@ -89,7 +100,7 @@
 						uni.request({
 							url: `${helper.url}/login/qr/create?key=${key}&qrimg=truetimestamp=${Date.now()}`,
 							success: (res) => {
-								console.log(res)
+								// console.log(res)
 								this.qrimg = res.data.data.qrimg
 								this.timer = setInterval(() => {
 									this.Polling(key)
@@ -100,11 +111,11 @@
 				})
 			},
 			Polling(k) {
-				// console.log(k)
 				uni.request({
-					url: `${helper.url}/login/qr/check?key=${k}&qrimg=truetimestamp=${Date.now()}`,
+					url: `${helper.url}/login/qr/check?key=${k}&timestamp=${Date.now()}`,
+					withCredentials: true,
 					success: (res) => {
-						// console.log(res.data.code)
+						console.log(res)
 						if (res.data.code === 800) {
 							this.msg = '二维码过期'
 							this.qrimg = ''
@@ -113,8 +124,6 @@
 							this.msg = '等待扫码'
 						} else if (res.data.code === 802) {
 							this.msg = '等待确认'
-							this.qrimg = ''
-							// clearInterval(this.timer)
 						} else if (res.data.code === 803) {
 							this.msg = '登入成功'
 							// console.log(res)

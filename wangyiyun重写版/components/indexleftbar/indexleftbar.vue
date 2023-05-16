@@ -292,6 +292,10 @@
 					}
 
 					.user-name {
+						width: 200rpx;
+						white-space: nowrap;
+						overflow: hidden;
+						text-overflow: ellipsis;
 						color: var(--listboxfontcolor);
 						font-size: 36rpx;
 					}

@@ -111,8 +111,20 @@
 				})
 			},
 			getsong() {
+				let key = uni.getStorageSync('cookie')
+				uni.request({
+					url: `${helper.url}/login/status`,
+					data: {
+						cookie: key
+					},
+					success: (res) => {
+						uni.setStorageSync('id', res.data.data.account.id)
+						let  id = res.data.data.account
+
+					}
+				})
+				
 				if(!helper.mygedan) {
-					let key = uni.getStorageSync('cookie')
 					let id = uni.getStorageSync('id')
 					if(!key) {
 						if(!id) {

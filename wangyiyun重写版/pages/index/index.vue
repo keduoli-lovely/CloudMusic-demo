@@ -1,7 +1,7 @@
 <template>
 	<view class="wyy night">	
 		<view class="Search">			
-			<indexleftbar></indexleftbar>
+			<indexleftbar v-if="showheader"></indexleftbar>
 			<view class="search-line">
 				
 				<view class="search-box">
@@ -95,6 +95,11 @@
 				uni.navigateTo({
 					url:"/pages/searchhome/searchhome?page=1"
 				})
+			}
+		},
+		computed: {
+			showheader() {
+				return this.$store.state.showheader
 			}
 		}
 		
