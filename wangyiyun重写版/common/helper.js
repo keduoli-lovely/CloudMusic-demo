@@ -50,6 +50,8 @@ let cloudmusice = []
 // let hotcomments = []
 let mygedan = ''
 
+// http://39.105.208.89/login/qr/check?key=6b7cf993-9665-4cc9-b7b5-ee143be4eeb5&qrimg=true&timestamp=1684239485760
+
 let kk1 = 1
 let lrc = null
 let time = 0
@@ -65,7 +67,8 @@ let picrow = ''
 
 const audiok = uni.createInnerAudioContext();
 
-const url = 'http://localhost:3000'
+// const url = 'http://localhost:3000'
+const url = 'http://39.105.208.89:3000'
 
 let userid = ''
 let username = ''
