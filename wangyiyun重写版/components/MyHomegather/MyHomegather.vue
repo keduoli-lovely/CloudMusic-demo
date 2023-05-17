@@ -160,7 +160,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.myhomegather {
 		padding: 0rpx 30rpx 160rpx;
 		.tarbar {

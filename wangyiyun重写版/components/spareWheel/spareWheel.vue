@@ -21,7 +21,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.sparewheel {
 		display: flex;
 		flex-direction: column;

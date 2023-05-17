@@ -41,7 +41,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.similarcomp {
 		box-sizing: border-box;
 		padding: 30rpx;

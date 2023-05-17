@@ -120,7 +120,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.homebanner {
 		padding: 0 30rpx 100rpx;
 		overflow: hidden;

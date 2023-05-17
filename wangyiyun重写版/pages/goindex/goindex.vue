@@ -98,7 +98,7 @@ import helper from '../../common/helper';
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.miku {
 		padding-bottom: 200rpx;
 		margin-bottom: 200rpx;

@@ -317,7 +317,6 @@
 
 	.myhome {
 		padding-top: 180rpx;
-		width: 750rpx;
 		height: 100%;
 		background-color: var(--indexgbcolor);
 
@@ -369,6 +368,7 @@
 		}
 
 		.banner {
+			width: 100%;
 			padding: 60rpx 30rpx 40rpx;
 			background-color: var(--indexgbcolor);
 
