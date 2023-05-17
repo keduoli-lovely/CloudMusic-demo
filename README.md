@@ -1,8 +1,8 @@
 
 
-# CloudMusic-dome
+# CloudMusic-demo
 
-## [在线Dome](http://39.105.208.89)
+## [在线Demo](http://39.105.208.89)
 
 **基于[网易云音乐 NodeJS 版](https://github.com/Binaryify/NeteaseCloudMusicApi),使用[uniapp](https://github.com/Binaryify/NeteaseCloudMusicApi)编写的网易云音乐**
 
