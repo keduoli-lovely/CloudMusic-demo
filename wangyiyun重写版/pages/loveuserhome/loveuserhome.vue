@@ -103,6 +103,7 @@
 <script>
 	import helper from '../../common/helper.js'
 	import {mapState} from 'vuex'
+	import nullFn from '../../utils/nullFn.js'
 	export default {
 		data() {
 			return {
@@ -384,15 +385,8 @@
 				})
 			},
 			bilibili(e) {
-				if (this.num != e) {
-					this.num = 1
-					this.dd = -100
-					helper.contminlist.dd = -100
-				} else {
-					this.num = e
-					this.dd = 0
-					helper.contminlist.dd = 0
-				}
+				nullFn(false, -100, this)
+				this.dd = this.$store.state.showandnone
 			}
 		},
 		beforeDestroy() {

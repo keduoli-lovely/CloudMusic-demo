@@ -233,6 +233,7 @@
 
 <script>
 	import helper from '../../common/helper.js'
+	import nullFn from '../../utils/nullFn.js'
 	export default {
 		data() {
 			return {
@@ -250,7 +251,7 @@
 				name: helper.contminlist.name,
 				ren: helper.contminlist.ren,
 				kk: helper.contminlist.kk,
-				dd: helper.contminlist.dd,
+				dd: -100,
 				topnum: helper.contminlist.topnum,
 				love: helper.contminlist.islove,
 				getk: 0,
@@ -506,15 +507,18 @@
 				helper.contminlist.xian = e
 			},
 			bilibili(e) {
-				if (this.num != e) {
-					this.num = 1
-					this.dd = -100
-					helper.contminlist.dd = -100
-				} else {
-					this.num = e
-					this.dd = 0
-					helper.contminlist.dd = 0
-				}
+				
+				nullFn(false, -100, this)
+				this.dd = this.$store.state.showandnone
+				// if (this.num != e) {
+				// 	this.num = 1
+				// 	this.dd = -100
+				// 	helper.contminlist.dd = -100
+				// } else {
+				// 	this.num = e
+				// 	this.dd = 0
+				// 	helper.contminlist.dd = 0
+				// }
 			},
 			getmv() {
 				uni.reLaunch({

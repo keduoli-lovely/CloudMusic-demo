@@ -149,6 +149,7 @@
 <script>
 	import throttle from 'lodash.throttle';
 	import helper from '../../common/helper.js'
+	import nullFn from '../../utils/nullFn.js'
 	export default {
 		data() {
 			return {
@@ -166,7 +167,7 @@
 				musicpic: helper.contminlist.musicpic,
 				name: helper.contminlist.name,
 				ren: helper.contminlist.ren,
-				dd: helper.contminlist.dd,
+				dd: -100,
 				topnum: helper.contminlist.topnum,
 				love:  helper.contminlist.islove
 				
@@ -195,15 +196,18 @@
 				this.$store.commit('changeshow', e)
 				},
 			bilibili(e) {
-				if(this.numk != e) {
-					this.numk = 1
-					helper.contminlist.dd = -100
-					// console.log(11,'k')
-				} else {
-					// console.log(11,'k1')
-					this.numk = e
-					helper.contminlist.dd = 0
-				}
+				nullFn(false, -100, this)
+
+				this.dd = this.$store.state.showandnone
+				// if(this.numk != e) {
+				// 	this.numk = 1
+				// 	helper.contminlist.dd = -100
+				// 	// console.log(11,'k')
+				// } else {
+				// 	// console.log(11,'k1')
+				// 	this.numk = e
+				// 	helper.contminlist.dd = 0
+				// }
 			},
 			okstop(e) {
 				if(this.$store.state.changeControl != e) {

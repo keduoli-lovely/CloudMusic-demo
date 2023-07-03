@@ -88,9 +88,14 @@ export default new Vuex.Store({
 		},
 		changeshowrevtop(con, value) {
 			con.showrevtop = value
+		},
+		oldAndnew(con, value) {
+			con.showandnone = value
 		}
 	},
 	state: {
+		// 控制播放页面的 -- 显示/隐藏
+		showandnone: -100,
 		// 控制底部播放组件的显示与隐藏
 		showplaycomponent: 0, // xina
 		showhome: 95,

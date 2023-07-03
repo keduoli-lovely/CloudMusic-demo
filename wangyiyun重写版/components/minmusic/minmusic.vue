@@ -1,5 +1,5 @@
 <template>
-	<view class="maxmusic night" :style="{bottom : long +'vh' }">
+	<view class="maxmusic night" :style="{bottom : long +'%' }">
 		<view class="musicmask">
 
 		</view>
@@ -704,16 +704,14 @@
 					this.isdown = 0
 				}
 				this.$emit('stopkk', stop1)
-				if (this.isdown == 1) {
+				if (this.$store.state?.showandnone) {
 					uni.showTabBar({
 						fail() {
 							console.log('珂朵莉')
 						}
 					})
-					this.long = -95
-				} else {
-					this.long = -100
 				}
+				this.long = this.$store.state?.showandnone
 			},
 			getgeci() {
 				// console.log(this.musiceplaylength)
@@ -832,7 +830,7 @@
 
 <style lang="scss" scoped>
 	.ismax {
-		bottom: -100vh !important;
+		bottom: -100% !important;
 	}
 
 	.t20 {
@@ -844,7 +842,7 @@
 		position: fixed;
 		left: 0;
 		bottom: 0;
-
+		height: 100%;
 		// transition: all 0.01s ease-in-out;
 		.musicmask {
 			z-index: 10;
@@ -852,12 +850,13 @@
 			left: 0;
 			bottom: 0;
 			width: 100%;
-			height: 100vh;
+			height: 100%;
 			background-color: rgba(0, 0, 0, .2);
 		}
 
 		.musicbox {
-
+			position: absolute;
+			top: -140rpx;
 			padding-right: 15rpx;
 			display: flex;
 			justify-content: space-around;
@@ -1118,7 +1117,7 @@
 			overflow: hidden;
 			position: relative;
 			width: 750rpx;
-			height: 100vh;
+			height: 100%;
 			background-color: #2d2d2d;
 
 			.bgpic {

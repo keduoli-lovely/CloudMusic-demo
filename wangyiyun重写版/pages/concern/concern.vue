@@ -130,6 +130,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 
 <script>
 	import helper from '../../common/helper.js'
+	import nullFn from '../../utils/nullFn.js'
 	export default {
 		data() {
 			return {
@@ -198,20 +199,22 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%);padding: 15rpx
 				this.subind = i
 			},
 			bilibili(e) {
-				if (this.numk != e) {
-					this.numk = 1
-					uni.showTabBar({
-						fail() {
-							console.log('珂朵莉')
-						}
-					})
-					helper.contminlist.dd = -100
-					this.dd = -95
-				} else {
-					this.dd = -100
-					this.numk = e
-					helper.contminlist.dd = 0
-				}
+				nullFn(true, -95, this)
+				this.dd = this.$store.state.showandnone
+				// if (this.numk != e) {
+				// 	this.numk = 1
+				// 	uni.showTabBar({
+				// 		fail() {
+				// 			console.log('珂朵莉')
+				// 		}
+				// 	})
+				// 	helper.contminlist.dd = -100
+				// 	this.dd = -95
+				// } else {
+				// 	this.dd = -100
+				// 	this.numk = e
+				// 	helper.contminlist.dd = 0
+				// }
 			},
 			playmin(e) {
 				this.startgq(e.id, e.img, e.title, e.name)

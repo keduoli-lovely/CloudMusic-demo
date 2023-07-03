@@ -126,6 +126,7 @@
 
 <script>
 	import helper from '../../common/helper';
+	import nullFn from '../../utils/nullFn.js'
 	import {
 		mapState
 	} from 'vuex'
@@ -200,7 +201,7 @@
 					})
 					return
 				}
-				uni.navigateTo({
+				uni.reLaunch({
 					url: '/pages/similarPage/similarPage?page=2'
 				})
 			},
@@ -283,20 +284,23 @@
 				})
 			},
 			bilibili(e) {
-				if (this.numk != e) {
-					this.numk = 1
-					uni.showTabBar({
-						fail() {
-							console.log('珂朵莉')
-						}
-					})
-					helper.contminlist.dd = -100
-					this.dd = -95
-				} else {
 
-					this.numk = e
-					helper.contminlist.dd = 0
-				}
+				nullFn(true, -95, this)
+				this.dd = this.$store.state.showandnone
+				// if (this.numk != e) {
+				// 	this.numk = 1
+				// 	uni.showTabBar({
+				// 		fail() {
+				// 			console.log('珂朵莉')
+				// 		}
+				// 	})
+				// 	helper.contminlist.dd = -100
+				// 	this.dd = -95
+				// } else {
+
+				// 	this.numk = e
+				// 	helper.contminlist.dd = 0
+				// }
 			},
 		},
 		computed: {

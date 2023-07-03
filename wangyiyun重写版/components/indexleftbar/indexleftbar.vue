@@ -18,12 +18,14 @@
 					</view>
 					<!-- // 用户名称 -->
 					<view class="user-name">
-						{{username}}
+						{{username}} 
+						
+						<!-- // 前网用户中心的小箭头 -->
+						<view class="getuserhomeicon">
+							<image src="/static/icon/前进.png" mode="aspectFit"></image>
+						</view>
 					</view>
-					<!-- // 前网用户中心的小箭头 -->
-					<view class="getuserhomeicon">
-						<image src="/static/icon/前进.png" mode="aspectFit"></image>
-					</view>
+					
 				</view>
 
 				<!-- // 扫一扫图标 -->
@@ -166,7 +168,7 @@
 				// console.log(this.movestart,this.movebox)
 
 				if (this.leftbox <= 0) {
-					this.leftbox = -(this.movestart - this.movebox)
+					this.leftbox = -(this.movestart - this.movebox) * 1.1
 				} else {
 					return
 				}
@@ -178,7 +180,7 @@
 			},
 			endmovebox(e) {
 
-				if (this.leftbox > -300) {
+				if (this.leftbox > -240) {
 					this.leftbox = 0
 					this.ischange = true
 
@@ -292,18 +294,21 @@
 					}
 
 					.user-name {
-						width: 200rpx;
+						display: flex;
+						align-items: center;
 						white-space: nowrap;
 						overflow: hidden;
 						text-overflow: ellipsis;
 						color: var(--listboxfontcolor);
 						font-size: 36rpx;
+						
+						.getuserhomeicon {
+							margin-left: 12rpx;
+							width: 35rpx;
+							height: 35rpx;
+						}
 					}
 
-					.getuserhomeicon {
-						width: 35rpx;
-						height: 35rpx;
-					}
 				}
 
 				.qricon {

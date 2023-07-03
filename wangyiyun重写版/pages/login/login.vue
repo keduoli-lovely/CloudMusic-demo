@@ -95,12 +95,10 @@
 				uni.request({
 					url: `${helper.url}/login/qr/key?timestamp=${Date.now()}`,
 					success: (res) => {
-						console.log(res)
 						let key = res.data.data.unikey
 						uni.request({
 							url: `${helper.url}/login/qr/create?key=${key}&qrimg=truetimestamp=${Date.now()}`,
 							success: (res) => {
-								// console.log(res)
 								this.qrimg = res.data.data.qrimg
 								this.timer = setInterval(() => {
 									this.Polling(key)
@@ -115,7 +113,6 @@
 					url: `${helper.url}/login/qr/check?key=${k}&timestamp=${Date.now()}`,
 					withCredentials: true,
 					success: (res) => {
-						console.log(res)
 						if (res.data.code === 800) {
 							this.msg = '二维码过期'
 							this.qrimg = ''
@@ -126,7 +123,6 @@
 							this.msg = '等待确认'
 						} else if (res.data.code === 803) {
 							this.msg = '登入成功'
-							// console.log(res)
 							uni.setStorageSync('cookie', res.data.cookie)
 							clearInterval(this.timer)
 							this.$store.commit('changeLogin', true)

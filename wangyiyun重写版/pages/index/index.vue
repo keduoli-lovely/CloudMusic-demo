@@ -54,6 +54,7 @@
 
 <script>
 	import helper from '../../common/helper.js'
+	import nullFn from '../../utils/nullFn.js'
 	export default {
 		data() {
 			return {
@@ -75,21 +76,23 @@
 			
 			// 控制显示/隐藏底部播放组件
 			bilibili(e) {
-				if(this.numk != e) {
-					this.numk = 1
-					uni.showTabBar({
-						fail() {
-							console.log('珂朵莉')
-						}
-					})
-					helper.contminlist.dd = -100
-					this.dd = -95
-					// console.log(11,'k')
-				} else {
+				nullFn(true, -95, this)
+				this.dd = this.$store.state.showandnone
+				// if(this.numk != e) {
+				// 	this.numk = 1
+				// 	uni.showTabBar({
+				// 		fail() {
+				// 			console.log('珂朵莉')
+				// 		}
+				// 	})
+				// 	helper.contminlist.dd = -100
+				// 	this.dd = -95
+				// 	// console.log(11,'k')
+				// } else {
 					
-					this.numk = e
-					helper.contminlist.dd = 0
-				}
+				// 	this.numk = e
+				// 	helper.contminlist.dd = 0
+				// }
 			},
 			getSearchHome() {
 				uni.navigateTo({
